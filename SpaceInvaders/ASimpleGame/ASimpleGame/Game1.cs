@@ -13,7 +13,6 @@ namespace ASimpleGame
 
         // Grafische Ausgabe
         private GraphicsDeviceManager _graphics;
-
         private SpriteBatch _spriteBatch;
 
         // Font
@@ -22,50 +21,35 @@ namespace ASimpleGame
         // Viewport
         private Viewport viewport;
 
-        // Zufallszahlen
-        private Random random = new Random();
-
         // Tastatur abfragen
         private KeyboardState currentKeyboardState;
-
         private KeyboardState previousKeyboardState;
 
         // Sprites
         private Texture2D ShipTexture;
-
         private Texture2D StarTexture;
         private Texture2D LaserTexture;
         private Texture2D EnemyTexture;
 
         // Raumschiff Variablen
         private Vector2 shipPosition;
-
         private float shipSpeed = 5f;
 
         // Laser Variablen
         private List<Vector2> laserShots = new List<Vector2>();
-
         private float laserSpeed = 10f;
-
-        // Gegner Variablen
-        private readonly List<Vector2> enemyPositions = new List<Vector2>();
-
         private Vector2 enemyStartPosition = new Vector2(100, 100);
-        private float enemyRadius;
         private float enemySpeed = 1f;
-        private Color enemyColor;
 
         // Sound Effekte
         private SoundEffect laserSound;
-
         private SoundEffect explosionSound;
 
         // Spieler-Punkte und Zeichenposition der Punkte
         private int playerScore;
-
         private Vector2 scorePosition;
-
         private Ship ship;
+        private Enemy enemy;
 
         #endregion Variablen
 
@@ -114,79 +98,12 @@ namespace ASimpleGame
             shipPosition.X = viewport.Width / 2;
             shipPosition.Y = viewport.Height - 100;
 
-            // Radius der Feinde festlegen
-            if (EnemyTexture != null)
-            {
-                if (EnemyTexture.Width > EnemyTexture.Height)
-                {
-                    enemyRadius = EnemyTexture.Width;
-                }
-                else
-                {
-                    enemyRadius = EnemyTexture.Height;
-                }
-
-                // Gegner erzeugen
-                CreateEnemies();
-            }
-
             // Position der Score Ausgabe festlegen
             scorePosition = new Vector2(25, 25);
 
             ship = new Ship(ShipTexture, shipPosition, shipSpeed);
+            enemy = new Enemy(EnemyTexture, enemyStartPosition, enemySpeed);
         }
-
-        #region Gegner erzeugen
-
-        public void CreateEnemies()
-        {
-            // Feinde erzeugen
-            Vector2 position = enemyStartPosition;
-            position.X -= EnemyTexture.Width / 2;
-
-            // Eine Zufallszahl zwischen 3 und 10 ermitteln
-            int count = random.Next(3, 11);
-
-            // Gegener erzeugen
-            for (int i = 0; i < count; i++)
-            {
-                enemyPositions.Add(position);
-                position.X += EnemyTexture.Width + 15f;
-            }
-
-            // Farbwert ändern
-            switch (count)
-            {
-                case 3:
-                    enemyColor = Color.Red;
-                    break;
-                case 4:
-                    enemyColor = Color.Green;
-                    break;
-                case 5:
-                    enemyColor = Color.Yellow;
-                    break;
-                case 6:
-                    enemyColor = Color.Blue;
-                    break;
-                case 7:
-                    enemyColor = Color.Magenta;
-                    break;
-                case 8:
-                    enemyColor = Color.Yellow;
-                    break;
-                case 9:
-                    enemyColor = Color.White;
-                    break;
-                case 10:
-                    enemyColor = Color.DarkGreen;
-                    break;
-                default:
-                    break;
-            }
-        }
-
-        #endregion
 
         #region Update Methode
 
@@ -214,7 +131,7 @@ namespace ASimpleGame
 
             previousKeyboardState = currentKeyboardState;
 
-            UpdateEnemies();
+            enemy.UpdateEnemies();
 
             UpdateLaserShots();
 
@@ -271,18 +188,18 @@ namespace ASimpleGame
                     // Überprüfen ob ein Treffer vorliegt
                     int enemyIndex = 0;
 
-                    while (enemyIndex < enemyPositions.Count)
+                    while (enemyIndex < enemy.enemyPositions.Count)
                     {
                         // Abstand zwischen Feind-Position und Schuss-Position ermitteln
-                        float distance = Vector2.Distance(enemyPositions[enemyIndex], laserShots[laserIndex]);
+                        float distance = Vector2.Distance(enemy.enemyPositions[enemyIndex], laserShots[laserIndex]);
 
                         // Treffer?
-                        if (distance < enemyRadius)
+                        if (distance < enemy.enemyRadius)
                         {
                             // Schuss entfernen
                             laserShots.RemoveAt(laserIndex);
                             // Feind entfernen
-                            enemyPositions.RemoveAt(enemyIndex);
+                            enemy.enemyPositions.RemoveAt(enemyIndex);
                             // Punkte erhöhen
                             playerScore++;
 
@@ -298,36 +215,6 @@ namespace ASimpleGame
                     }
                     laserIndex++;
                 }
-            }
-        }
-
-        public void UpdateEnemies()
-        {
-            // Startposition verändern
-            enemyStartPosition.X += enemySpeed;
-
-            // Bewegungsrichtung umkehren
-            if (enemyStartPosition.X > 250)
-            {
-                enemySpeed *= -1;
-            }
-            else if (enemyStartPosition.X < 100f)
-            {
-                enemySpeed *= -1;
-            }
-
-            // Alle Feinde abgeschossen? Dann Neue Gegener
-            if (enemyPositions.Count == 0 && EnemyTexture != null)
-            {
-                CreateEnemies();
-            }
-
-            // Aktualisieren
-            for (int i = 0; i < enemyPositions.Count; i++)
-            {
-                Vector2 position = enemyPositions[i];
-                position.X += enemySpeed;
-                enemyPositions[i] = position;
             }
         }
 
@@ -363,7 +250,7 @@ namespace ASimpleGame
             DrawLaser();
 
             // Feinde zeichnen
-            DrawEnemy();
+            enemy.DrawEnemy(_spriteBatch);
 
             // Punkte anzeigen
             DrawScore();
@@ -386,16 +273,6 @@ namespace ASimpleGame
             foreach(Vector2 laser in laserShots)
             {
                 _spriteBatch.Draw(LaserTexture, laser, Color.White);
-            }
-        }
-
-        private void DrawEnemy()
-        {
-            // Die Liste mit allen Gegnern (enemyPositions) durchlaufen
-            // und alle Feinde (EnemyTexture) zeichnen
-            foreach(Vector2 enemy in enemyPositions)
-            {
-                _spriteBatch.Draw(EnemyTexture, enemy, enemyColor);
             }
         }
 
