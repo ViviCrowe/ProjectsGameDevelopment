@@ -65,6 +65,8 @@ namespace ASimpleGame
 
         private Vector2 scorePosition;
 
+        private Ship ship;
+
         #endregion Variablen
 
         #region Init
@@ -130,6 +132,8 @@ namespace ASimpleGame
 
             // Position der Score Ausgabe festlegen
             scorePosition = new Vector2(25, 25);
+
+            ship = new Ship(ShipTexture, shipPosition, shipSpeed);
         }
 
         #region Gegner erzeugen
@@ -193,13 +197,13 @@ namespace ASimpleGame
             // Left
             if (currentKeyboardState.IsKeyDown(Keys.A))
             {
-                MoveShipLeft();
+                ship.MoveShipLeft();
             }
 
             // Right
             if (currentKeyboardState.IsKeyDown(Keys.D))
             {
-                MoveShipRight();
+                ship.MoveShipRight(_graphics);
             }
 
             // Space
@@ -230,7 +234,7 @@ namespace ASimpleGame
         public void FireLaser()
         {
             // aktuelle Position des Schiffes auf dem Bildschirm speichern
-            Vector2 position = shipPosition;
+            Vector2 position = ship.shipPosition;
 
             // Laserschuss vor das Schiff mittig platzieren
             position.Y -= ShipTexture.Height / 2;
@@ -243,32 +247,6 @@ namespace ASimpleGame
         }
 
         #endregion
-
-        public void MoveShipLeft()
-        {
-            // Schiff nach links bewegen und verhindern, 
-            // dass das Schiff den Bildschirm verlässt
-            shipPosition.X -= shipSpeed;
-
-            if(shipPosition.X < ShipTexture.Width / 2)
-            {
-                shipPosition.X = ShipTexture.Width / 2;
-            }
-        }
-
-        public void MoveShipRight()
-        {
-            // TODO
-            // Schiff nach rechts bewegen und verhindern, 
-            // dass das Schiff den Bildschirm verlässt
-            shipPosition.X += shipSpeed;
-
-            if(shipPosition.X > _graphics.PreferredBackBufferWidth - ShipTexture.Width / 2)
-            {
-                shipPosition.X = _graphics.PreferredBackBufferWidth - ShipTexture.Width / 2;
-            }
-
-        }
 
         #region Update von Lasern und Gegnern
 
@@ -379,7 +357,7 @@ namespace ASimpleGame
             DrawBackground();
 
             // Das Schiff zeichnen
-            DrawSpaceShip();
+            ship.DrawSpaceShip(_spriteBatch);
 
             // Laser zeichnen
             DrawLaser();
@@ -401,13 +379,6 @@ namespace ASimpleGame
             _spriteBatch.Draw(StarTexture, Vector2.Zero, Color.White);
         }
 
-        private void DrawSpaceShip()
-        {
-            // Das Schiff mittig an den Koordinaten des Schiffes (shipPosition) zeichnen
-            _spriteBatch.Draw(ShipTexture, shipPosition, null, Color.White, 0, 
-                new Vector2(ShipTexture.Width / 2, ShipTexture.Height / 2), 1, SpriteEffects.None, 0);
-        }
-
         private void DrawLaser()
         {
             // Die Liste mit den Laser-Schüssen (laserShots) durchlaufen
@@ -424,7 +395,7 @@ namespace ASimpleGame
             // und alle Feinde (EnemyTexture) zeichnen
             foreach(Vector2 enemy in enemyPositions)
             {
-                _spriteBatch.Draw(EnemyTexture, enemy, Color.White);
+                _spriteBatch.Draw(EnemyTexture, enemy, enemyColor);
             }
         }
 
