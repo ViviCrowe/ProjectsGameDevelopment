@@ -38,6 +38,8 @@ namespace ASimpleGame
         // Laser Variablen
         private List<Vector2> laserShots = new List<Vector2>();
         private float laserSpeed = 10f;
+
+        //Enemy Variablen
         private Vector2 enemyStartPosition = new Vector2(100, 100);
         private float enemySpeed = 1f;
 
@@ -50,6 +52,7 @@ namespace ASimpleGame
         private Vector2 scorePosition;
         private Ship ship;
         private Enemy enemy;
+        private Laser laser;
 
         #endregion Variablen
 
@@ -103,6 +106,7 @@ namespace ASimpleGame
 
             ship = new Ship(ShipTexture, shipPosition, shipSpeed);
             enemy = new Enemy(EnemyTexture, enemyStartPosition, enemySpeed);
+            laser = new Laser(LaserTexture, laserSound, explosionSound, laserSpeed);
         }
 
         #region Update Methode
@@ -126,14 +130,14 @@ namespace ASimpleGame
             // Space
             if (IsNewKeyPressed(Keys.Space))
             {
-                FireLaser();
+                laser.FireLaser(ship);
             }
 
             previousKeyboardState = currentKeyboardState;
 
             enemy.UpdateEnemies();
 
-            UpdateLaserShots();
+            playerScore = laser.UpdateLaserShots(enemy, playerScore);
 
             base.Update(gameTime);
         }
@@ -148,89 +152,7 @@ namespace ASimpleGame
                     !previousKeyboardState.IsKeyDown(key);
         }
 
-        public void FireLaser()
-        {
-            // aktuelle Position des Schiffes auf dem Bildschirm speichern
-            Vector2 position = ship.shipPosition;
-
-            // Laserschuss vor das Schiff mittig platzieren
-            position.Y -= ShipTexture.Height / 2;
-            position.X -= LaserTexture.Width / 2;
-
-            // Position in der Liste speichern
-            laserShots.Add(position);
-
-            PlayLaserSound();
-        }
-
         #endregion
-
-        #region Update von Lasern und Gegnern
-
-        public void UpdateLaserShots()
-        {
-            int laserIndex = 0;
-
-            while (laserIndex < laserShots.Count)
-            {
-                // hat der Schuss den Bildschirm verlassen?
-                if (laserShots[laserIndex].Y < 0)
-                {
-                    laserShots.RemoveAt(laserIndex);
-                }
-                else
-                {
-                    // Position des Schusses aktualiesieren
-                    Vector2 pos = laserShots[laserIndex];
-                    pos.Y -= laserSpeed;
-                    laserShots[laserIndex] = pos;
-
-                    // Überprüfen ob ein Treffer vorliegt
-                    int enemyIndex = 0;
-
-                    while (enemyIndex < enemy.enemyPositions.Count)
-                    {
-                        // Abstand zwischen Feind-Position und Schuss-Position ermitteln
-                        float distance = Vector2.Distance(enemy.enemyPositions[enemyIndex], laserShots[laserIndex]);
-
-                        // Treffer?
-                        if (distance < enemy.enemyRadius)
-                        {
-                            // Schuss entfernen
-                            laserShots.RemoveAt(laserIndex);
-                            // Feind entfernen
-                            enemy.enemyPositions.RemoveAt(enemyIndex);
-                            // Punkte erhöhen
-                            playerScore++;
-
-                            PlayExplosionSound();
-
-                            // Schleife verlassen
-                            break;
-                        }
-                        else
-                        {
-                            enemyIndex++;
-                        }
-                    }
-                    laserIndex++;
-                }
-            }
-        }
-
-        #endregion
-
-        public void PlayExplosionSound()
-        {
-            // Explosions WAV abspielen
-            explosionSound.Play();
-        }
-
-        public void PlayLaserSound()
-        {
-            // Laserschuss WAV abspielen
-            laserSound.Play();
-        }
 
         #region Draw Methoden
 
@@ -247,7 +169,7 @@ namespace ASimpleGame
             ship.DrawSpaceShip(_spriteBatch);
 
             // Laser zeichnen
-            DrawLaser();
+            laser.DrawLaser(_spriteBatch);
 
             // Feinde zeichnen
             enemy.DrawEnemy(_spriteBatch);
@@ -264,16 +186,6 @@ namespace ASimpleGame
         {
             // Die Sternenfeld Grafik an der Position 0,0 zeichnen
             _spriteBatch.Draw(StarTexture, Vector2.Zero, Color.White);
-        }
-
-        private void DrawLaser()
-        {
-            // Die Liste mit den Laser-Schüssen (laserShots) durchlaufen
-            // und alle Schüsse (LaserTexture) zeichnen
-            foreach(Vector2 laser in laserShots)
-            {
-                _spriteBatch.Draw(LaserTexture, laser, Color.White);
-            }
         }
 
         private void DrawScore()
