@@ -14,11 +14,11 @@ namespace ASimpleGame
         public Vector2 shipPosition;
         public float shipSpeed { get; set; }
 
-        public Ship(Texture2D ShipTexture, Vector2 shipPosition, float shipSpeed)
+        public Ship()
         {
-            this.shipSpeed = shipSpeed;
-            this.ShipTexture = ShipTexture;
-            this.shipPosition = shipPosition;
+            shipSpeed = 5f;
+            shipPosition.X = 1280 / 2;
+            shipPosition.Y = 720 - 100 ;
         }
 
         public void MoveShipLeft()
@@ -33,15 +33,15 @@ namespace ASimpleGame
             }
         }
 
-        public void MoveShipRight(GraphicsDeviceManager _graphics)
+        public void MoveShipRight()
         {
             // Schiff nach rechts bewegen und verhindern, 
             // dass das Schiff den Bildschirm verlässt
             shipPosition.X += shipSpeed;
 
-            if (shipPosition.X > _graphics.PreferredBackBufferWidth - ShipTexture.Width / 2)
+            if (shipPosition.X > 1280 - ShipTexture.Width / 2)
             {
-                shipPosition.X = _graphics.PreferredBackBufferWidth - ShipTexture.Width / 2;
+                shipPosition.X = 1280 - ShipTexture.Width / 2;
             }
 
         }

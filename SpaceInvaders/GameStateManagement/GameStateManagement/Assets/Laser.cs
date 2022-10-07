@@ -16,12 +16,9 @@ namespace ASimpleGame
         private SoundEffect laserSound;
         private SoundEffect explosionSound;
 
-        public Laser(Texture2D LaserTexture, SoundEffect laserSound, SoundEffect explosionSound, float laserSpeed)
+        public Laser()
         {
-            this.LaserTexture = LaserTexture;   
-            this.laserSound = laserSound;
-            this.explosionSound = explosionSound;
-            this.laserSpeed = laserSpeed;
+            laserSpeed = 10f;
         }
 
         public void FireLaser(Ship ship)

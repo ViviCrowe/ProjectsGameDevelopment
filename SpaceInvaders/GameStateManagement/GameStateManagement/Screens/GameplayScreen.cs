@@ -11,6 +11,7 @@
 
 #region Using Statements
 
+using ASimpleGame;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -34,12 +35,18 @@ namespace GameStateManagement
         private ContentManager content;
         private SpriteFont gameFont;
 
-        private Vector2 playerPosition = new Vector2(100, 100);
-        private Vector2 enemyPosition = new Vector2(100, 100);
-
-        private Random random = new Random();
-
         private float pauseAlpha;
+
+        private Ship ship = new Ship();
+        private Enemy enemy = new Enemy();
+        private Laser laser = new Laser();
+
+        private Texture2D StarTexture;
+
+        private int playerScore = 0;
+        private Vector2 scorePosition = new Vector2(25, 25);
+
+        private KeyboardState previousKeyboardState;
 
         #endregion Fields
 
@@ -61,8 +68,11 @@ namespace GameStateManagement
         {
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
-
-            gameFont = content.Load<SpriteFont>("gamefont");
+            gameFont = content.Load<SpriteFont>("Verdana");
+            ship.LoadShipAssets(content);
+            enemy.LoadEnemyAssets(content);
+            laser.LoadLaserAssets(content);
+            StarTexture = content.Load<Texture2D>("starfield");
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
@@ -109,21 +119,8 @@ namespace GameStateManagement
 
             if (IsActive)
             {
-                // Apply some random jitter to make the enemy move around.
-                const float randomization = 10;
-
-                enemyPosition.X += (float)(random.NextDouble() - 0.5) * randomization;
-                enemyPosition.Y += (float)(random.NextDouble() - 0.5) * randomization;
-
-                // Apply a stabilizing force to stop the enemy moving off the screen.
-                Vector2 targetPosition = new Vector2(
-                    ScreenManager.GraphicsDevice.Viewport.Width / 2 - gameFont.MeasureString("Insert Gameplay Here").X / 2,
-                    200);
-
-                enemyPosition = Vector2.Lerp(enemyPosition, targetPosition, 0.05f);
-
-                // TODO: this game isn't very fun! You could probably improve
-                // it by inserting something more interesting in this space :-)
+                enemy.UpdateEnemies();
+                playerScore = laser.UpdateLaserShots(enemy, playerScore);
             }
         }
 
@@ -157,41 +154,30 @@ namespace GameStateManagement
             }
             else
             {
-                // Otherwise move the player position.
-                Vector2 movement = Vector2.Zero;
 
-                if (keyboardState.IsKeyDown(Keys.Left))
+                if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    movement.X--;
+                    ship.MoveShipLeft();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Right))
+                if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    movement.X++;
+                    ship.MoveShipRight();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Up))
+                if (IsNewKeyPressed(Keys.Space, keyboardState))
                 {
-                    movement.Y--;
+                    laser.FireLaser(ship);
                 }
 
-                if (keyboardState.IsKeyDown(Keys.Down))
-                {
-                    movement.Y++;
-                }
-
-                Vector2 thumbstick = gamePadState.ThumbSticks.Left;
-
-                movement.X += thumbstick.X;
-                movement.Y -= thumbstick.Y;
-
-                if (movement.Length() > 1)
-                {
-                    movement.Normalize();
-                }
-
-                playerPosition += movement * 2;
+                previousKeyboardState = keyboardState;
             }
+        }
+
+        public bool IsNewKeyPressed(Keys key, KeyboardState keyboardState)
+        {
+            return keyboardState.IsKeyDown(key) &&
+                    !previousKeyboardState.IsKeyDown(key);
         }
 
         /// <summary>
@@ -208,10 +194,11 @@ namespace GameStateManagement
 
             spriteBatch.Begin();
 
-            spriteBatch.DrawString(gameFont, "// TODO", playerPosition, Color.Green);
-
-            spriteBatch.DrawString(gameFont, "Insert Gameplay Here",
-                                   enemyPosition, Color.DarkRed);
+            spriteBatch.Draw(StarTexture, Vector2.Zero, Color.White);
+            spriteBatch.DrawString(gameFont, playerScore + "", scorePosition, Color.White);
+            ship.DrawSpaceShip(spriteBatch);
+            enemy.DrawEnemy(spriteBatch);
+            laser.DrawLaser(spriteBatch);
 
             spriteBatch.End();
 

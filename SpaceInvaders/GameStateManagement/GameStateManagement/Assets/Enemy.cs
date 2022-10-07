@@ -18,28 +18,15 @@ namespace ASimpleGame
         private Color enemyColor;
         private Random random = new Random();
 
-        public Enemy(Texture2D EnemyTexture, Vector2 enemyStartPosition, float enemySpeed)
+        public Enemy()
         {
-            this.EnemyTexture = EnemyTexture;
-            this.enemyStartPosition = enemyStartPosition;
-            this.enemySpeed = enemySpeed;
-            if (EnemyTexture != null)
-            {
-                if (EnemyTexture.Width > EnemyTexture.Height)
-                {
-                    enemyRadius = EnemyTexture.Width;
-                }
-                else
-                {
-                    enemyRadius = EnemyTexture.Height;
-                }
-
-                // Gegner erzeugen
-                CreateEnemies();
-            }
+            
+            enemyStartPosition = new Vector2(100, 100);
+            enemySpeed = 1f;
+            
         }
 
-        public void CreateEnemies()
+        private void CreateEnemies()
         {
             // Feinde erzeugen
             Vector2 position = enemyStartPosition;
@@ -130,6 +117,21 @@ namespace ASimpleGame
         public void LoadEnemyAssets(ContentManager Content)
         {
             EnemyTexture = Content.Load<Texture2D>("enemy");
+
+            if (EnemyTexture != null)
+            {
+                if (EnemyTexture.Width > EnemyTexture.Height)
+                {
+                    enemyRadius = EnemyTexture.Width;
+                }
+                else
+                {
+                    enemyRadius = EnemyTexture.Height;
+                }
+
+                // Gegner erzeugen
+                CreateEnemies();
+            }
         }
     }
 }
