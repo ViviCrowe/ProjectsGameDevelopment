@@ -34,10 +34,11 @@ namespace GameStateManagement
 
         private ContentManager content;
         private SpriteFont gameFont;
+        
 
         private float pauseAlpha;
 
-        private Ship ship = new Ship();
+        private Ship ship;
         private Enemy enemy = new Enemy();
         private Laser laser = new Laser();
 
@@ -68,6 +69,13 @@ namespace GameStateManagement
         {
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
+
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+
+            //Schiff benötigt Viewport um Position des Schiffes dynamisch an die Auflösung des Fensters anzupassen
+            //und für Kollision
+            ship = new Ship(viewport);
+
             gameFont = content.Load<SpriteFont>("Verdana");
             ship.LoadShipAssets(content);
             enemy.LoadEnemyAssets(content);

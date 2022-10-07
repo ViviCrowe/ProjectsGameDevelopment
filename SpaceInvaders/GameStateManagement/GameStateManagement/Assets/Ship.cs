@@ -13,12 +13,14 @@ namespace ASimpleGame
         public Texture2D ShipTexture { get; set; }
         public Vector2 shipPosition;
         public float shipSpeed { get; set; }
+        private Viewport viewport;
 
-        public Ship()
+        public Ship(Viewport viewport)
         {
             shipSpeed = 5f;
-            shipPosition.X = 1280 / 2;
-            shipPosition.Y = 720 - 100 ;
+            this.viewport = viewport;
+            shipPosition.X = viewport.Width / 2;
+            shipPosition.Y = viewport.Height - 100 ;
         }
 
         public void MoveShipLeft()
@@ -38,10 +40,10 @@ namespace ASimpleGame
             // Schiff nach rechts bewegen und verhindern, 
             // dass das Schiff den Bildschirm verlässt
             shipPosition.X += shipSpeed;
-
-            if (shipPosition.X > 1280 - ShipTexture.Width / 2)
+               Console.WriteLine(viewport.Width);
+            if (shipPosition.X > viewport.Width - ShipTexture.Width / 2)
             {
-                shipPosition.X = 1280 - ShipTexture.Width / 2;
+                shipPosition.X = viewport.Width - ShipTexture.Width / 2;
             }
 
         }
