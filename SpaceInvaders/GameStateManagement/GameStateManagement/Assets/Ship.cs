@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
-using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using System;
@@ -51,11 +50,6 @@ namespace ASimpleGame
             // Das Schiff mittig an den Koordinaten des Schiffes (shipPosition) zeichnen
             _spriteBatch.Draw(ShipTexture, shipPosition, null, Color.White, 0,
                 new Vector2(ShipTexture.Width / 2, ShipTexture.Height / 2), 1, SpriteEffects.None, 0);
-        }
-
-        public void LoadShipAssets(ContentManager Content)
-        {
-            ShipTexture = Content.Load<Texture2D>("ship");
         }
 
     }
