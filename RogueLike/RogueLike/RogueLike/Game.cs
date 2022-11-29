@@ -62,8 +62,9 @@ namespace GameStateManagement
 
         protected override void Initialize()
         {
-            graphics.PreferredBackBufferWidth = 1360;
-            graphics.PreferredBackBufferHeight = 768;
+            graphics.PreferredBackBufferWidth = 1920;
+            graphics.PreferredBackBufferHeight = 1080;
+            graphics.IsFullScreen = true;
             graphics.ApplyChanges();
             base.Initialize();
         }
