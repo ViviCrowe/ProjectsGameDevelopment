@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
+using SharpDX.Direct3D11;
 using System;
 using System.Threading;
 
@@ -40,6 +41,9 @@ namespace GameStateManagement
         private KeyboardState previousKeyboardState;
 
         private Character character;
+        private Room room;
+        private Tile tile;
+        private Tile[,] Tiles;
 
         #endregion Fields
 
@@ -66,6 +70,23 @@ namespace GameStateManagement
 
             character = new Character();
             character.LoadCharacterStartAssets(content);
+            room = new Room();
+            Tiles = room.Tiles;
+
+
+            for (int i = 0; i < Tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < Tiles.GetLength(1); j++)
+                {
+                    Tiles[i, j] = new Tile(room.Position, false);
+
+                    Tiles[i, j].LoadTileAssets(content, "Grass_normal");
+                    room.Position.X += 64;
+                }
+                room.Position.X = 1920f / 2 - 10 * 64 /2;
+                room.Position.Y += 64;
+            }
+
 
             // A real game would probably have more content than this sample, so
             // it would take longer to load. We simulate that by delaying for a
@@ -190,9 +211,17 @@ namespace GameStateManagement
             // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
-            spriteBatch.Begin();
+            spriteBatch.Begin(SpriteSortMode.BackToFront);
 
             character.DrawCharacter(spriteBatch);
+            for (int i = 0; i < Tiles.GetLength(0); i++)
+            {
+                for (int j = 0; j < Tiles.GetLength(1); j++)
+                {
+                    Tiles[i, j].DrawTile(spriteBatch);
+                }
+               
+            }
 
             spriteBatch.End();
 
