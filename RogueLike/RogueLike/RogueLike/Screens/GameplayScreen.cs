@@ -16,7 +16,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
-using SharpDX.Direct3D11;
 using System;
 using System.Threading;
 
@@ -40,7 +39,7 @@ namespace GameStateManagement
 
         private KeyboardState previousKeyboardState;
 
-        private Character character;
+        private Player player;
         private Room room;
 
         #endregion Fields
@@ -64,13 +63,15 @@ namespace GameStateManagement
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
+            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+
             gameFont = content.Load<SpriteFont>("gamefont");
 
-            character = new Character();
-            character.LoadCharacterStartAssets(content);
-            room = new Room();
+            player = new Player(viewport);
+            player.LoadAssets(content);
+            room = new Room(viewport);
             room.LoadRoomAssets(content);
-
+            room.activeObjects.Add(player); // move this somewhere else later
 
             
 
@@ -157,22 +158,26 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    character.MoveLeft();
+                    if(!CheckForCollision(-1, 0))
+                        player.MoveLeft();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    character.MoveRight();
+                    if(!CheckForCollision(1, 0))
+                        player.MoveRight();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
-                    character.MoveUp();
+                    if(!CheckForCollision(0, -1))
+                        player.MoveUp();
                 }
-
+                
                 if (keyboardState.IsKeyDown(Keys.S))
                 {
-                    character.MoveDown();
+                    if(!CheckForCollision(0, 1))
+                        player.MoveDown();
                 }
 
                 previousKeyboardState = keyboardState;
@@ -200,7 +205,7 @@ namespace GameStateManagement
 
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
-            character.DrawCharacter(spriteBatch);
+            player.Draw(spriteBatch);
             room.DrawRoom(spriteBatch);
 
             spriteBatch.End();
@@ -215,5 +220,28 @@ namespace GameStateManagement
         }
 
         #endregion Update and Draw
+
+        private bool CheckForCollision(int factorX, int factorY)
+        {
+            foreach (Entity entity in room.activeObjects) 
+            {
+                BoundingBox boundingBox_1 = new BoundingBox(new Vector3(entity.position.X + entity.movementSpeed*factorX - (entity.texture.Width / 2) + 10, 
+                    entity.position.Y + entity.movementSpeed*factorY - (entity.texture.Height / 2), 0), new Vector3(entity.position.X + entity.movementSpeed*factorX + (entity.texture.Width / 2) - 10,
+                    entity.position.Y + entity.movementSpeed*factorY + (entity.texture.Height / 2) - 5, 0));                       
+                foreach(GameObject obj in room.passiveObjects)
+                {
+                    BoundingBox boundingBox_2 = new BoundingBox(new Vector3(obj.position.X - (obj.texture.Width / 2), 
+                        obj.position.Y - (obj.texture.Height / 2), 0), new Vector3(obj.position.X + (obj.texture.Width / 2),
+                        obj.position.Y + (obj.texture.Height / 2), 0));     
+                    if(boundingBox_1.Intersects(boundingBox_2))
+                    {
+                        return true;
+                    }
+                }
+                // when there's enemies add one foreach(activeObjects) or do collisions another way (grid?)
+            }
+                return false;
+        }
+
     }
 }
