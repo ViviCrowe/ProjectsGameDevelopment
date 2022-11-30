@@ -42,8 +42,6 @@ namespace GameStateManagement
 
         private Character character;
         private Room room;
-        private Tile tile;
-        private Tile[,] Tiles;
 
         #endregion Fields
 
