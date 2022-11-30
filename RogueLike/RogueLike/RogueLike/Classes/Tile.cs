@@ -28,8 +28,17 @@ namespace RogueLike.Classes
 
         public void DrawTile(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(TileTexture, TilePosition, null, Color.White, 0,
+            if(TileTexture.Width != 64)
+            {
+                spriteBatch.Draw(TileTexture, TilePosition, null, Color.White, 0,
+                new Vector2(TileTexture.Width / 2, TileTexture.Height / 2), 0.1f, SpriteEffects.None, 1);
+            }
+            else
+            {
+                spriteBatch.Draw(TileTexture, TilePosition, null, Color.White, 0,
                 new Vector2(TileTexture.Width / 2, TileTexture.Height / 2), 1, SpriteEffects.None, 1);
+            }
+            
         }
     }
 }

@@ -27,7 +27,7 @@ namespace RogueLike.Classes
         public void DrawCharacter(SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(CharacterTexture, CharacterPosition, null, Color.White, 0,
-                new Vector2(CharacterTexture.Width / 2, CharacterTexture.Height / 2), 0.3f, SpriteEffects.None, 0);
+                new Vector2(CharacterTexture.Width / 2, CharacterTexture.Height / 2), 0.2f, SpriteEffects.None, 0);
         }
 
         public void MoveLeft()

@@ -71,21 +71,10 @@ namespace GameStateManagement
             character = new Character();
             character.LoadCharacterStartAssets(content);
             room = new Room();
-            Tiles = room.Tiles;
+            room.LoadRoomAssets(content);
 
 
-            for (int i = 0; i < Tiles.GetLength(0); i++)
-            {
-                for (int j = 0; j < Tiles.GetLength(1); j++)
-                {
-                    Tiles[i, j] = new Tile(room.Position, false);
-
-                    Tiles[i, j].LoadTileAssets(content, "Grass_normal");
-                    room.Position.X += 64;
-                }
-                room.Position.X = 1920f / 2 - 10 * 64 /2;
-                room.Position.Y += 64;
-            }
+            
 
 
             // A real game would probably have more content than this sample, so
@@ -206,7 +195,7 @@ namespace GameStateManagement
         {
             // This game has a blue background. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.CornflowerBlue, 0, 0);
+                                               Color.Black, 0, 0);
 
             // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
@@ -214,14 +203,7 @@ namespace GameStateManagement
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
             character.DrawCharacter(spriteBatch);
-            for (int i = 0; i < Tiles.GetLength(0); i++)
-            {
-                for (int j = 0; j < Tiles.GetLength(1); j++)
-                {
-                    Tiles[i, j].DrawTile(spriteBatch);
-                }
-               
-            }
+            room.DrawRoom(spriteBatch);
 
             spriteBatch.End();
 
