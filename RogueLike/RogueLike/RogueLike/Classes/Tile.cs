@@ -1,44 +1,28 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace RogueLike.Classes
 {
-    public class Tile
+    public class Tile : GameObject
     {
-        public Texture2D TileTexture { get; set; }
-        public Vector2 TilePosition;
         public bool isWall;
 
         public Tile(Vector2 tilePosition, bool isWall)
         {
-            TilePosition = tilePosition;
+            position = tilePosition;
             this.isWall = isWall;
         }
 
-        public void LoadTileAssets(ContentManager content, string name) 
+        public override void LoadAssets(ContentManager content) 
         {
-            TileTexture = content.Load<Texture2D>(name);
+            throw new NotSupportedException();
         }
 
-        public void DrawTile(SpriteBatch spriteBatch)
+        public void LoadAssets(ContentManager content, string name) 
         {
-            if(TileTexture.Width != 64)
-            {
-                spriteBatch.Draw(TileTexture, TilePosition, null, Color.White, 0,
-                new Vector2(TileTexture.Width / 2, TileTexture.Height / 2), 0.1f, SpriteEffects.None, 1);
-            }
-            else
-            {
-                spriteBatch.Draw(TileTexture, TilePosition, null, Color.White, 0,
-                new Vector2(TileTexture.Width / 2, TileTexture.Height / 2), 1, SpriteEffects.None, 1);
-            }
-            
+            texture = content.Load<Texture2D>(name);
         }
     }
 }
