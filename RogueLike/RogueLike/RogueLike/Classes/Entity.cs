@@ -1,13 +1,23 @@
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RogueLike.Classes;
 
 public abstract class Entity : GameObject
 {
-    private Viewport viewport;
     public float movementSpeed;
+
+    public Viewport viewport;
+
     private int health;
-    private int attackDamage;
+
     private int teethValue;
-    // private Weapon weapon; or Item
+    
+    // attack Attribute == Fist == (Weapon==null), Basiswerte
+    private int attackDamage;
+    private float attackRange;
+    private float attackSpeed;
+
+    public Weapon weapon;
 
     public Entity(Viewport viewport) // add more attributes?
     {
@@ -35,7 +45,31 @@ public abstract class Entity : GameObject
         position.Y += movementSpeed;
     }
 
-    public void DropWeapon() { // or Item
-        // todo
+    public void DropWeapon(Room room, ContentManager content) 
+    {
+        if (this.weapon != null)
+        {
+            this.weapon.position = this.position;
+            room.items.Add(this.weapon);
+            room.LoadItemAssets(content); // necessary to avoid null exception
+            this.weapon = null;
+            this.LoadAssets(content, "character"); // TESTWEISE FÜR PLAYER NUR
+        } 
     }
+
+    public void PickUpItem(GameObject item, Room room, ContentManager content)
+    {
+        if (item != null)
+        {
+            if(item is Weapon newWeapon) 
+            {
+                this.weapon = newWeapon;
+                room.items.Remove(newWeapon);
+                this.LoadAssets(content, "character_with_sword"); // TESTWEISE FÜR PLAYER NUR
+            }
+        }
+    }
+    // attack
+    // buy/sell things
+    // use abilities
 }
