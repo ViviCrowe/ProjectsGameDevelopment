@@ -1,15 +1,17 @@
 public class Weapon : GameObject
 {
     // sword, bow, spear, fistWeapon
-    private int weaponDamage;
+    public int weaponDamage;
 
     private float weaponSpeed;
 
     private int teethValue;
 
-    private float weaponRange;
+    public float weaponRange;
 
     public Weapon()
     {
+        this.weaponDamage = 5;
+        this.weaponRange = 10;
     }
 }
