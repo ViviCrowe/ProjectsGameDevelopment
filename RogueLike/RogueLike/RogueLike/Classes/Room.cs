@@ -60,15 +60,28 @@ namespace RogueLike.Classes
                     viewport.Width / 2 - (Tiles.GetLength(0) - 1) * 64 / 2;
                 Position.Y += 64;
             }
+            LoadEntityAssets(content);
+            LoadItemAssets(content);
         }
 
         public void LoadItemAssets(ContentManager content)
         {
-            foreach (Weapon item in items)
+            foreach (Weapon item in items) // bis jetzt nur Waffen keine Items
             {
                 if (item != null)
                 {
-                    item.LoadAssets(content, "sword");
+                    item.LoadAssets(content, "sword"); // TEST NAME
+                }
+            }
+        }
+
+        public void LoadEntityAssets(ContentManager content)
+        {
+            foreach(Entity entity in activeObjects) 
+            {
+                if(entity != null)
+                {
+                    entity.LoadAssets(content, "enemy"); // TEST NAME
                 }
             }
         }
@@ -88,6 +101,14 @@ namespace RogueLike.Classes
                 if (item != null)
                 {
                     item.Draw(spriteBatch, 0.9f);
+                }
+            }
+
+            foreach (Entity entity in activeObjects) 
+            {
+                if(entity != null) 
+                {
+                    entity.Draw(spriteBatch, 0.2f);
                 }
             }
         }
