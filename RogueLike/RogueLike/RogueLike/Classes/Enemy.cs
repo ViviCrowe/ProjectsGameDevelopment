@@ -1,9 +1,10 @@
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes;
 
 // Context Class
-public class Enemy : Entity 
+public class Enemy : Entity
 {
     // defense, attack bool values?
     private float visionRange;
@@ -14,8 +15,19 @@ public class Enemy : Entity
         base(viewport)
     {
         this.enemyAI = enemyAI;
-        this.position.X = 200;
-        this.position.Y = 200;
+        this.position.X = viewport.Width / 2;
+        this.position.Y = viewport.Height / 2 + 200; // TEST WERTE
+        this.health = 100;
+    }
+
+    public void Attack()
+    {
+        enemyAI.Attack();
+    }
+
+    public void Move()
+    {
+        enemyAI.Move();
     }
 
     public void setEnemyAI(EnemyAI enemyAI)
@@ -24,14 +36,13 @@ public class Enemy : Entity
         this.enemyAI = enemyAI;
     }
 
-    public void Move()
+    public void Update(Room room, ContentManager content)
     {
-        enemyAI.Move();
+        if(this.health <= 0) {
+            room.activeObjects.Remove(this);
+            if(this.weapon != null) {
+                this.DropWeapon(room, content);
+            }
+        }
     }
-
-    public void Attack()
-    {
-        enemyAI.Attack();
-    }
-
 }
