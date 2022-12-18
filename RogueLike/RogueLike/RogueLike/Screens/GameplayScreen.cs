@@ -42,8 +42,11 @@ namespace GameStateManagement
 
         private Player player;
 
-        private Room room;
+        private Enemy enemy; // STATISCHER TEST GEGNER
+        
+        private Weapon weapon; // TEST WAFFE
 
+        private Room room;
 
 #endregion Fields
 
@@ -73,16 +76,20 @@ namespace GameStateManagement
             gameFont = content.Load<SpriteFont>("gamefont");
 
             player = new Player(viewport);
-            //player.LoadAssets(content, "character");
-            player.LoadAssets(content, "character_with_sword");
-            room = new Room(viewport);
-            room.LoadAssets (content);
-            room.activeObjects.Add (player); // move this somewhere else later
 
-            // A real game would probably have more content than this sample, so
-            // it would take longer to load. We simulate that by delaying for a
-            // while, giving you a chance to admire the beautiful loading screen.
-            Thread.Sleep(1000);
+            player.LoadAssets(content, "character");
+            //player.LoadAssets(content, "character_with_sword"); // TEST
+            enemy = new Enemy(viewport, new PatrolAI()); // TEST  
+            weapon = new Weapon();   
+            weapon.position.X = viewport.Width/2 + 60; //TEST
+            weapon.position.Y = viewport.Height/2 - 60; //TEST  
+            room = new Room(viewport);
+            room.activeObjects.Add(enemy); // TEST
+            room.items.Add(weapon);
+            room.LoadAssets(content);
+
+            // simulate longer loading time
+            //Thread.Sleep(1000);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -129,6 +136,7 @@ namespace GameStateManagement
 
             if (IsActive)
             {
+                enemy.Update(room, content);
             }
         }
 
@@ -167,32 +175,47 @@ namespace GameStateManagement
             {
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    if (!CheckForCollision(-1, 0)) player.MoveLeft();
+                    if (CheckForCollision(-1, 0, false) == null)
+                        player.MoveLeft();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (!CheckForCollision(1, 0)) player.MoveRight();
+                    if (CheckForCollision(1, 0, false) == null)
+                        player.MoveRight();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (!CheckForCollision(0, -1)) player.MoveUp();
+                    if (CheckForCollision(0, -1, false) == null)
+                        player.MoveUp();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.S))
                 {
-                    if (!CheckForCollision(0, 1)) player.MoveDown();
+                    if (CheckForCollision(0, 1, false) == null)
+                        player.MoveDown();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.B))
+                if (keyboardState.IsKeyDown(Keys.J))
                 {
-                    player.DropWeapon(room, content);
+                    player.DropWeapon (room, content);
+                }
+
+                if (keyboardState.IsKeyDown(Keys.K))
+                {
+                    player.PickUpItem(CheckForItemCollision(), room, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
-                    player.PickUpItem(CheckForItemCollision(), room, content);
+                    Entity targetEntity =
+                        (Entity) CheckForCollision(0, 0, true);
+                    if (targetEntity != null)
+                    {
+                        player.Attack (targetEntity);
+                        // TODO: display damage taken
+                    }
                 }
             }
             previousKeyboardState = keyboardState;
@@ -220,8 +243,7 @@ namespace GameStateManagement
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
             player.Draw(spriteBatch, 0.2f);
-            room.Draw (spriteBatch);
-
+            room.Draw(spriteBatch);
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -238,58 +260,65 @@ namespace GameStateManagement
 #endregion Update and Draw
 
 
-        private bool CheckForCollision(int factorX, int factorY)
+        private GameObject
+        CheckForCollision(int factorX, int factorY, bool attack)
         {
-            foreach (Entity entity in room.activeObjects)
+            BoundingBox boundingBox_1 =
+                CreateBoundingBox(player, factorX, factorY);
+
+            foreach (GameObject obj in room.passiveObjects)
             {
-                BoundingBox boundingBox_1 = CreateBoundingBox(entity, factorX, factorY);
+                BoundingBox boundingBox_2 = CreateBoundingBox(obj);
 
-                foreach (GameObject obj in room.passiveObjects)
+                if (boundingBox_1.Intersects(boundingBox_2))
                 {
-                    BoundingBox boundingBox_2 = CreateBoundingBox(obj);
-
-                    if (boundingBox_1.Intersects(boundingBox_2))
-                    {
-                        return true;
-                    }
+                    return obj;
                 }
+            }
 
-                if(room.activeObjects.Count > 1) {
-                    foreach (Entity entity_2 in room.activeObjects)
+            if (room.activeObjects.Count > 0)
+            {
+                foreach (Entity entity_2 in room.activeObjects)
+                {
+                    if (player != entity_2)
                     {
                         BoundingBox boundingBox_2 = CreateBoundingBox(entity_2);
 
+                        if (attack && player.weapon != null)
+                        {
+                            boundingBox_1.Min.X -= player.weapon.weaponRange;
+                            boundingBox_1.Min.Y -= player.weapon.weaponRange;
+                            boundingBox_1.Max.X += player.weapon.weaponRange;
+                            boundingBox_1.Max.Y += player.weapon.weaponRange;
+                        }
                         if (boundingBox_1.Intersects(boundingBox_2))
                         {
-                            return true;
+                            return entity_2;
                         }
-                    }
-                }
-                // when there's enemies add one foreach(activeObjects) or do collisions another way (grid?)
-            }
-            return false;
-        }
-
-        private GameObject CheckForItemCollision()
-        {
-            foreach (Entity entity in room.activeObjects)
-            {
-                BoundingBox boundingBox_1 = CreateBoundingBox(entity);
-
-                foreach(GameObject item in room.items)
-                {
-                    BoundingBox boundingBox_2 = CreateBoundingBox(item);
-
-                    if (boundingBox_1.Intersects(boundingBox_2))
-                    {
-                        return item;
                     }
                 }
             }
             return null;
         }
 
-        private BoundingBox CreateBoundingBox(Entity entity, int factorX, int factorY)
+        private GameObject CheckForItemCollision()
+        {
+            BoundingBox boundingBox_1 = CreateBoundingBox(player);
+
+            foreach (GameObject item in room.items)
+            {
+                BoundingBox boundingBox_2 = CreateBoundingBox(item);
+
+                if (boundingBox_1.Intersects(boundingBox_2))
+                {
+                    return item;
+                }
+            }
+            return null;
+        }
+
+        private BoundingBox
+        CreateBoundingBox(Entity entity, int factorX, int factorY)
         {
             return new BoundingBox(new Vector3(entity.position.X +
                     entity.movementSpeed * factorX -
