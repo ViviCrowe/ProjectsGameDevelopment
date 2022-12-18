@@ -4,25 +4,55 @@ using RogueLike.Classes;
 
 public abstract class Entity : GameObject
 {
+    // TODO: passive und aktive Abilities ergänzen
     public float movementSpeed;
 
     public Viewport viewport;
 
-    private int health;
+    public int health;
 
-    private int teethValue;
-    
+    public int teethValue;
+
     // attack Attribute == Fist == (Weapon==null), Basiswerte
-    private int attackDamage;
-    private float attackRange;
-    private float attackSpeed;
+    public int attackDamage;
+
+    public float attackRange;
+
+    public float attackSpeed;
 
     public Weapon weapon;
 
-    public Entity(Viewport viewport) // add more attributes?
+    public Entity(Viewport viewport) // ggf. mehr Attribute hinzufügen
     {
         this.viewport = viewport;
-        movementSpeed = 5f; // todo: change so that every type of entity has a different speed
+        movementSpeed = 5f; // TODO: ändern sodass jeder Entitätentyp eigene Geschwindigkeit hat
+    }
+
+    public void Attack(Entity target)
+    {
+        target.health -= (this.attackDamage + this.weapon.weaponDamage);
+    }
+
+    public void Buy(GameObject item)
+    {
+        // TODO
+    }
+
+    public void DropWeapon(Room room, ContentManager content)
+    {
+        if (this.weapon != null)
+        {
+            this.weapon.position = this.position;
+            room.items.Add(this.weapon);
+            room.LoadItemAssets (content); // nötig um null exception zu vermeiden
+            this.weapon = null;
+            this.LoadAssets(content, "character"); // TESTWEISE FÜR PLAYER NUR
+        }
+    }
+
+    public void MoveDown()
+    {
+        position.Y += movementSpeed;
     }
 
     public void MoveLeft()
@@ -40,36 +70,26 @@ public abstract class Entity : GameObject
         position.Y -= movementSpeed;
     }
 
-    public void MoveDown()
-    {
-        position.Y += movementSpeed;
-    }
-
-    public void DropWeapon(Room room, ContentManager content) 
-    {
-        if (this.weapon != null)
-        {
-            this.weapon.position = this.position;
-            room.items.Add(this.weapon);
-            room.LoadItemAssets(content); // necessary to avoid null exception
-            this.weapon = null;
-            this.LoadAssets(content, "character"); // TESTWEISE FÜR PLAYER NUR
-        } 
-    }
-
     public void PickUpItem(GameObject item, Room room, ContentManager content)
     {
         if (item != null)
         {
-            if(item is Weapon newWeapon) 
+            if (item is Weapon newWeapon)
             {
                 this.weapon = newWeapon;
-                room.items.Remove(newWeapon);
+                room.items.Remove (newWeapon);
                 this.LoadAssets(content, "character_with_sword"); // TESTWEISE FÜR PLAYER NUR
             }
         }
     }
-    // attack
-    // buy/sell things
-    // use abilities
+
+    public void Sell(GameObject item)
+    {
+        // TODO
+    }
+
+    public void UseActiveAbility() 
+    {
+        // TODO
+    }
 }
