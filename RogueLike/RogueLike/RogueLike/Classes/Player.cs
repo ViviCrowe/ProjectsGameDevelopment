@@ -7,6 +7,7 @@ public class Player : Entity
         base(viewport)
     {
         position = new Vector2(viewport.Width / 2, viewport.Height / 2);
-        weapon = new Weapon(); // nur für Testzwecke, zu Beginn des Spiels hat der Spieler keine Waffe (= Fäuste also null)
+        this.attackDamage = 5;
+        this.attackRange = 5;
     }
 }
