@@ -7,14 +7,16 @@ using System.Threading.Tasks;
 
 namespace RogueLike.Classes.Weapons
 {
-    public abstract class Item
+    /*
+     * Setteing and Getting within the concreat Class
+     */
+    public abstract class Weapon
     {
         protected int attackDamage { get; set; }
         protected float attackSpeed { get; set; }
         protected int teethValue { get; set; }
         protected int weaponRange { get; set; }
         protected Texture2D weaponTexture { get; set; }
-
 
     }
 }

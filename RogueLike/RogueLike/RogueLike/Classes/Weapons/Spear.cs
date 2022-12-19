@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RogueLike.Classes.Weapons
 {
-    public class Spear : Item
+    public class Spear : Weapon
     {
         public Spear(Texture2D weaponTexture)
         {
