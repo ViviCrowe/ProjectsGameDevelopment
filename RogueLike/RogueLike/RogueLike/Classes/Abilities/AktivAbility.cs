@@ -9,6 +9,12 @@ using System.Threading.Tasks;
 
 namespace RogueLike.Classes.Abilities
 {
+    public enum ConcreteAktiveAbility
+    {
+        FIREBALL,
+        EARTHBALL,
+        AIRBALL
+    }
     public class AktivAbility
     {
         private float castDuration;
