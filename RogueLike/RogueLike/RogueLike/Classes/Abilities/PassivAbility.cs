@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RogueLike.Classes.Abilities
 {
-    public class PassivAbillity
+    public class PassivAbility
     {
         private float attackSpeed;
         private int healthPoits;
@@ -14,7 +14,7 @@ namespace RogueLike.Classes.Abilities
         private float movementSpeed;
 
         private Player player;
-        public PassivAbillity(Player player)
+        public PassivAbility(Player player)
         {
             this.player = player;
         }

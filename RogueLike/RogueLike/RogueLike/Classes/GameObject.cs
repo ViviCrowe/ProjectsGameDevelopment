@@ -12,16 +12,7 @@ public abstract class GameObject
 
     public void Draw(SpriteBatch spriteBatch, float layerDepth)
     {
-        spriteBatch
-            .Draw(texture,
-            position,
-            null,
-            Color.White,
-            0f,
-            new Vector2(texture.Width / 2f, texture.Height / 2f),
-            1.0f,
-            SpriteEffects.None,
-            layerDepth);
+        spriteBatch.Draw(texture,position,null,Color.White,0f,new Vector2(texture.Width / 2f, texture.Height / 2f),1.0f,SpriteEffects.None,layerDepth);
     }
 
     public void LoadAssets(ContentManager content, string name)
