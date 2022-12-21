@@ -10,13 +10,13 @@ namespace RogueLike.Classes.Weapons
     /*
      * Setteing and Getting within the concreat Class
      */
-    public abstract class Weapon
+    public abstract class Weapon : GameObject
     {
-        protected int attackDamage { get; set; }
-        protected float attackSpeed { get; set; }
-        protected int teethValue { get; set; }
-        protected int weaponRange { get; set; }
-        protected Texture2D weaponTexture { get; set; }
+        public int attackDamage { get; set; }
+        public float attackSpeed { get; set; }
+        public int teethValue { get; set; }
+        public int weaponRange { get; set; }
+        public Texture2D weaponTexture { get; set; }
 
     }
 }

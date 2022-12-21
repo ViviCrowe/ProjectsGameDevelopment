@@ -2,6 +2,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes;
+using RogueLike.Classes.Weapons;
 
 // Context Class
 public class Enemy : Entity
@@ -11,13 +12,14 @@ public class Enemy : Entity
 
     private EnemyAI enemyAI;
 
-    public Enemy(Viewport viewport, EnemyAI enemyAI) :
-        base(viewport)
+    public Enemy(Viewport viewport, EnemyAI enemyAI, Weapon weapon) :
+        base(viewport, weapon)
     {
         this.enemyAI = enemyAI;
         this.position.X = viewport.Width / 2;
         this.position.Y = viewport.Height / 2 + 200; // TEST WERTE
         this.maximumHealth = 100;
+        this.minimumHealth = 100;
     }
 
     public void Attack()

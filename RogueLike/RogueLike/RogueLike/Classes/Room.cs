@@ -2,6 +2,7 @@
 using System.Numerics;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RogueLike.Classes.Weapons;
 
 namespace RogueLike.Classes
 {

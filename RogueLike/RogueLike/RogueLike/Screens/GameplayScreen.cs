@@ -14,8 +14,10 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
+using RogueLike.Classes.Weapons;
 using System;
 using System.Threading;
+using System.Xml.Linq;
 
 
 #endregion Using Statements
@@ -79,26 +81,29 @@ namespace GameStateManagement
 
             gameFont = content.Load<SpriteFont>("gamefont");
 
-            player = new Player(viewport);
-
+            player = new Player(viewport, new Sword(content.Load<Texture2D>("sword")));
             player.LoadAssets(content, "character");
+
             //player.LoadAssets(content, "character_with_sword"); // TEST
-            enemy = new Enemy(viewport, new PatrolAI()); // TEST  
-            weapon = new Weapon();   
+            enemy = new Enemy(viewport, new PatrolAI(), new Sword()); // TEST  
+
+            weapon = new Sword();   
             weapon.position.X = viewport.Width/2 + 60; //TEST
             weapon.position.Y = viewport.Height/2 - 60; //TEST  
+
             room = new Room(viewport);
             room.activeObjects.Add(enemy); // TEST
             room.items.Add(weapon);
             room.LoadAssets(content);
+
             enemy.LoadAssets(content, "enemy");
 
+            //playerHUD initiolaztion
             playerHUD = new PlayerHUD(player);
-
             playerHUD.LoadContent(content);
 
             // simulate longer loading time
-            //Thread.Sleep(1000);
+            // Thread.Sleep(1000);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that

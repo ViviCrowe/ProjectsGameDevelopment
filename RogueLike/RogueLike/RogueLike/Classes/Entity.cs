@@ -1,6 +1,7 @@
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes;
+using RogueLike.Classes.Weapons;
 
 public abstract class Entity : GameObject
 {
@@ -23,15 +24,16 @@ public abstract class Entity : GameObject
 
     public Weapon weapon;
 
-    public Entity(Viewport viewport) // ggf. mehr Attribute hinzufügen
+    public Entity(Viewport viewport,Weapon weapon) // ggf. mehr Attribute hinzufügen
     {
         this.viewport = viewport;
+        this.weapon = weapon;
         movementSpeed = 5f; // TODO: ändern sodass jeder Entitätentyp eigene Geschwindigkeit hat
     }
 
     public void Attack(Entity target)
     {
-        target.minimumHealth -= (this.attackDamage + this.weapon.weaponDamage);
+        target.minimumHealth -= (this.attackDamage + this.weapon.attackDamage);
     }
 
     public void Buy(GameObject item)

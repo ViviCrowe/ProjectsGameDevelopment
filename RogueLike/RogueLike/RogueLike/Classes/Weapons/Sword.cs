@@ -9,6 +9,7 @@ namespace RogueLike.Classes.Weapons
 {
     public class Sword : Weapon
     {
+        public Sword() { }
         public Sword(Texture2D weaponTexture)
         {
             weaponRange = 2;
