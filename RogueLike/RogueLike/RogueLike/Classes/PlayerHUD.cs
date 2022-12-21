@@ -1,23 +1,19 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.Abilities;
 using RogueLike.Classes.Weapons;
-using SharpDX.Direct2D1;
 using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 
 namespace RogueLike.Classes
 {
     public class PlayerHUD
     {
+        private Player player;
+
         private Weapon weaponSlot;
         private AktivAbility aktivAbility;
-        private Player player;
 
         private String teethValue;
         private String healthValue;
@@ -30,7 +26,6 @@ namespace RogueLike.Classes
         public PlayerHUD(Player player)
         {
             this.player = player;
-
             
             teethValue =  player.teethValue.ToString();
             healthValue = player.minimumHealth + "/" + player.maximumHealth;
@@ -50,6 +45,31 @@ namespace RogueLike.Classes
             spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.Black);
             spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.Black);
             spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.Black);
+        }
+
+        public void Update(Player player)
+        {
+            if(this.player.maximumHealth != player.maximumHealth)
+            {
+                this.player.maximumHealth = player.maximumHealth;
+                healthValue = player.minimumHealth + "/" + player.maximumHealth;
+            }
+
+            if(this.player.minimumHealth != player.minimumHealth)
+            {
+                this.player.minimumHealth = player.minimumHealth;
+                healthValue = player.minimumHealth + "/" + player.maximumHealth;
+            }
+
+            if(this.player.weapon != player.weapon)
+            {
+                this.player.weapon = player.weapon;
+            }
+
+            if(this.player.aktivAbility != player.aktivAbility)
+            {
+                this.player.aktivAbility =player.aktivAbility;
+            }
         }
     }
 }

@@ -82,6 +82,7 @@ namespace GameStateManagement
 
             gameFont = content.Load<SpriteFont>("gamefont");
 
+            //Initialising and Generating Atributes of Player
             player = new Player(viewport, new Sword(content.Load<Texture2D>("sword")));
             player.aktivAbility = new AktivAbility();
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
@@ -140,6 +141,8 @@ namespace GameStateManagement
         )
         {
             base.Update(gameTime, otherScreenHasFocus, false);
+            //Updates the HUD if Reference is different
+            playerHUD.Update(player);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
