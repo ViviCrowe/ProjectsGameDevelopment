@@ -7,6 +7,9 @@ public class Player : Entity
         base(viewport)
     {
         position = new Vector2(viewport.Width / 2, viewport.Height / 2);
+        minimumHealth = 100;
+        maximumHealth = 100;
+        teethValue = 0;
         this.attackDamage = 5;
         this.attackRange = 5;
     }

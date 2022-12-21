@@ -31,7 +31,7 @@ public abstract class Entity : GameObject
 
     public void Attack(Entity target)
     {
-        target.health -= (this.attackDamage + this.weapon.weaponDamage);
+        target.minimumHealth -= (this.attackDamage + this.weapon.weaponDamage);
     }
 
     public void Buy(GameObject item)

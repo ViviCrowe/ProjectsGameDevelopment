@@ -23,10 +23,13 @@ namespace RogueLike.Classes
 
         private SpriteFont font;
 
-        public PlayerHUD()
+        public PlayerHUD(Player player)
         {
-            teethValue =  100.ToString();
-            healthValue = 20.ToString() + "/" + 100.ToString();
+            this.player = player;
+
+            teethValue =  player.teethValue.ToString();
+            healthValue = player.minimumHealth + "/" + player.maximumHealth;
+
         }
         public void LoadContent(ContentManager content)
         {

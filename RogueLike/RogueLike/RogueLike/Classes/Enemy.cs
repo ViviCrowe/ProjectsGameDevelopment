@@ -17,7 +17,7 @@ public class Enemy : Entity
         this.enemyAI = enemyAI;
         this.position.X = viewport.Width / 2;
         this.position.Y = viewport.Height / 2 + 200; // TEST WERTE
-        this.health = 100;
+        this.maximumHealth = 100;
     }
 
     public void Attack()
@@ -38,7 +38,7 @@ public class Enemy : Entity
 
     public void Update(Room room, ContentManager content)
     {
-        if(this.health <= 0) {
+        if(this.minimumHealth <= 0) {
             room.activeObjects.Remove(this);
             if(this.weapon != null) {
                 this.DropWeapon(room, content);

@@ -91,8 +91,9 @@ namespace GameStateManagement
             room.activeObjects.Add(enemy); // TEST
             room.items.Add(weapon);
             room.LoadAssets(content);
+            enemy.LoadAssets(content, "enemy");
 
-            playerHUD = new PlayerHUD();
+            playerHUD = new PlayerHUD(player);
 
             playerHUD.LoadContent(content);
 
@@ -252,6 +253,7 @@ namespace GameStateManagement
 
                 player.Draw(spriteBatch, 0.2f);
                 room.Draw(spriteBatch);
+                enemy.Draw(spriteBatch, 2.0f);
                 playerHUD.Draw(spriteBatch);
 
             spriteBatch.End();
