@@ -9,7 +9,8 @@ public abstract class Entity : GameObject
 
     public Viewport viewport;
 
-    public int health;
+    public int maximumHealth;
+    public int minimumHealth;
 
     public int teethValue;
 
