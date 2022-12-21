@@ -15,6 +15,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
 using RogueLike.Classes.Weapons;
+using RogueLike.Classes.Abilities;
 using System;
 using System.Threading;
 using System.Xml.Linq;
@@ -82,6 +83,8 @@ namespace GameStateManagement
             gameFont = content.Load<SpriteFont>("gamefont");
 
             player = new Player(viewport, new Sword(content.Load<Texture2D>("sword")));
+            player.aktivAbility = new AktivAbility();
+            player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content, "character");
 
             //player.LoadAssets(content, "character_with_sword"); // TEST

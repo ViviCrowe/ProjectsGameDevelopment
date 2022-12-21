@@ -22,14 +22,13 @@ namespace RogueLike.Classes.Abilities
         private ConcreteAktiveAbility abilityType;
         private int abilityHealthPoints;
 
-        private Texture2D abilityTexture;
-        private SoundEffect abilitySoundEffect;
+        public Texture2D abilityTexture { get; set; }
+        public SoundEffect abilitySoundEffect { get; set; }
 
-        public AktivAbility(Texture2D abilityTexture, SoundEffect abilitySoundEffects, ConcreteAktiveAbility abilityType)
+        public AktivAbility()
         {
-            this.abilityTexture = abilityTexture;
-            this.abilitySoundEffect = abilitySoundEffects;
-            this.abilityType = abilityType;
+            abilityType = ConcreteAktiveAbility.EARTHBALL;
+            abilityTexture = null;
         }
 
         public void CastAbility()

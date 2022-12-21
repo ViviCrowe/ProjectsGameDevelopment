@@ -41,7 +41,7 @@ namespace RogueLike.Classes
         {
             font = content.Load<SpriteFont>("gamefont");
             weaponTexture = weaponSlot.weaponTexture;
-            abilityTexture = content.Load<Texture2D>("enemy");
+            abilityTexture = aktivAbility.abilityTexture;
         }
 
         public void Draw(SpriteBatch spriteBatch)
