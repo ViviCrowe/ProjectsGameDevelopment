@@ -24,11 +24,14 @@ namespace RogueLike.Classes
             this.viewport = viewport;
 
             //Es funktionieren aktuell nur ungerade Anzahlen
-            Tiles = new Tile[11,11];
-            Position.X =
+            Tiles = new Tile[17, 30];
+            /*Position.X =
                 (viewport.Width / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
             Position.Y =
-                (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+                (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);*/
+
+            Position.X = 32;
+            Position.Y = 32;
         }
 
         public void LoadAssets(ContentManager content)
@@ -41,7 +44,7 @@ namespace RogueLike.Classes
                         i == 0 ||
                         j == 0 ||
                         i == Tiles.GetLength(0) - 1 ||
-                        j == Tiles.GetLength(0) - 1
+                        j == Tiles.GetLength(1) - 1
                     )
                     {
                         Tiles[i, j] = new Tile(Position, true);
@@ -56,8 +59,7 @@ namespace RogueLike.Classes
 
                     Position.X += 64;
                 }
-                Position.X =
-                    viewport.Width / 2 - (Tiles.GetLength(0) - 1) * 64 / 2;
+                Position.X = 32;
                 Position.Y += 64;
             }
             LoadEntityAssets(content);
