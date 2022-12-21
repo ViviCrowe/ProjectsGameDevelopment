@@ -31,7 +31,7 @@ namespace RogueLike.Classes
         {
             this.player = player;
 
-
+            
             teethValue =  player.teethValue.ToString();
             healthValue = player.minimumHealth + "/" + player.maximumHealth;
             weaponSlot = player.weapon;
@@ -40,16 +40,16 @@ namespace RogueLike.Classes
         public void LoadContent(ContentManager content)
         {
             font = content.Load<SpriteFont>("gamefont");
-            weaponTexture = content.Load<Texture2D>("sword");
+            weaponTexture = weaponSlot.weaponTexture;
             abilityTexture = content.Load<Texture2D>("enemy");
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font,teethValue,new Vector2(100,0),Color.Black);
-            spriteBatch.DrawString(font, healthValue, new Vector2(300, 0), Color.Black);
-            spriteBatch.Draw(weaponTexture,new Vector2(500,0),Color.Black);
-            spriteBatch.Draw(abilityTexture,new Vector2(700,0),Color.Black);
+            spriteBatch.DrawString(font,teethValue,new Vector2(100,12.5f),Color.Black);
+            spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.Black);
+            spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.Black);
+            spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.Black);
         }
     }
 }
