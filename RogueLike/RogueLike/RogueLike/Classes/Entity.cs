@@ -93,4 +93,20 @@ public abstract class Entity : GameObject
     {
         // TODO
     }
+    //Sets the minimum value of the Helth bar
+    public void setMinimumHealth(int minimumHealth)
+    {
+        if(minimumHealth <= maximumHealth && minimumHealth >= 0)
+        {
+            this.minimumHealth = minimumHealth;
+        }
+    }
+
+    public void setTeethValue(int teethValue)
+    {
+        if((this.teethValue + teethValue) >= 0)
+        {
+            this.teethValue += teethValue;
+        }
+    }
 }
