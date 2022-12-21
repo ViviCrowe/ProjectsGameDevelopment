@@ -48,6 +48,8 @@ namespace GameStateManagement
 
         private Room room;
 
+        private PlayerHUD playerHUD;
+
 #endregion Fields
 
 
@@ -89,6 +91,10 @@ namespace GameStateManagement
             room.activeObjects.Add(enemy); // TEST
             room.items.Add(weapon);
             room.LoadAssets(content);
+
+            playerHUD = new PlayerHUD();
+
+            playerHUD.LoadContent(content);
 
             // simulate longer loading time
             //Thread.Sleep(1000);
@@ -244,8 +250,10 @@ namespace GameStateManagement
 
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
-            player.Draw(spriteBatch, 0.2f);
-            room.Draw(spriteBatch);
+                player.Draw(spriteBatch, 0.2f);
+                room.Draw(spriteBatch);
+                playerHUD.Draw(spriteBatch);
+
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
