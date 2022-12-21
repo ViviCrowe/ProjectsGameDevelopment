@@ -141,8 +141,6 @@ namespace GameStateManagement
         )
         {
             base.Update(gameTime, otherScreenHasFocus, false);
-            //Updates the HUD if Reference is different
-            playerHUD.Update(player);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
             if (coveredByOtherScreen)
@@ -157,6 +155,8 @@ namespace GameStateManagement
             if (IsActive)
             {
                 enemy.Update(room, content);
+                //Updates the HUD if Reference is different
+                playerHUD.Update(player);
             }
         }
 
