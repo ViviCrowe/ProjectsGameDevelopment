@@ -13,6 +13,7 @@ namespace RogueLike.Classes.Weapons
         public Sword(Texture2D weaponTexture)
         {
             weaponRange = 2;
+            attackDamage = 100;
             this.weaponTexture = weaponTexture;
         }
     }

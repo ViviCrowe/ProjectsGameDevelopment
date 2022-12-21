@@ -4,7 +4,6 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.Abilities;
 using RogueLike.Classes.Weapons;
-using SpriteBatch = Microsoft.Xna.Framework.Graphics.SpriteBatch;
 
 namespace RogueLike.Classes
 {
@@ -17,7 +16,6 @@ namespace RogueLike.Classes
 
         private String teethValue;
         private String healthValue;
-
 
         private SpriteFont font;
         private Texture2D weaponTexture;
@@ -32,6 +30,7 @@ namespace RogueLike.Classes
             weaponSlot = player.weapon;
             aktivAbility = player.aktivAbility;
         }
+
         public void LoadContent(ContentManager content)
         {
             font = content.Load<SpriteFont>("gamefont");
@@ -69,6 +68,16 @@ namespace RogueLike.Classes
             if(this.player.aktivAbility != player.aktivAbility)
             {
                 this.player.aktivAbility =player.aktivAbility;
+            }
+
+            if(this.teethValue != player.teethValue.ToString())
+            {
+                this.teethValue = player.teethValue.ToString();
+            }
+
+            if (this.player != player)
+            {
+                this.player = player;
             }
         }
     }
