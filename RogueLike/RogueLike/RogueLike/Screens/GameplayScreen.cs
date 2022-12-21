@@ -67,9 +67,11 @@ namespace GameStateManagement
         /// </summary>
         public override void LoadContent()
         {
+
             if (content == null)
                 content =
                     new ContentManager(ScreenManager.Game.Services, "Content");
+
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
 
