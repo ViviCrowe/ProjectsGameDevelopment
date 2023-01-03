@@ -10,6 +10,8 @@ public abstract class GameObject
 
     public BoundingBox boundingBox;
 
+    public bool isDoor = false;
+
     public void Draw(SpriteBatch spriteBatch, float layerDepth)
     {
         spriteBatch
