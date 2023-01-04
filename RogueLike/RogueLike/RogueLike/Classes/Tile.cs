@@ -5,12 +5,11 @@ namespace RogueLike.Classes
 {
     public class Tile : GameObject
     {
-        public bool isWall;
 
-        public Tile(Vector2 tilePosition, bool isWall)
+        public Tile(Vector2 tilePosition, bool isDoor)
         {
             position = tilePosition;
-            this.isWall = isWall;
+            this.isDoor = isDoor;
         }
     }
 }

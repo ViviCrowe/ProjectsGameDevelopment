@@ -41,14 +41,20 @@ namespace RogueLike.Classes
             {
                 for (int j = 0; j < Tiles.GetLength(1); j++)
                 {
-                    if (
+                    if((i == 0 || i == Tiles.GetLength(0) -1) && j == Tiles.GetLength(0)/2)
+                    {
+                        Tiles[i, j] = new Tile(Position, true);
+                        Tiles[i, j].LoadAssets(content, "tuer_offen");
+                        passiveObjects.Add(Tiles[i, j]);
+                    }
+                    else if (
                         i == 0 ||
                         j == 0 ||
                         i == Tiles.GetLength(0) - 1 ||
                         j == Tiles.GetLength(1) - 1
                     )
                     {
-                        Tiles[i, j] = new Tile(Position, true);
+                        Tiles[i, j] = new Tile(Position, false);
                         Tiles[i, j].LoadAssets(content, "wall");
                         passiveObjects.Add(Tiles[i, j]);
                     }

@@ -49,7 +49,13 @@ namespace GameStateManagement
         
         private Weapon weapon; // TEST WAFFE
 
-        private Room room;
+        private Level level;
+
+        private Room currentRoom;
+
+        private int roomCounter;
+
+        private Viewport viewport;
 
         private PlayerHUD playerHUD;
 
@@ -57,7 +63,7 @@ namespace GameStateManagement
 
 
 
-#region Initialization
+        #region Initialization
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -77,8 +83,7 @@ namespace GameStateManagement
                 content =
                     new ContentManager(ScreenManager.Game.Services, "Content");
 
-
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            viewport = ScreenManager.GraphicsDevice.Viewport;
 
             gameFont = content.Load<SpriteFont>("gamefont");
 
@@ -94,11 +99,17 @@ namespace GameStateManagement
             weapon = new Sword();   
             weapon.position.X = viewport.Width/2 + 60; //TEST
             weapon.position.Y = viewport.Height/2 - 60; //TEST  
-
-            room = new Room(viewport);
-            room.activeObjects.Add(enemy); // TEST
-            room.items.Add(weapon);
-            room.LoadAssets(content);
+            level = new Level(viewport);
+            level.generateLevel();
+            foreach(Room room in level.Rooms)
+            {
+                room.activeObjects.Add(enemy); // TEST
+                room.items.Add(weapon);
+                room.LoadAssets(content);
+            }
+            roomCounter = 0;
+            currentRoom = level.Rooms[roomCounter];
+            
 
             enemy.LoadAssets(content, "enemy");
 
@@ -154,10 +165,29 @@ namespace GameStateManagement
 
             if (IsActive)
             {
-                enemy.Update(room, content);
-                //Updates the HUD if Reference is different
-                playerHUD.Update(player);
+                enemy.Update(currentRoom, content);
             }
+
+            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).isDoor)
+            {
+                player.position.X = viewport.Width / 2;
+                player.position.Y = viewport.Height / 2;
+
+                roomCounter++;
+                currentRoom = level.Rooms[roomCounter];
+            }
+            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).isDoor)
+            {
+                player.position.X = viewport.Width / 2;
+                player.position.Y = viewport.Height / 2;
+
+                roomCounter--;
+                currentRoom = level.Rooms[roomCounter];
+                
+            }
+            enemy.Update(room, content);
+            //Updates the HUD if Reference is different
+            playerHUD.Update(player);
         }
 
         /// <summary>
@@ -219,12 +249,12 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.J))
                 {
-                    player.DropWeapon (room, content);
+                    player.DropWeapon (currentRoom, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.K))
                 {
-                    player.PickUpItem(CheckForItemCollision(), room, content);
+                    player.PickUpItem(CheckForItemCollision(), currentRoom, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Space))
@@ -262,11 +292,10 @@ namespace GameStateManagement
 
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
-                player.Draw(spriteBatch, 0.2f);
-                room.Draw(spriteBatch);
-                enemy.Draw(spriteBatch, 2.0f);
-                playerHUD.Draw(spriteBatch);
-
+            player.Draw(spriteBatch, 0.2f);
+            currentRoom.Draw(spriteBatch);
+            enemy.Draw(spriteBatch, 2.0f);
+            playerHUD.Draw(spriteBatch);
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -289,7 +318,7 @@ namespace GameStateManagement
             BoundingBox boundingBox_1 =
                 CreateBoundingBox(player, factorX, factorY);
 
-            foreach (GameObject obj in room.passiveObjects)
+            foreach (GameObject obj in currentRoom.passiveObjects)
             {
                 BoundingBox boundingBox_2 = CreateBoundingBox(obj);
 
@@ -299,9 +328,9 @@ namespace GameStateManagement
                 }
             }
 
-            if (room.activeObjects.Count > 0)
+            if (currentRoom.activeObjects.Count > 0)
             {
-                foreach (Entity entity_2 in room.activeObjects)
+                foreach (Entity entity_2 in currentRoom.activeObjects)
                 {
                     if (player != entity_2)
                     {
@@ -328,7 +357,7 @@ namespace GameStateManagement
         {
             BoundingBox boundingBox_1 = CreateBoundingBox(player);
 
-            foreach (GameObject item in room.items)
+            foreach (GameObject item in currentRoom.items)
             {
                 BoundingBox boundingBox_2 = CreateBoundingBox(item);
 
