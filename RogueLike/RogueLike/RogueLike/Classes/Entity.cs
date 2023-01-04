@@ -11,9 +11,8 @@ public abstract class Entity : GameObject
     public Viewport viewport;
 
     public int maximumHealth;
-    public int minimumHealth;
 
-    public int teethValue;
+    public int currentHealth;
 
     // attack Attribute == Fist == (Weapon==null), Basiswerte
     public int attackDamage;
@@ -24,16 +23,20 @@ public abstract class Entity : GameObject
 
     public Weapon weapon;
 
-    public Entity(Viewport viewport,Weapon weapon) // ggf. mehr Attribute hinzufügen
+    public Wallet teeth;
+
+    public Entity(Viewport viewport, Weapon weapon) // ggf. mehr Attribute hinzufügen
     {
         this.viewport = viewport;
         this.weapon = weapon;
         movementSpeed = 5f; // TODO: ändern sodass jeder Entitätentyp eigene Geschwindigkeit hat
     }
 
-    public void Attack(Entity target)
+    public int Attack(Entity target)
     {
-        target.minimumHealth -= (this.attackDamage - this.weapon.attackDamage);
+        int damageDealt = this.attackDamage + this.weapon.attackDamage;
+        target.currentHealth -= damageDealt;
+        return damageDealt;
     }
 
     public void Buy(GameObject item)
@@ -43,7 +46,7 @@ public abstract class Entity : GameObject
 
     public void DropWeapon(Room room, ContentManager content)
     {
-        if (this.weapon != null)
+        if (this.weapon != null && this.weapon is not Fist)
         {
             this.weapon.position = this.position;
             room.items.Add(this.weapon);
@@ -51,6 +54,16 @@ public abstract class Entity : GameObject
             this.weapon = null;
             this.LoadAssets(content, "character"); // TESTWEISE FÜR PLAYER NUR
         }
+    }
+
+    public void DropTeeth(Room room, ContentManager content)
+    {
+        if (this.teeth.value > 0)
+        {
+            this.teeth.position = this.position;
+            room.items.Add(this.teeth);
+            room.LoadItemAssets (content);
+            this.teeth = null;        }
     }
 
     public void MoveDown()
@@ -83,6 +96,11 @@ public abstract class Entity : GameObject
                 room.items.Remove (newWeapon);
                 this.LoadAssets(content, "character_with_sword"); // TESTWEISE FÜR PLAYER NUR
             }
+            else if (item is Wallet wallet)
+            {
+                this.UpdateTeethValue(wallet.value);
+                room.items.Remove (wallet);
+            }
         }
     }
 
@@ -91,24 +109,34 @@ public abstract class Entity : GameObject
         // TODO
     }
 
-    public void UseActiveAbility() 
+    public void Update(Room room, ContentManager content) 
+    {
+        // ...
+    }
+
+    public void UseActiveAbility()
     {
         // TODO
     }
+
     //Sets the minimum value of the Helth bar
-    public void setMinimumHealth(int minimumHealth)
+    public void SetCurrentHealth(int currentHealth)
     {
-        if(minimumHealth <= maximumHealth && minimumHealth >= 0)
+        if (currentHealth <= maximumHealth && currentHealth >= 0)
         {
-            this.minimumHealth = minimumHealth;
+            this.currentHealth = currentHealth;
         }
     }
 
-    public void setTeethValue(int teethValue)
+    public void UpdateTeethValue(int teethValue)
     {
-        if((this.teethValue + teethValue) >= 0)
+        if ((this.teeth.value + teethValue) >= 0)
         {
-            this.teethValue += teethValue;
+            this.teeth.value += teethValue;
+        }
+        else
+        {
+            this.teeth.value = 0;
         }
     }
 }
