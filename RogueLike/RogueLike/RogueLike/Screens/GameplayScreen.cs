@@ -49,7 +49,13 @@ namespace GameStateManagement
         
         private Weapon weapon; // TEST WAFFE
 
-        private Room room;
+        private Level level;
+
+        private Room currentRoom;
+
+        private int roomCounter;
+
+        private Viewport viewport;
 
         private PlayerHUD playerHUD;
 
@@ -59,7 +65,7 @@ namespace GameStateManagement
 
 
 
-#region Initialization
+        #region Initialization
         /// <summary>
         /// Constructor.
         /// </summary>
@@ -79,8 +85,7 @@ namespace GameStateManagement
                 content =
                     new ContentManager(ScreenManager.Game.Services, "Content");
 
-
-            Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
+            viewport = ScreenManager.GraphicsDevice.Viewport;
 
             gameFont = content.Load<SpriteFont>("gamefont");
             song = content.Load<Song>("revenge");
@@ -96,12 +101,19 @@ namespace GameStateManagement
             weapon = new Sword();   
             weapon.position.X = viewport.Width/2 + 60; //TEST
             weapon.position.Y = viewport.Height/2 - 60; //TEST  
-
-            room = new Room(viewport);
-            room.items.Add(weapon);
-            enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(viewport.Height/2, viewport.Width/2), null, room); // TEST
-            enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(viewport.Height/4, viewport.Width/4), null, room);
-            room.LoadAssets(content);
+            
+            level = new Level(viewport);
+            level.generateLevel();
+            foreach(Room room in level.Rooms)
+            {
+                room.items.Add(weapon);
+                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), null, room); // TEST
+                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), null, room);
+                room.LoadAssets(content);
+            }
+            roomCounter = 0;
+            currentRoom = level.Rooms[roomCounter];
+            
 
             //playerHUD initialization
             playerHUD = new PlayerHUD(player);
@@ -152,10 +164,10 @@ namespace GameStateManagement
 
             if (IsActive)
             {
-                foreach(Entity e in room.activeObjects.ToArray()) 
+                foreach(Entity e in currentRoom.activeObjects.ToArray()) 
                 {
                     if(e is Enemy) {
-                        ((Enemy)e).Update(room, content);
+                        ((Enemy)e).Update(currentRoom, content);
                     }
                 }
 
@@ -165,9 +177,30 @@ namespace GameStateManagement
                 GameObject item = CheckForItemCollision();
                 if(item is Wallet)
                 {
-                    player.PickUpItem(item, room, content);
+                    player.PickUpItem(item, currentRoom, content);
                 }
             }
+
+            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).isDoor)
+            {
+                player.position.X = viewport.Width / 2;
+                player.position.Y = viewport.Height / 2;
+
+                roomCounter++;
+                currentRoom = level.Rooms[roomCounter];
+            }
+            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).isDoor)
+            {
+                player.position.X = viewport.Width / 2;
+                player.position.Y = viewport.Height / 2;
+
+                roomCounter--;
+                currentRoom = level.Rooms[roomCounter];
+                
+            }
+            enemy.Update(currentRoom, content);
+            //Updates the HUD if Reference is different
+            playerHUD.Update(player);
         }
 
         /// <summary>
@@ -229,12 +262,12 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.J))
                 {
-                    player.DropWeapon (room, content);
+                    player.DropWeapon (currentRoom, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.K))
                 {
-                    player.PickUpItem(CheckForItemCollision(), room, content);
+                    player.PickUpItem(CheckForItemCollision(), currentRoom, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Space))
@@ -271,10 +304,9 @@ namespace GameStateManagement
 
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
-                player.Draw(spriteBatch, 0.2f);
-                room.Draw(spriteBatch);
-                playerHUD.Draw(spriteBatch);
-
+            player.Draw(spriteBatch, 0.2f);
+            currentRoom.Draw(spriteBatch);
+            playerHUD.Draw(spriteBatch);
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -297,7 +329,7 @@ namespace GameStateManagement
             BoundingBox boundingBox_1 =
                 CreateBoundingBox(player, factorX, factorY);
 
-            foreach (GameObject obj in room.passiveObjects)
+            foreach (GameObject obj in currentRoom.passiveObjects)
             {
                 BoundingBox boundingBox_2 = CreateBoundingBox(obj);
 
@@ -307,11 +339,11 @@ namespace GameStateManagement
                 }
             }
 
-            if (room.activeObjects.Count > 0)
+            if (currentRoom.activeObjects.Count > 0)
             {
-                foreach (Entity entity_2 in room.activeObjects)
+                foreach (Entity entity_2 in currentRoom.activeObjects)
                 {
-                    if (player != entity_2)
+                    if (player != entity_2 && entity_2 != null)
                     {
                         BoundingBox boundingBox_2 = CreateBoundingBox(entity_2);
 
@@ -336,7 +368,7 @@ namespace GameStateManagement
         {
             BoundingBox boundingBox_1 = CreateBoundingBox(player);
 
-            foreach (GameObject item in room.items)
+            foreach (GameObject item in currentRoom.items)
             {
                 BoundingBox boundingBox_2 = CreateBoundingBox(item);
 
@@ -365,8 +397,7 @@ namespace GameStateManagement
                     10,
                     entity.position.Y +
                     entity.movementSpeed * factorY +
-                    (entity.texture.Height / 2) -
-                    5,
+                    (entity.texture.Height / 2),
                     0));
         }
 

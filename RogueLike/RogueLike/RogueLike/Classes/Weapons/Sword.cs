@@ -3,7 +3,7 @@
     public class Sword : Weapon
     {
         public Sword() { 
-            weaponRange = 2;
+            weaponRange = 5;
             attackDamage = 100;
         }
     }

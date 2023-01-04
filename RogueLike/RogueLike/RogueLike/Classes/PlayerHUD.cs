@@ -44,12 +44,12 @@ namespace RogueLike.Classes
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.DrawString(font,teethValue,new Vector2(100,12.5f),Color.Black);
-            spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.Black);
+            spriteBatch.DrawString(font,teethValue,new Vector2(100,12.5f),Color.White);
+            spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.White);
             if(weaponTexture != null)
-                spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.Black);
+                spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.White);
             if(abilityTexture != null)
-                spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.Black);
+                spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.White);
         }
 
         public void Update(Player player)
