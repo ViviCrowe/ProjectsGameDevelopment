@@ -1,3 +1,4 @@
+using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -7,21 +8,28 @@ using RogueLike.Classes.Weapons;
 // Context Class
 public class Enemy : Entity
 {
-    // defense, attack bool values?
     private float visionRange;
-
     private EnemyAI enemyAI;
+    private static Random random = new Random();
+    public enum Type
+    {
+        ARCHER,
+        MELEE,
+        TANK    
+    };
+    private Type type;
 
-    public Enemy(Viewport viewport, EnemyAI enemyAI, Weapon weapon) :
+    public Enemy(Viewport viewport, Type type, Vector2 position, Weapon weapon, Room room) :
         base(viewport, weapon)
     {
-        this.enemyAI = enemyAI;
-        this.position.X = viewport.Width / 2;
-        this.position.Y = viewport.Height / 2 + 200; // TEST WERTE
-        this.maximumHealth = 100;
-        this.minimumHealth = 100;
+        this.enemyAI = new PatrolAI();
+        this.position.X = position.X;
+        this.position.Y = position.Y;
+        this.maximumHealth = this.currentHealth = 100;
+        teeth = new((int) (random.NextDouble()*10));
+        room.activeObjects.Add(this);
     }
-
+    
     public void Attack()
     {
         enemyAI.Attack();
@@ -38,13 +46,26 @@ public class Enemy : Entity
         this.enemyAI = enemyAI;
     }
 
-    public void Update(Room room, ContentManager content)
+    public new void Update(Room room, ContentManager content)
     {
-        if(this.minimumHealth <= 0) {
+       if(this.currentHealth <= 0) 
+        {
             room.activeObjects.Remove(this);
-            if(this.weapon != null) {
+
+            if(random.NextDouble() < 0.75)
+            {
+                this.DropTeeth(room, content);
+            }
+            else 
+            {   
                 this.DropWeapon(room, content);
             }
         }
+    }
+
+    public void LoadAssets(ContentManager content) 
+    {
+        string name = this.type.ToString().ToLower();
+        this.texture = content.Load<Texture2D>(name);
     }
 }
