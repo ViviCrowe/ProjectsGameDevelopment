@@ -10,9 +10,10 @@ public class Player : Entity
         base(viewport, weapon)
     {
         position = new Vector2(viewport.Width / 2, viewport.Height / 2);
-        minimumHealth = maximumHealth = 100;
-        teethValue = 0;
+        currentHealth = maximumHealth = 100;
+        teeth = new(0);
         this.attackDamage = 5;
         this.attackRange = 5;
+        this.weapon = new Fist();
     }
 }
