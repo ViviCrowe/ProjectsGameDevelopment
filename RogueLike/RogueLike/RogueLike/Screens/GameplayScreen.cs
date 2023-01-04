@@ -185,7 +185,7 @@ namespace GameStateManagement
                 currentRoom = level.Rooms[roomCounter];
                 
             }
-            enemy.Update(room, content);
+            enemy.Update(currentRoom, content);
             //Updates the HUD if Reference is different
             playerHUD.Update(player);
         }
