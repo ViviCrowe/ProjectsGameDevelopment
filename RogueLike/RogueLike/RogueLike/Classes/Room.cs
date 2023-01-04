@@ -25,14 +25,11 @@ namespace RogueLike.Classes
             this.viewport = viewport;
 
             //Es funktionieren aktuell nur ungerade Anzahlen
-            Tiles = new Tile[17, 30];
-            /*Position.X =
+            Tiles = new Tile[11, 11];
+            Position.X =
                 (viewport.Width / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
             Position.Y =
-                (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);*/
-
-            Position.X = 32;
-            Position.Y = 32;
+                (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
         }
 
         public void LoadAssets(ContentManager content)
