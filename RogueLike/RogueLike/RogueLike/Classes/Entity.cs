@@ -14,7 +14,6 @@ public abstract class Entity : GameObject
 
     public int currentHealth;
 
-    // attack Attribute == Fist == (Weapon==null), Basiswerte
     public int attackDamage;
 
     public float attackRange;
