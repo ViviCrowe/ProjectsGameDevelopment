@@ -1,20 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RogueLike.Classes.Weapons
+﻿namespace RogueLike.Classes.Weapons
 {
     public class Sword : Weapon
     {
-        public Sword() { }
-        public Sword(Texture2D weaponTexture)
-        {
+        public Sword() { 
             weaponRange = 2;
             attackDamage = 100;
-            this.weaponTexture = weaponTexture;
         }
     }
 }

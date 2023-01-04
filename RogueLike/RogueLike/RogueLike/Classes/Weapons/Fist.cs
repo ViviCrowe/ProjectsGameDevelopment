@@ -1,18 +1,10 @@
-﻿using Microsoft.Xna.Framework.Graphics;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace RogueLike.Classes.Weapons
+﻿namespace RogueLike.Classes.Weapons
 {
     internal class Fist : Weapon
     {
-        public Fist(Texture2D weaponTexture)
+        public Fist()
         {
             weaponRange = 0;
-            this.weaponTexture = weaponTexture;
         }
 
     }
