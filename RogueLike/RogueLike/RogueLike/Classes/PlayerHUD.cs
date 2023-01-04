@@ -25,8 +25,8 @@ namespace RogueLike.Classes
         {
             this.player = player;
             
-            teethValue =  player.teethValue.ToString();
-            healthValue = player.minimumHealth + "/" + player.maximumHealth;
+            teethValue =  player.teeth.value.ToString();
+            healthValue = player.currentHealth + "/" + player.maximumHealth;
             weaponSlot = player.weapon;
             aktivAbility = player.aktivAbility;
         }
@@ -34,16 +34,22 @@ namespace RogueLike.Classes
         public void LoadContent(ContentManager content)
         {
             font = content.Load<SpriteFont>("gamefont");
-            weaponTexture = weaponSlot.weaponTexture;
-            abilityTexture = aktivAbility.abilityTexture;
+            if(player.weapon != null) {
+                weaponTexture = weaponSlot.texture;
+            }
+            if(player.aktivAbility != null) {
+                abilityTexture = aktivAbility.abilityTexture;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch)
         {
             spriteBatch.DrawString(font,teethValue,new Vector2(100,12.5f),Color.Black);
             spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.Black);
-            spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.Black);
-            spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.Black);
+            if(weaponTexture != null)
+                spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.Black);
+            if(abilityTexture != null)
+                spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.Black);
         }
 
         public void Update(Player player)
@@ -51,13 +57,13 @@ namespace RogueLike.Classes
             if(this.player.maximumHealth != player.maximumHealth)
             {
                 this.player.maximumHealth = player.maximumHealth;
-                healthValue = player.minimumHealth + "/" + player.maximumHealth;
+                healthValue = player.currentHealth + "/" + player.maximumHealth;
             }
 
-            if(this.player.minimumHealth != player.minimumHealth)
+            if(this.player.currentHealth != player.currentHealth)
             {
-                this.player.minimumHealth = player.minimumHealth;
-                healthValue = player.minimumHealth + "/" + player.maximumHealth;
+                this.player.currentHealth = player.currentHealth;
+                healthValue = player.currentHealth + "/" + player.maximumHealth;
             }
 
             if(this.player.weapon != player.weapon)
@@ -70,9 +76,9 @@ namespace RogueLike.Classes
                 this.player.aktivAbility =player.aktivAbility;
             }
 
-            if(this.teethValue != player.teethValue.ToString())
+            if(this.teethValue != player.teeth.value.ToString())
             {
-                this.teethValue = player.teethValue.ToString();
+                this.teethValue = player.teeth.value.ToString();
             }
 
             if (this.player != player)
