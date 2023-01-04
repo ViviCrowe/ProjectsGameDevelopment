@@ -17,8 +17,7 @@ using RogueLike.Classes;
 using RogueLike.Classes.Weapons;
 using RogueLike.Classes.Abilities;
 using System;
-using System.Threading;
-using System.Xml.Linq;
+using Microsoft.Xna.Framework.Media;
 
 
 #endregion Using Statements
@@ -46,12 +45,15 @@ namespace GameStateManagement
         private Player player;
 
         private Enemy enemy; // STATISCHER TEST GEGNER
+        private Enemy enemy2;
         
         private Weapon weapon; // TEST WAFFE
 
         private Room room;
 
         private PlayerHUD playerHUD;
+
+        private Song song;
 
 #endregion Fields
 
@@ -81,33 +83,29 @@ namespace GameStateManagement
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
 
             gameFont = content.Load<SpriteFont>("gamefont");
+            song = content.Load<Song>("revenge");
+            MediaPlayer.IsRepeating = true;
+            //MediaPlayer.Play(song);
 
             //Initialising and Generating Atributes of Player
-            player = new Player(viewport, new Sword(content.Load<Texture2D>("sword")));
+            player = new Player(viewport, null);
             player.aktivAbility = new AktivAbility();
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content, "character");
-
-            //player.LoadAssets(content, "character_with_sword"); // TEST
-            enemy = new Enemy(viewport, new PatrolAI(), new Sword()); // TEST  
 
             weapon = new Sword();   
             weapon.position.X = viewport.Width/2 + 60; //TEST
             weapon.position.Y = viewport.Height/2 - 60; //TEST  
 
             room = new Room(viewport);
-            room.activeObjects.Add(enemy); // TEST
             room.items.Add(weapon);
+            enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(viewport.Height/2, viewport.Width/2), null, room); // TEST
+            enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(viewport.Height/4, viewport.Width/4), null, room);
             room.LoadAssets(content);
 
-            enemy.LoadAssets(content, "enemy");
-
-            //playerHUD initiolaztion
+            //playerHUD initialization
             playerHUD = new PlayerHUD(player);
             playerHUD.LoadContent(content);
-
-            // simulate longer loading time
-            // Thread.Sleep(1000);
 
             // once the load has finished, we use ResetElapsedTime to tell the game's
             // timing mechanism that we have just finished a very long frame, and that
@@ -154,9 +152,21 @@ namespace GameStateManagement
 
             if (IsActive)
             {
-                enemy.Update(room, content);
+                foreach(Entity e in room.activeObjects.ToArray()) 
+                {
+                    if(e is Enemy) {
+                        ((Enemy)e).Update(room, content);
+                    }
+                }
+
                 //Updates the HUD if Reference is different
                 playerHUD.Update(player);
+                
+                GameObject item = CheckForItemCollision();
+                if(item is Wallet)
+                {
+                    player.PickUpItem(item, room, content);
+                }
             }
         }
 
@@ -233,8 +243,8 @@ namespace GameStateManagement
                         (Entity) CheckForCollision(0, 0, true);
                     if (targetEntity != null)
                     {
-                        player.Attack (targetEntity);
-                        // TODO: display damage taken
+                        int damageDealt = player.Attack (targetEntity);
+                        // TODO: display damage dealt
                     }
                 }
             }
@@ -257,14 +267,12 @@ namespace GameStateManagement
                 .GraphicsDevice
                 .Clear(ClearOptions.Target, Color.Black, 0, 0);
 
-            // Our player and enemy are both actually just text strings.
             SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
 
             spriteBatch.Begin(SpriteSortMode.BackToFront);
 
                 player.Draw(spriteBatch, 0.2f);
                 room.Draw(spriteBatch);
-                enemy.Draw(spriteBatch, 2.0f);
                 playerHUD.Draw(spriteBatch);
 
             spriteBatch.End();
@@ -307,7 +315,7 @@ namespace GameStateManagement
                     {
                         BoundingBox boundingBox_2 = CreateBoundingBox(entity_2);
 
-                        if (attack && player.weapon != null)
+                        if (attack)
                         {
                             boundingBox_1.Min.X -= player.weapon.weaponRange;
                             boundingBox_1.Min.Y -= player.weapon.weaponRange;
