@@ -111,6 +111,12 @@
 /processorParam:TextureFormat=Compressed
 /build:menufont.spritefont
 
+#begin revenge.wma
+/importer:WmaImporter
+/processor:SongProcessor
+/processorParam:Quality=Best
+/build:revenge.wma
+
 #begin sword.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -122,6 +128,18 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:sword.png
+
+#begin teeth.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:teeth.png
 
 #begin wall.png
 /importer:TextureImporter
