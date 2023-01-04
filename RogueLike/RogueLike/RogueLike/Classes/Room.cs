@@ -38,7 +38,7 @@ namespace RogueLike.Classes
             {
                 for (int j = 0; j < Tiles.GetLength(1); j++)
                 {
-                    if((i == 0 || i == Tiles.GetLength(0) -1) && j == Tiles.GetLength(0)/2)
+                    if ((i == 0 || i == Tiles.GetLength(0) - 1) && j == Tiles.GetLength(0) / 2)
                     {
                         Tiles[i, j] = new Tile(Position, true);
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
@@ -48,7 +48,7 @@ namespace RogueLike.Classes
                         i == 0 ||
                         j == 0 ||
                         i == Tiles.GetLength(0) - 1 ||
-                        j == Tiles.GetLength(1) - 1
+                        j == Tiles.GetLength(0) - 1
                     )
                     {
                         Tiles[i, j] = new Tile(Position, false);
@@ -63,7 +63,8 @@ namespace RogueLike.Classes
 
                     Position.X += 64;
                 }
-                Position.X = 32;
+                Position.X =
+                    viewport.Width / 2 - (Tiles.GetLength(0) - 1) * 64 / 2;
                 Position.Y += 64;
             }
             LoadEntityAssets(content);
@@ -83,9 +84,9 @@ namespace RogueLike.Classes
 
         public void LoadEntityAssets(ContentManager content)
         {
-            foreach(Entity entity in activeObjects) 
+            foreach (Entity entity in activeObjects)
             {
-                if(entity != null)
+                if (entity != null)
                 {
                     entity.LoadAssets(content, "enemy"); // TEST NAME
                 }
@@ -110,9 +111,9 @@ namespace RogueLike.Classes
                 }
             }
 
-            foreach (Entity entity in activeObjects) 
+            foreach (Entity entity in activeObjects)
             {
-                if(entity != null) 
+                if (entity != null)
                 {
                     entity.Draw(spriteBatch, 0.2f);
                 }
