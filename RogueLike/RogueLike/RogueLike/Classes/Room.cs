@@ -16,7 +16,7 @@ namespace RogueLike.Classes
 
         public List<Entity> activeObjects = new List<Entity>();
 
-        public List<Weapon> items = new List<Weapon>(); // haben (noch?) keine item klasse
+        public List<GameObject> items = new List<GameObject>(); // haben (noch?) keine item klasse
 
         private Viewport viewport;
 
@@ -69,11 +69,18 @@ namespace RogueLike.Classes
 
         public void LoadItemAssets(ContentManager content)
         {
-            foreach (Weapon item in items) // bis jetzt nur Waffen keine Items
+            foreach (GameObject item in items) 
             {
                 if (item != null)
                 {
-                    item.LoadAssets(content, "sword"); // TEST NAME
+                    if(item is Weapon)
+                    {
+                        item.LoadAssets(content, "sword"); // TEST NAME
+                    }
+                    else if(item is Wallet)
+                    {
+                        item.LoadAssets(content, "teeth");
+                    }
                 }
             }
         }
@@ -82,7 +89,7 @@ namespace RogueLike.Classes
         {
             foreach(Entity entity in activeObjects) 
             {
-                if(entity != null)
+                if(entity is Enemy)
                 {
                     entity.LoadAssets(content, "enemy"); // TEST NAME
                 }
@@ -99,7 +106,7 @@ namespace RogueLike.Classes
                 }
             }
 
-            foreach (Weapon item in items)
+            foreach (GameObject item in items)
             {
                 if (item != null)
                 {
