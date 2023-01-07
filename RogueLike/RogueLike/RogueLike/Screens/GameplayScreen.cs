@@ -102,7 +102,7 @@ namespace GameStateManagement
             weapon.position.X = viewport.Width/2 + 60; //TEST
             weapon.position.Y = viewport.Height/2 - 60; //TEST  
             
-            level = new Level(viewport);
+            level = new Level(viewport, 6);
             level.generateLevel();
             foreach(Room room in level.Rooms)
             {
@@ -182,21 +182,27 @@ namespace GameStateManagement
             }
 
             if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).isDoor)
-            {
-                player.position.X = viewport.Width / 2;
+            {  
                 player.position.Y = viewport.Height / 2;
+                
 
                 roomCounter++;
                 currentRoom = level.Rooms[roomCounter];
+
+                player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
             }
             else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).isDoor)
             {
-                player.position.X = viewport.Width / 2;
                 player.position.Y = viewport.Height / 2;
+
+                
 
                 roomCounter--;
                 currentRoom = level.Rooms[roomCounter];
+
+                player.position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].position.Y + 85;
                 
+
             }
             enemy.Update(currentRoom, content);
             //Updates the HUD if Reference is different

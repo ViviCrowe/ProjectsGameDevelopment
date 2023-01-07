@@ -13,18 +13,33 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
 
-        public Level (Viewport viewport)
+        int roomNumber;
+
+        public Level (Viewport viewport, int roomNumber)
         {
             this.viewport = viewport;
-            Rooms = new Room[3]; 
+            this.roomNumber = roomNumber;
+            Rooms = new Room[roomNumber]; 
         }
         
 
         public void generateLevel()
         {
-            Rooms[0] = new Room(viewport);
-            Rooms[1] = new Room(viewport);
-            Rooms[2] = new Room(viewport);
+            for (int i = 0; i < Rooms.Length; i++)
+            {
+                if(i == 0)
+                {
+                    Rooms[i] = new Room(viewport, true, false);
+                }
+                else if(i == Rooms.Length - 1)
+                {
+                    Rooms[i] = new Room(viewport, false, true);
+                }
+                else
+                {
+                    Rooms[i] = new Room(viewport, false, false);
+                }
+            }
         }
     }
 }

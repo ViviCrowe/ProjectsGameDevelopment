@@ -20,7 +20,9 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
 
-        public Room(Viewport viewport)
+        bool first, last;
+
+        public Room(Viewport viewport, bool first, bool last)
         {
             this.viewport = viewport;
 
@@ -30,6 +32,8 @@ namespace RogueLike.Classes
                 (viewport.Width / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
             Position.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+            this.first = first;
+            this.last = last;
         }
 
         public void LoadAssets(ContentManager content)
@@ -38,7 +42,7 @@ namespace RogueLike.Classes
             {
                 for (int j = 0; j < Tiles.GetLength(1); j++)
                 {
-                    if ((i == 0 || i == Tiles.GetLength(0) - 1) && j == Tiles.GetLength(0) / 2)
+                    if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(0) / 2)
                     {
                         Tiles[i, j] = new Tile(Position, true);
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
