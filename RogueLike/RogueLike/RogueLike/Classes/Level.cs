@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,32 +13,39 @@ namespace RogueLike.Classes
         public Room[] Rooms { get; set; }
 
         private Viewport viewport;
+        
+        Random random = new Random();
 
-        int roomNumber;
+        bool lastLevel;
 
-        public Level (Viewport viewport, int roomNumber)
+        public Level (Viewport viewport, int roomNumber, bool lastLevel)
         {
             this.viewport = viewport;
-            this.roomNumber = roomNumber;
             Rooms = new Room[roomNumber]; 
+            this.lastLevel = lastLevel;
         }
         
 
         public void generateLevel()
         {
+            int width, height;
             for (int i = 0; i < Rooms.Length; i++)
             {
+                width = random.Next(9, 15);
+                if (width % 2 == 0) width++;
+                height = random.Next(15, 29);
+                if (height % 2 == 0) height++;
                 if(i == 0)
                 {
-                    Rooms[i] = new Room(viewport, true, false);
+                    Rooms[i] = new Room(viewport, true, false, lastLevel, width, height);
                 }
                 else if(i == Rooms.Length - 1)
                 {
-                    Rooms[i] = new Room(viewport, false, true);
+                    Rooms[i] = new Room(viewport, false, true, lastLevel, width, height);
                 }
                 else
                 {
-                    Rooms[i] = new Room(viewport, false, false);
+                    Rooms[i] = new Room(viewport, false, false, lastLevel, width, height);
                 }
             }
         }

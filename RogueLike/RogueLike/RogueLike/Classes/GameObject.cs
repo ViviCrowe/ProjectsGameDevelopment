@@ -10,7 +10,15 @@ public abstract class GameObject
 
     public BoundingBox boundingBox;
 
-    public bool isDoor = false;
+    public TileType tileType;
+
+    public enum TileType
+    {
+        Door,
+        Hole,
+        Wall,
+        Floor
+    }
 
     public void Draw(SpriteBatch spriteBatch, float layerDepth)
     {

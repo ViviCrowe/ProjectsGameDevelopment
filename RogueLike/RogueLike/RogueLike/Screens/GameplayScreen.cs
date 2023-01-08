@@ -49,11 +49,15 @@ namespace GameStateManagement
         
         private Weapon weapon; // TEST WAFFE
 
-        private Level level;
+        private Level[] level;
+
+        private Level currentLevel;
 
         private Room currentRoom;
 
         private int roomCounter;
+
+        private int levelCounter;
 
         private Viewport viewport;
 
@@ -98,22 +102,18 @@ namespace GameStateManagement
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content, "character");
 
-            weapon = new Sword();   
-            weapon.position.X = viewport.Width/2 + 60; //TEST
-            weapon.position.Y = viewport.Height/2 - 60; //TEST  
-            
-            level = new Level(viewport, 6);
-            level.generateLevel();
-            foreach(Room room in level.Rooms)
-            {
-                room.items.Add(weapon);
-                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), null, room); // TEST
-                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), null, room);
-                room.LoadAssets(content);
-            }
-            roomCounter = 0;
-            currentRoom = level.Rooms[roomCounter];
-            
+            weapon = new Sword();
+            weapon.position.X = viewport.Width / 2 + 60; //TEST
+            weapon.position.Y = viewport.Height / 2 - 60; //TEST  
+
+            level = new Level[3];
+            level[0] = new Level(viewport, 5, false);
+            level[1] = new Level(viewport, 6, false);
+            level[2] = new Level(viewport, 7, true);
+
+            levelCounter = 0;
+            newLevel();
+
 
             //playerHUD initialization
             playerHUD = new PlayerHUD(player);
@@ -123,6 +123,22 @@ namespace GameStateManagement
             // timing mechanism that we have just finished a very long frame, and that
             // it should not try to catch up.
             ScreenManager.Game.ResetElapsedTime();
+        }
+
+        private void newLevel()
+        {
+            currentLevel = level[levelCounter];
+            currentLevel.generateLevel();
+            foreach (Room room in currentLevel.Rooms)
+            {
+                room.items.Add(weapon);
+                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), null, room); // TEST
+                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), null, room);
+                room.LoadAssets(content);
+            }
+
+            roomCounter = 0;
+            currentRoom = currentLevel.Rooms[roomCounter];
         }
 
         /// <summary>
@@ -181,32 +197,56 @@ namespace GameStateManagement
                 }
             }
 
-            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).isDoor)
+            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).tileType == GameObject.TileType.Door)
             {  
                 player.position.Y = viewport.Height / 2;
                 
 
                 roomCounter++;
-                currentRoom = level.Rooms[roomCounter];
+                currentRoom = currentLevel.Rooms[roomCounter];
 
                 player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
             }
-            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).isDoor)
+            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).tileType == GameObject.TileType.Door)
             {
                 player.position.Y = viewport.Height / 2;
 
                 
 
                 roomCounter--;
-                currentRoom = level.Rooms[roomCounter];
+                currentRoom = currentLevel.Rooms[roomCounter];
 
                 player.position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].position.Y + 85;
                 
 
             }
+            else if (checkTrapDoor())
+            {
+                player.position.X = viewport.Width / 2;
+                player.position.Y = viewport.Height / 2;
+                levelCounter++;
+                newLevel();
+            }
             enemy.Update(currentRoom, content);
             //Updates the HUD if Reference is different
             playerHUD.Update(player);
+        }
+
+        private bool checkTrapDoor()
+        {
+            if (CheckForCollision(-1, 0, false) != null && (CheckForCollision(-1, 0, false).tileType == GameObject.TileType.Hole))
+            {
+                return true;
+            }
+            else if (CheckForCollision(1, 0, false) != null && (CheckForCollision(1, 0, false).tileType == GameObject.TileType.Hole))
+            {
+                return true;
+            }
+            else if (CheckForCollision(0, -1, false) != null && (CheckForCollision(0, -1, false).tileType == GameObject.TileType.Hole))
+            {
+                return true;
+            }
+            else return false;
         }
 
         /// <summary>

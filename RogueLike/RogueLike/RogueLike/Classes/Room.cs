@@ -20,20 +20,21 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
 
-        bool first, last;
+        bool first, last, lastLevel;
 
-        public Room(Viewport viewport, bool first, bool last)
+        public Room(Viewport viewport, bool first, bool last, bool lastLevel, int width, int height)
         {
             this.viewport = viewport;
 
             //Es funktionieren aktuell nur ungerade Anzahlen
-            Tiles = new Tile[11, 11];
+            Tiles = new Tile[width, height];
             Position.X =
-                (viewport.Width / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+                (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
             Position.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
             this.first = first;
             this.last = last;
+            this.lastLevel = lastLevel; 
         }
 
         public void LoadAssets(ContentManager content)
@@ -42,9 +43,9 @@ namespace RogueLike.Classes
             {
                 for (int j = 0; j < Tiles.GetLength(1); j++)
                 {
-                    if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(0) / 2)
+                    if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(1) / 2)
                     {
-                        Tiles[i, j] = new Tile(Position, true);
+                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Door);
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
                         passiveObjects.Add(Tiles[i, j]);
                     }
@@ -52,23 +53,29 @@ namespace RogueLike.Classes
                         i == 0 ||
                         j == 0 ||
                         i == Tiles.GetLength(0) - 1 ||
-                        j == Tiles.GetLength(0) - 1
+                        j == Tiles.GetLength(1) - 1
                     )
                     {
-                        Tiles[i, j] = new Tile(Position, false);
+                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Wall);
                         Tiles[i, j].LoadAssets(content, "wall");
+                        passiveObjects.Add(Tiles[i, j]);
+                    }
+                    else if (!lastLevel && last && i == 1 && j == Tiles.GetLength(1) / 2)
+                    {
+                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Hole);
+                        Tiles[i, j].LoadAssets(content, "hole");
                         passiveObjects.Add(Tiles[i, j]);
                     }
                     else
                     {
-                        Tiles[i, j] = new Tile(Position, false);
+                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Floor);
                         Tiles[i, j].LoadAssets(content, "Grass_normal");
                     }
 
                     Position.X += 64;
                 }
                 Position.X =
-                    viewport.Width / 2 - (Tiles.GetLength(0) - 1) * 64 / 2;
+                    viewport.Width / 2 - (Tiles.GetLength(1) - 1) * 64 / 2;
                 Position.Y += 64;
             }
             LoadEntityAssets(content);
