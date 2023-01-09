@@ -14,7 +14,7 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
         
-        Random random = new Random();
+        static Random random = new Random();
 
         bool lastLevel;
 
