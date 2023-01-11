@@ -26,18 +26,18 @@ public class Enemy : Entity
         this.position.X = position.X;
         this.position.Y = position.Y;
         this.maximumHealth = this.currentHealth = 100;
-        teeth = new((int) (random.NextDouble()*10));
         room.activeObjects.Add(this);
+        teeth = new((int) (random.NextDouble()*10));
     }
     
-    public void Attack()
+    public new void Attack(Entity entity)
     {
-        enemyAI.Attack();
+        enemyAI.Attack((Player) entity);
     }
 
-    public void Move()
+    public void Move(Room room, Tile destinationTile)
     {
-        enemyAI.Move();
+        enemyAI.Move(this, room, destinationTile);
     }
 
     public void setEnemyAI(EnemyAI enemyAI)
@@ -46,9 +46,12 @@ public class Enemy : Entity
         this.enemyAI = enemyAI;
     }
 
-    public new void Update(Room room, ContentManager content)
+    public void Update(Player player, Room room, ContentManager content)
     {
-       if(this.currentHealth <= 0) 
+        base.Update(room, content);
+
+        // handle enemy death
+        if(this.currentHealth <= 0) 
         {
             room.activeObjects.Remove(this);
 
@@ -61,6 +64,9 @@ public class Enemy : Entity
                 this.DropWeapon(room, content);
             }
         }
+
+        //room.StartAStar(this);
+        //room.FollowPath(this);
     }
 
     public void LoadAssets(ContentManager content) 
@@ -68,4 +74,5 @@ public class Enemy : Entity
         string name = this.type.ToString().ToLower();
         this.texture = content.Load<Texture2D>(name);
     }
+
 }
