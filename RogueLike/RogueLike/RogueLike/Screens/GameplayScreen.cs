@@ -197,7 +197,7 @@ namespace GameStateManagement
                 }
             }
 
-            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).tileType == GameObject.TileType.Door)
+            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).objectType == GameObject.ObjectType.Door)
             {  
                 player.position.Y = viewport.Height / 2;
                 
@@ -207,7 +207,7 @@ namespace GameStateManagement
 
                 player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
             }
-            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).tileType == GameObject.TileType.Door)
+            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).objectType == GameObject.ObjectType.Door)
             {
                 player.position.Y = viewport.Height / 2;
 
@@ -234,15 +234,15 @@ namespace GameStateManagement
 
         private bool checkTrapDoor()
         {
-            if (CheckForCollision(-1, 0, false) != null && (CheckForCollision(-1, 0, false).tileType == GameObject.TileType.Hole))
+            if (CheckForCollision(-1, 0, false) != null && (CheckForCollision(-1, 0, false).objectType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (CheckForCollision(1, 0, false) != null && (CheckForCollision(1, 0, false).tileType == GameObject.TileType.Hole))
+            else if (CheckForCollision(1, 0, false) != null && (CheckForCollision(1, 0, false).objectType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (CheckForCollision(0, -1, false) != null && (CheckForCollision(0, -1, false).tileType == GameObject.TileType.Hole))
+            else if (CheckForCollision(0, -1, false) != null && (CheckForCollision(0, -1, false).objectType == GameObject.ObjectType.Hole))
             {
                 return true;
             }

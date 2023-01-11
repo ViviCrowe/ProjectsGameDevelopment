@@ -10,14 +10,15 @@ public abstract class GameObject
 
     public BoundingBox boundingBox;
 
-    public TileType tileType;
+    public ObjectType objectType;
 
-    public enum TileType
+    public enum ObjectType
     {
-        Door,
+        Entity,
+        Floor,
         Hole,
         Wall,
-        Floor
+        Door
     }
 
     public void Draw(SpriteBatch spriteBatch, float layerDepth)
