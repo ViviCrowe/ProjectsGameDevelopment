@@ -1,6 +1,8 @@
+using RogueLike.Classes;
+
 public interface EnemyAI
 {
-    void Attack();
+    void Attack(Player player);
 
-    void Move();
+    void Move(Enemy enemy, Room room, Tile destinationTile);
 }
