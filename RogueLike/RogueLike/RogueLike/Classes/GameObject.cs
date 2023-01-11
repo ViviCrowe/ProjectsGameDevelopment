@@ -14,10 +14,10 @@ public abstract class GameObject
 
     public enum TileType
     {
+        Floor,
         Door,
         Hole,
-        Wall,
-        Floor
+        Wall
     }
 
     public void Draw(SpriteBatch spriteBatch, float layerDepth)
