@@ -132,7 +132,7 @@ namespace GameStateManagement
             foreach (Room room in currentLevel.Rooms)
             {
                 room.items.Add(weapon);
-                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), null, room); // TEST
+                enemy = new Enemy(viewport, Enemy.Type.MELEE, new Vector2(1100, 550), null, room); // TEST
                 enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), null, room);
                 room.LoadAssets(content);
             }
@@ -180,69 +180,69 @@ namespace GameStateManagement
 
             if (IsActive)
             {
+                currentRoom.UpdateDestination(player);
+    
                 foreach(Entity e in currentRoom.activeObjects.ToArray()) 
                 {
                     if(e is Enemy) {
-                        ((Enemy)e).Update(currentRoom, content);
+                        ((Enemy)e).Update(player, currentRoom, content);
                     }
                 }
 
                 //Updates the HUD if Reference is different
                 playerHUD.Update(player);
                 
-                GameObject item = CheckForItemCollision();
+                GameObject item = player.CheckForItemCollision(currentRoom);
                 if(item is Wallet)
                 {
                     player.PickUpItem(item, currentRoom, content);
                 }
             }
 
-            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).tileType == GameObject.TileType.Door)
+            if (player.CheckForCollision(currentRoom, 0, -1, false) != null && player.CheckForCollision(currentRoom, 0, -1, false).tileType == GameObject.TileType.Door)
             {  
                 player.position.Y = viewport.Height / 2;
                 
-
                 roomCounter++;
                 currentRoom = currentLevel.Rooms[roomCounter];
 
                 player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
             }
-            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).tileType == GameObject.TileType.Door)
+            else if (player.CheckForCollision(currentRoom, 0, 1, false) != null && player.CheckForCollision(currentRoom, 0, 1, false).tileType == GameObject.TileType.Door)
             {
                 player.position.Y = viewport.Height / 2;
-
                 
-
-                roomCounter--;
+                if(roomCounter > 0)  // FÜR TESTEN, SPÄTER LÖSCHEN
+                    roomCounter--;
                 currentRoom = currentLevel.Rooms[roomCounter];
 
                 player.position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].position.Y + 85;
                 
 
             }
-            else if (checkTrapDoor())
+            else if (checkTrapDoor(player))
             {
                 player.position.X = viewport.Width / 2;
                 player.position.Y = viewport.Height / 2;
                 levelCounter++;
                 newLevel();
             }
-            enemy.Update(currentRoom, content);
+
             //Updates the HUD if Reference is different
             playerHUD.Update(player);
         }
 
-        private bool checkTrapDoor()
+        private bool checkTrapDoor(Entity entity)
         {
-            if (CheckForCollision(-1, 0, false) != null && (CheckForCollision(-1, 0, false).tileType == GameObject.TileType.Hole))
+            if (entity.CheckForCollision(currentRoom, -1, 0, false) != null && (entity.CheckForCollision(currentRoom, -1, 0, false).tileType == GameObject.TileType.Hole))
             {
                 return true;
             }
-            else if (CheckForCollision(1, 0, false) != null && (CheckForCollision(1, 0, false).tileType == GameObject.TileType.Hole))
+            else if (entity.CheckForCollision(currentRoom, 1, 0, false) != null && (entity.CheckForCollision(currentRoom, 1, 0, false).tileType == GameObject.TileType.Hole))
             {
                 return true;
             }
-            else if (CheckForCollision(0, -1, false) != null && (CheckForCollision(0, -1, false).tileType == GameObject.TileType.Hole))
+            else if (entity.CheckForCollision(currentRoom, 0, -1, false) != null && (entity.CheckForCollision(currentRoom, 0, -1, false).tileType == GameObject.TileType.Hole))
             {
                 return true;
             }
@@ -284,25 +284,25 @@ namespace GameStateManagement
             {
                 if (keyboardState.IsKeyDown(Keys.A))
                 {
-                    if (CheckForCollision(-1, 0, false) == null)
+                    if (player.CheckForCollision(currentRoom, -1, 0, false) == null)
                         player.MoveLeft();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (CheckForCollision(1, 0, false) == null)
+                    if (player.CheckForCollision(currentRoom, 1, 0, false) == null)
                         player.MoveRight();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (CheckForCollision(0, -1, false) == null)
+                    if (player.CheckForCollision(currentRoom, 0, -1, false) == null)
                         player.MoveUp();
                 }
 
                 if (keyboardState.IsKeyDown(Keys.S))
                 {
-                    if (CheckForCollision(0, 1, false) == null)
+                    if (player.CheckForCollision(currentRoom, 0, 1, false) == null)
                         player.MoveDown();
                 }
 
@@ -313,13 +313,13 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.K))
                 {
-                    player.PickUpItem(CheckForItemCollision(), currentRoom, content);
+                    player.PickUpItem(player.CheckForItemCollision(currentRoom), currentRoom, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
                     Entity targetEntity =
-                        (Entity) CheckForCollision(0, 0, true);
+                        (Entity) player.CheckForCollision(currentRoom, 0, 0, true);
                     if (targetEntity != null)
                     {
                         int damageDealt = player.Attack (targetEntity);
@@ -341,7 +341,6 @@ namespace GameStateManagement
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            // This game has a blue background. Why? Because!
             ScreenManager
                 .GraphicsDevice
                 .Clear(ClearOptions.Target, Color.Black, 0, 0);
@@ -353,6 +352,12 @@ namespace GameStateManagement
             player.Draw(spriteBatch, 0.2f);
             currentRoom.Draw(spriteBatch);
             playerHUD.Draw(spriteBatch);
+            /*
+            for(int i = 0; i < projectiles.Count; i++)
+            {
+                projectiles[i].Draw(offset);
+            }
+            */
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.
@@ -368,94 +373,5 @@ namespace GameStateManagement
 
 #endregion Update and Draw
 
-
-        private GameObject
-        CheckForCollision(int factorX, int factorY, bool attack)
-        {
-            BoundingBox boundingBox_1 =
-                CreateBoundingBox(player, factorX, factorY);
-
-            foreach (GameObject obj in currentRoom.passiveObjects)
-            {
-                BoundingBox boundingBox_2 = CreateBoundingBox(obj);
-
-                if (boundingBox_1.Intersects(boundingBox_2))
-                {
-                    return obj;
-                }
-            }
-
-            if (currentRoom.activeObjects.Count > 0)
-            {
-                foreach (Entity entity_2 in currentRoom.activeObjects)
-                {
-                    if (player != entity_2 && entity_2 != null)
-                    {
-                        BoundingBox boundingBox_2 = CreateBoundingBox(entity_2);
-
-                        if (attack)
-                        {
-                            boundingBox_1.Min.X -= player.weapon.weaponRange;
-                            boundingBox_1.Min.Y -= player.weapon.weaponRange;
-                            boundingBox_1.Max.X += player.weapon.weaponRange;
-                            boundingBox_1.Max.Y += player.weapon.weaponRange;
-                        }
-                        if (boundingBox_1.Intersects(boundingBox_2))
-                        {
-                            return entity_2;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        private GameObject CheckForItemCollision()
-        {
-            BoundingBox boundingBox_1 = CreateBoundingBox(player);
-
-            foreach (GameObject item in currentRoom.items)
-            {
-                BoundingBox boundingBox_2 = CreateBoundingBox(item);
-
-                if (boundingBox_1.Intersects(boundingBox_2))
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        private BoundingBox
-        CreateBoundingBox(Entity entity, int factorX, int factorY)
-        {
-            return new BoundingBox(new Vector3(entity.position.X +
-                    entity.movementSpeed * factorX -
-                    (entity.texture.Width / 2) +
-                    10,
-                    entity.position.Y +
-                    entity.movementSpeed * factorY -
-                    (entity.texture.Height / 2),
-                    0),
-                new Vector3(entity.position.X +
-                    entity.movementSpeed * factorX +
-                    (entity.texture.Width / 2) -
-                    10,
-                    entity.position.Y +
-                    entity.movementSpeed * factorY +
-                    (entity.texture.Height / 2),
-                    0));
-        }
-
-        private BoundingBox CreateBoundingBox(GameObject obj)
-        {
-            return new BoundingBox(new Vector3(obj.position.X -
-                    (obj.texture.Width / 2),
-                    obj.position.Y - (obj.texture.Height / 2),
-                    0),
-                new Vector3(obj.position.X + (obj.texture.Width / 2),
-                    obj.position.Y + (obj.texture.Height / 2),
-                    0));
-        }
     }
 }
