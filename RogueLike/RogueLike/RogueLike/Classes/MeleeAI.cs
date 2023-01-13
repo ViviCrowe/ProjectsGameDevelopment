@@ -2,41 +2,61 @@ using RogueLike.Classes;
 
 public class MeleeAI : EnemyAI
 {
-    public void Attack(Player player)
-    {
-        throw new System.NotImplementedException();
-    }
-
     public void Move(Enemy enemy, Room room, Tile destinationTile)
     {
-        // Vector2 destinationPos = room.GetPosFromTile(destinationTile);
-        int x = 0;
-        int y = 0;
-        while(room.Tiles[x, y] != destinationTile) 
+        int x = (int) destinationTile.position.X;
+        int y = (int) destinationTile.position.Y;
+
+        if(x < room.GetTileFromPos(enemy.position).position.X && enemy.CheckForCollision(room, 1, 0, false, false) == null
+        && y < room.GetTileFromPos(enemy.position).position.Y && enemy.CheckForCollision(room, 0, 1, false, false) == null) 
         {
-            x++;
-            y++;
+            enemy.MoveUpLeft();
         }
-        if(x > enemy.tilePosition.X) 
+        else if(x < room.GetTileFromPos(enemy.position).position.X && enemy.CheckForCollision(room, 1, 0, false, false) == null
+        && y > room.GetTileFromPos(enemy.position).position.Y && enemy.CheckForCollision(room, 0, 1, false, false) == null)
+        {
+            enemy.MoveDownLeft();
+        }
+        else if(x > room.GetTileFromPos(enemy.position).position.X && enemy.CheckForCollision(room, -1, 0, false, false) == null
+        && y < room.GetTileFromPos(enemy.position).position.Y && enemy.CheckForCollision(room, 0, 1, false, false) == null)
+        {
+            enemy.MoveUpRight();
+        }
+        else if(x > room.GetTileFromPos(enemy.position).position.X && enemy.CheckForCollision(room, -1, 0, false, false) == null
+        && y > room.GetTileFromPos(enemy.position).position.Y && enemy.CheckForCollision(room, 0, 1, false, false) == null)
+        {   
+            enemy.MoveDownRight();
+        }
+        else if(x > room.GetTileFromPos(enemy.position).position.X && enemy.CheckForCollision(room, 1, 0, false, false) == null) 
         {
             enemy.MoveRight();
         }
-        else if(x < enemy.tilePosition.X)
+        else if(x < room.GetTileFromPos(enemy.position).position.X && enemy.CheckForCollision(room, -1, 0, false, false) == null)
         {
             enemy.MoveLeft();
         }
-        else if(y > enemy.tilePosition.Y)
+        else if(y > room.GetTileFromPos(enemy.position).position.Y && enemy.CheckForCollision(room, 0, 1, false, false) == null)
         {
             enemy.MoveDown();
         }
-        else if(y < enemy.tilePosition.Y)
+        else if(y < room.GetTileFromPos(enemy.position).position.Y && enemy.CheckForCollision(room, 0, -1, false, false) == null)
         {
             enemy.MoveUp();
         }
-        else
+        else if(enemy.CheckForCollision(room, 0, 0, true, false) is Player player)
         {
-            if(enemy.CheckForCollision(room, 0, 0, true) is Player)
-            this.Attack((Player) enemy.CheckForCollision(room, 0, 0, true));
+                enemy.Attack(player);
         }
+        else if(enemy.CheckForCollision(room, 0, 0, false, false) is Enemy enemy_2)// stuck
+        {
+            enemy_2.MoveUpLeft();
+            enemy.MoveDownRight();
+        }
+        
+    }
+
+    public void UpdateDestination(Enemy enemy, Player player, Room room)
+    {
+        enemy.destinationTile = room.GetTileFromPos(player.position);
     }
 }
