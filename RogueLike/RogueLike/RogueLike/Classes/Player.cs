@@ -12,8 +12,8 @@ public class Player : Entity
         position = new Vector2(viewport.Width / 2, viewport.Height / 2);
         currentHealth = maximumHealth = 100;
         teeth = new(0);
-        this.attackDamage = 5;
-        this.attackRange = 5;
-        this.weapon = new Fist();
+        //this.weapon = new Fist();
+        this.weapon = new Bow(this); // TEST
+        this.movementSpeed = 5f;
     }
 }
