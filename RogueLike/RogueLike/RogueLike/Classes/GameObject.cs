@@ -30,13 +30,15 @@ public abstract class GameObject
         texture = content.Load<Texture2D>(name);
     }
 
-            public BoundingBox CreateBoundingBox() {
-            return new BoundingBox(new Vector3(this.position.X -
-                    (this.texture.Width / 2),
-                    this.position.Y - (this.texture.Height / 2),
-                    0),
-                new Vector3(this.position.X + (this.texture.Width / 2),
-                    this.position.Y + (this.texture.Height / 2),
-                    0));
-        }
+    public BoundingBox CreateBoundingBox() {
+        int playerFactor = 0;
+        if(this is Player) playerFactor = 15;
+    return new BoundingBox(new Vector3(this.position.X -
+            (this.texture.Width / 2) - playerFactor,
+            this.position.Y - (this.texture.Height / 2) - playerFactor,
+            0),
+        new Vector3(this.position.X + (this.texture.Width / 2) + playerFactor,
+            this.position.Y + (this.texture.Height / 2) + playerFactor,
+            0));
+    }
 }
