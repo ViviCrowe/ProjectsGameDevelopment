@@ -209,7 +209,7 @@ namespace GameStateManagement
                 }
             }
 
-            if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).tileType == GameObject.TileType.Door)
+            if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).objectType == GameObject.ObjectType.Door)
             {  
                 player.position.Y = viewport.Height / 2;
                 
@@ -218,7 +218,7 @@ namespace GameStateManagement
 
                 player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
             }
-            else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).tileType == GameObject.TileType.Door)
+            else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).objectType == GameObject.ObjectType.Door)
             {
                 player.position.Y = viewport.Height / 2;
                 
@@ -244,15 +244,15 @@ namespace GameStateManagement
 
         private bool checkTrapDoor(Entity entity)
         {
-            if (entity.CheckForCollision(currentRoom, -1, 0, false, false) != null && (entity.CheckForCollision(currentRoom, -1, 0, false, false).tileType == GameObject.TileType.Hole))
+            if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && (player.CheckForCollision(currentRoom, -1, 0, false, false).objectType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (entity.CheckForCollision(currentRoom, 1, 0, false, false) != null && (entity.CheckForCollision(currentRoom, 1, 0, false, false).tileType == GameObject.TileType.Hole))
+            else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && (player.CheckForCollision(currentRoom, 1, 0, false, false).objectType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (entity.CheckForCollision(currentRoom, 0, -1, false, false) != null && (entity.CheckForCollision(currentRoom, 0, -1, false, false).tileType == GameObject.TileType.Hole))
+            else if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && (player.CheckForCollision(currentRoom, 0, -1, false, false).objectType == GameObject.ObjectType.Hole))
             {
                 return true;
             }

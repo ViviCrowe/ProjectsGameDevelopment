@@ -50,7 +50,7 @@ namespace RogueLike.Classes
                 {
                     if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(1) / 2)
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Door);
+                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Door);
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
                         passiveObjects.Add(Tiles[i, j]);
                     }
@@ -61,19 +61,19 @@ namespace RogueLike.Classes
                         j == Tiles.GetLength(1) - 1
                     )
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Wall);
+                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Wall);
                         Tiles[i, j].LoadAssets(content, "wall");
                         passiveObjects.Add(Tiles[i, j]);
                     }
                     else if (!lastLevel && last && i == 1 && j == Tiles.GetLength(1) / 2)
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Hole);
+                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Hole);
                         Tiles[i, j].LoadAssets(content, "hole");
                         passiveObjects.Add(Tiles[i, j]);
                     }
                     else
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.TileType.Floor);
+                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Floor);
                         Tiles[i, j].LoadAssets(content, "Grass_normal");
                     }
 

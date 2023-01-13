@@ -10,10 +10,11 @@ public abstract class GameObject
 
     public BoundingBox boundingBox;
 
-    public TileType tileType;
+    public ObjectType objectType;
 
-    public enum TileType
+    public enum ObjectType
     {
+        Entity,
         Floor,
         Hole,
         Wall,
