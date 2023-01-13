@@ -13,6 +13,18 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin arrow.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:arrow.png
+
 #begin background.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -116,7 +128,14 @@
 /processorParam:TextureFormat=Color
 /build:hole.png
 
-#begin hole.png
+#begin menufont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:menufont.spritefont
+
+#begin potion.png
 /importer:TextureImporter
 /processor:TextureProcessor
 /processorParam:ColorKeyColor=255,0,255,255
@@ -126,14 +145,19 @@
 /processorParam:ResizeToPowerOfTwo=False
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
-/build:hole.png
+/build:potion.png
 
-#begin menufont.spritefont
-/importer:FontDescriptionImporter
-/processor:FontDescriptionProcessor
+#begin potion.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
 /processorParam:PremultiplyAlpha=True
-/processorParam:TextureFormat=Compressed
-/build:menufont.spritefont
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:potion.png
 
 #begin revenge.wma
 /importer:WmaImporter
