@@ -8,7 +8,6 @@ using RogueLike.Classes.Weapons;
 // Context Class
 public class Enemy : Entity
 {
-    private float visionRange;
     private EnemyAI enemyAI;
     private static Random random = new Random();
     public enum Type
@@ -17,22 +16,42 @@ public class Enemy : Entity
         MELEE,
         TANK    
     };
-    private Type type;
+    public Type type;
+    public Tile destinationTile;
+    public Vector2 playerDirection;
 
-    public Enemy(Viewport viewport, Type type, Vector2 position, Weapon weapon, Room room) :
-        base(viewport, weapon)
+    public Enemy(Viewport viewport, Type type, Vector2 position, Room room)
     {
-        this.enemyAI = new PatrolAI();
+        this.type = type;
+
+        switch(type) {
+            case Type.ARCHER: 
+            this.movementSpeed = 3.5f;
+            this.maximumHealth = this.currentHealth = 200;
+            this.weapon = new Bow(this);
+            this.visionRange = 300;
+            break;
+            case Type.MELEE:
+            this.movementSpeed = 2.5f;
+            this.maximumHealth = this.currentHealth = 400;
+            this.weapon = new Sword();
+            this.visionRange = 150;
+            break;
+            case Type.TANK:
+            this.movementSpeed = 1.5f;
+            this.maximumHealth = this.currentHealth = 800;
+            this.weapon = new Spear();
+            this.visionRange = 100;
+            break;
+        }
+
         this.position.X = position.X;
         this.position.Y = position.Y;
-        this.maximumHealth = this.currentHealth = 100;
         room.activeObjects.Add(this);
+
+        this.enemyAI = new PatrolAI();
+        
         teeth = new((int) (random.NextDouble()*10));
-    }
-    
-    public new void Attack(Entity entity)
-    {
-        enemyAI.Attack((Player) entity);
     }
 
     public void Move(Room room, Tile destinationTile)
@@ -48,9 +67,8 @@ public class Enemy : Entity
 
     public void Update(Player player, Room room, ContentManager content)
     {
-        base.Update(room, content);
-
-        // handle enemy death
+        base.Update(room);
+        // enemy death
         if(this.currentHealth <= 0) 
         {
             room.activeObjects.Remove(this);
@@ -59,14 +77,49 @@ public class Enemy : Entity
             {
                 this.DropTeeth(room, content);
             }
-            else 
+            else if(random.NextDouble() < 0.2)
             {   
                 this.DropWeapon(room, content);
             }
         }
 
-        //room.StartAStar(this);
-        //room.FollowPath(this);
+        // enemy movement
+        this.enemyAI.UpdateDestination(this, player, room);
+        
+        if(room.StartAStar(this))
+        {   
+            room.FollowPath(this);
+        }
+
+        // vision field
+        UpdatePlayerInVision(room);
+
+    }
+
+    private void UpdatePlayerInVision(Room room)
+    {
+        if((PlayerInVision(room) || currentHealth < maximumHealth) && enemyAI is PatrolAI)
+        {
+            switch(type) 
+            {
+                case Type.ARCHER: setEnemyAI(new ArcherAI());
+                break;
+                case Type.MELEE: setEnemyAI(new MeleeAI());
+                break;
+                case Type.TANK: setEnemyAI(new TankAI());
+                break;
+            }
+        }
+        else if(!PlayerInVision(room) && enemyAI is not PatrolAI)
+        {
+            setEnemyAI(new PatrolAI());
+        }
+    }
+
+    private bool PlayerInVision(Room room)
+    {
+        if(this.CheckForCollision(room, 0, 0, false, true) != null) return true;
+        return false;
     }
 
     public void LoadAssets(ContentManager content) 
