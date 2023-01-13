@@ -48,6 +48,7 @@ namespace GameStateManagement
         private Enemy enemy2;
         
         private Weapon weapon; // TEST WAFFE
+        private Potion potion; // TEST POTION
 
         private Level[] level;
 
@@ -102,9 +103,13 @@ namespace GameStateManagement
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content, "character");
 
-            weapon = new Sword();
+            weapon = new Sword(); // TEST
             weapon.position.X = viewport.Width / 2 + 60; //TEST
             weapon.position.Y = viewport.Height / 2 - 60; //TEST  
+
+            potion = new Potion(50); // TEST
+            potion.position.X = viewport.Width / 2 + 120;
+            potion.position.Y = viewport.Height / 2 + 120;
 
             level = new Level[3];
             level[0] = new Level(viewport, 5, false);
@@ -132,8 +137,10 @@ namespace GameStateManagement
             foreach (Room room in currentLevel.Rooms)
             {
                 room.items.Add(weapon);
-                enemy = new Enemy(viewport, Enemy.Type.MELEE, new Vector2(1100, 550), null, room); // TEST
-                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), null, room);
+                room.items.Add(potion);
+                room.activeObjects.Add(player);
+                enemy = new Enemy(viewport, Enemy.Type.MELEE, new Vector2(1100, 550), room); // TEST
+                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), room);
                 room.LoadAssets(content);
             }
 
@@ -180,12 +187,15 @@ namespace GameStateManagement
 
             if (IsActive)
             {
-                currentRoom.UpdateDestination(player);
-    
                 foreach(Entity e in currentRoom.activeObjects.ToArray()) 
                 {
-                    if(e is Enemy) {
+                    if(e is Enemy) 
+                    {
                         ((Enemy)e).Update(player, currentRoom, content);
+                    }
+                    else if(e is Player)
+                    {
+                        e.Update(currentRoom);
                     }
                 }
 
@@ -193,13 +203,13 @@ namespace GameStateManagement
                 playerHUD.Update(player);
                 
                 GameObject item = player.CheckForItemCollision(currentRoom);
-                if(item is Wallet)
+                if(item is Wallet || item is Potion)
                 {
                     player.PickUpItem(item, currentRoom, content);
                 }
             }
 
-            if (player.CheckForCollision(currentRoom, 0, -1, false) != null && player.CheckForCollision(currentRoom, 0, -1, false).tileType == GameObject.TileType.Door)
+            if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).tileType == GameObject.TileType.Door)
             {  
                 player.position.Y = viewport.Height / 2;
                 
@@ -208,7 +218,7 @@ namespace GameStateManagement
 
                 player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
             }
-            else if (player.CheckForCollision(currentRoom, 0, 1, false) != null && player.CheckForCollision(currentRoom, 0, 1, false).tileType == GameObject.TileType.Door)
+            else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).tileType == GameObject.TileType.Door)
             {
                 player.position.Y = viewport.Height / 2;
                 
@@ -234,15 +244,15 @@ namespace GameStateManagement
 
         private bool checkTrapDoor(Entity entity)
         {
-            if (entity.CheckForCollision(currentRoom, -1, 0, false) != null && (entity.CheckForCollision(currentRoom, -1, 0, false).tileType == GameObject.TileType.Hole))
+            if (entity.CheckForCollision(currentRoom, -1, 0, false, false) != null && (entity.CheckForCollision(currentRoom, -1, 0, false, false).tileType == GameObject.TileType.Hole))
             {
                 return true;
             }
-            else if (entity.CheckForCollision(currentRoom, 1, 0, false) != null && (entity.CheckForCollision(currentRoom, 1, 0, false).tileType == GameObject.TileType.Hole))
+            else if (entity.CheckForCollision(currentRoom, 1, 0, false, false) != null && (entity.CheckForCollision(currentRoom, 1, 0, false, false).tileType == GameObject.TileType.Hole))
             {
                 return true;
             }
-            else if (entity.CheckForCollision(currentRoom, 0, -1, false) != null && (entity.CheckForCollision(currentRoom, 0, -1, false).tileType == GameObject.TileType.Hole))
+            else if (entity.CheckForCollision(currentRoom, 0, -1, false, false) != null && (entity.CheckForCollision(currentRoom, 0, -1, false, false).tileType == GameObject.TileType.Hole))
             {
                 return true;
             }
@@ -282,30 +292,50 @@ namespace GameStateManagement
             }
             else
             {
-                if (keyboardState.IsKeyDown(Keys.A))
+                if (keyboardState.IsKeyDown(Keys.A) && !keyboardState.IsKeyDown(Keys.W) && !keyboardState.IsKeyDown(Keys.S))
                 {
-                    if (player.CheckForCollision(currentRoom, -1, 0, false) == null)
+                    if (player.CheckForCollision(currentRoom, -1, 0, false, false) == null)
                         player.MoveLeft();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.D))
+                if (keyboardState.IsKeyDown(Keys.D) && !keyboardState.IsKeyDown(Keys.S) && !keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (player.CheckForCollision(currentRoom, 1, 0, false) == null)
+                    if (player.CheckForCollision(currentRoom, 1, 0, false, false) == null)
                         player.MoveRight();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.W))
+                if (keyboardState.IsKeyDown(Keys.W) && !keyboardState.IsKeyDown(Keys.A) && !keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (player.CheckForCollision(currentRoom, 0, -1, false) == null)
+                    if (player.CheckForCollision(currentRoom, 0, -1, false, false) == null)
                         player.MoveUp();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.S))
+                if (keyboardState.IsKeyDown(Keys.S) && !keyboardState.IsKeyDown(Keys.A) && !keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (player.CheckForCollision(currentRoom, 0, 1, false) == null)
+                    if (player.CheckForCollision(currentRoom, 0, 1, false, false) == null)
                         player.MoveDown();
                 }
 
+                if(keyboardState.IsKeyDown(Keys.W) && keyboardState.IsKeyDown(Keys.A))
+                {
+                    if (player.CheckForCollision(currentRoom, -1, -1, false, false) == null)
+                        player.MoveUpLeft();     
+                }
+                if(keyboardState.IsKeyDown(Keys.W) && keyboardState.IsKeyDown(Keys.D))
+                {
+                    if (player.CheckForCollision(currentRoom, 1, -1, false, false) == null)
+                        player.MoveUpRight();     
+                }
+                if(keyboardState.IsKeyDown(Keys.S) && keyboardState.IsKeyDown(Keys.A))
+                {
+                    if (player.CheckForCollision(currentRoom, -1, 1, false, false) == null)
+                        player.MoveDownLeft();      
+                }
+                if(keyboardState.IsKeyDown(Keys.S) && keyboardState.IsKeyDown(Keys.D))
+                {
+                    if (player.CheckForCollision(currentRoom, 1, 1, false, false) == null)
+                        player.MoveDownRight();     
+                }
                 if (keyboardState.IsKeyDown(Keys.J))
                 {
                     player.DropWeapon (currentRoom, content);
@@ -318,12 +348,19 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
-                    Entity targetEntity =
-                        (Entity) player.CheckForCollision(currentRoom, 0, 0, true);
-                    if (targetEntity != null)
+                    if(player.weapon is Bow bow) 
                     {
-                        int damageDealt = player.Attack (targetEntity);
-                        // TODO: display damage dealt
+                        bow.FireArrow(player);
+                    }  
+                    else
+                    {
+                         Entity targetEntity =
+                            (Entity) player.CheckForCollision(currentRoom, 0, 0, true, false);
+                        if (targetEntity != null)
+                        {
+                            int damageDealt = player.Attack (targetEntity);
+                            // TODO: display damage dealt
+                        }
                     }
                 }
             }
