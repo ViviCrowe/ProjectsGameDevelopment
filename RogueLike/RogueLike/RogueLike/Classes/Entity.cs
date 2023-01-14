@@ -15,6 +15,7 @@ public abstract class Entity : GameObject
     public int maximumHealth;
 
     public int currentHealth;
+    private int attackCountdown = 0;
 
     public Weapon weapon;
 
@@ -46,9 +47,18 @@ public abstract class Entity : GameObject
 
     public int Attack(Entity target)
     {
-        int damageDealt = this.weapon.attackDamage;
-        target.currentHealth -= damageDealt;
-        return damageDealt;
+        if(this.attackCountdown == 0 || this.weapon is Bow)
+        {
+            int damageDealt = this.weapon.attackDamage;
+            target.currentHealth -= damageDealt;
+            attackCountdown = 60;
+            System.Console.WriteLine("HIT!");
+            return damageDealt;
+        }
+        else
+        {
+            return 0;
+        }
     }
 
     public void Buy(GameObject item)
@@ -191,6 +201,8 @@ public abstract class Entity : GameObject
         {
             bow.UpdateArrows(this, room);
         }
+        
+        if(attackCountdown > 0) attackCountdown--;
     }
 
  
