@@ -13,7 +13,7 @@ namespace RogueLike.Classes.Weapons
 
         public Bow(Entity entity)
         {
-            this.weaponRange = 2000; // unnötig gross?
+            this.weaponRange = 2000;
             this.attackSpeed = 8f;
             this.attackDamage = 100;
         }
@@ -29,47 +29,47 @@ namespace RogueLike.Classes.Weapons
                 switch(entity.directionFacing)
                 {
                     case Entity.Direction.UP:
-                    y -= entity.texture.Height/2 + Arrow.texture.Height/2;
-                    direction.Y = -2;
+                    y -= entity.texture.Height/2 + Arrow.texture.Height;
+                    direction.Y = -1;
                     break;
                     case Entity.Direction.DOWN:
-                    y += entity.texture.Height/2 + Arrow.texture.Height/2;
-                    direction.Y = 2;
+                    y += entity.texture.Height/2 + Arrow.texture.Height;
+                    direction.Y = 1;
                     break;
                     case Entity.Direction.RIGHT:
-                    x += entity.texture.Width/2 + Arrow.texture.Width/2;
-                    direction.X = 2;
+                    x += entity.texture.Width/2 + Arrow.texture.Width*2;
+                    direction.X = 1;
                     break;
                     case Entity.Direction.LEFT:
-                    x -= entity.texture.Width/2 + Arrow.texture.Width/2;
-                    direction.X = -2;
+                    x -= entity.texture.Width/2 + Arrow.texture.Width*2;
+                    direction.X = -1;
                     break;
                     case Entity.Direction.UPRIGHT:
-                    y -= entity.texture.Height/2 + Arrow.texture.Height/2;
-                    direction.Y = -2;
-                    x += entity.texture.Width/2 + Arrow.texture.Width/2;
-                    direction.X = 2;
+                    y -= entity.texture.Height/2 + Arrow.texture.Height;
+                    direction.Y = -1;
+                    x += entity.texture.Width/2 + Arrow.texture.Width;
+                    direction.X = 1;
                     break;
                     case Entity.Direction.UPLEFT:
-                    y -= entity.texture.Height/2 + Arrow.texture.Height/2;
-                    direction.Y = -2;
-                    x -= entity.texture.Width/2 + Arrow.texture.Width/2;
-                    direction.X = -2;
+                    y -= entity.texture.Height/2 + Arrow.texture.Height;
+                    direction.Y = -1;
+                    x -= entity.texture.Width/2 + Arrow.texture.Width;
+                    direction.X = -1;
                     break;
                     case Entity.Direction.DOWNRIGHT:
-                    y += entity.texture.Height/2 + Arrow.texture.Height/2;
-                    direction.Y = 2;
-                    x += entity.texture.Width/2 + Arrow.texture.Width/2;
-                    direction.X = 2;
+                    y += entity.texture.Height/2 + Arrow.texture.Height;
+                    direction.Y = 1;
+                    x += entity.texture.Width/2 + Arrow.texture.Width;
+                    direction.X = 1;
                     break;
                     case Entity.Direction.DOWNLEFT:
-                    y += entity.texture.Height/2 + Arrow.texture.Height/2;
-                    direction.Y = 2;
-                    x -= entity.texture.Width/2 + Arrow.texture.Width/2;
-                    direction.X = -2;
+                    y += entity.texture.Height/2 + Arrow.texture.Height;
+                    direction.Y = 1;
+                    x -= entity.texture.Width/2 + Arrow.texture.Width;
+                    direction.X = -1;
                     break;
                 }
-                //Vector2.Normalize(direction);
+                direction = Vector2.Normalize(direction);
             }
             else if(entity is Enemy enemy)
             {
@@ -109,17 +109,13 @@ namespace RogueLike.Classes.Weapons
         public void Draw(SpriteBatch spriteBatch)
         {
             foreach(Arrow arrow in arrows)
-            {
-                /*
+            {                
                 Vector2 startAngle = new(0, -1);
-                //startAngle = Vector2.Normalize(startAngle);
                 double scalarProduct = startAngle.X*arrow.direction.X + startAngle.Y*arrow.direction.Y;
-                //float angle = (float) ((Math.Acos(scalarProduct)*180) / Math.PI);
                 float angle = (float) (Math.Acos(scalarProduct));
+                if(arrow.direction.X < 0) angle = -angle;
                 spriteBatch.Draw(Arrow.texture, arrow.position, null, Color.White, angle, 
                     Vector2.Zero, 1.0f, SpriteEffects.None, 0.2f);
-                */
-                spriteBatch.Draw(Arrow.texture, arrow.position, Color.White);
             }
         }
 
