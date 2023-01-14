@@ -47,7 +47,6 @@ public abstract class Entity : GameObject
     public int Attack(Entity target)
     {
         int damageDealt = this.weapon.attackDamage;
-        System.Console.WriteLine(damageDealt);
         target.currentHealth -= damageDealt;
         return damageDealt;
     }
