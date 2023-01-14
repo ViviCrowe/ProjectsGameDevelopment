@@ -139,8 +139,8 @@ namespace GameStateManagement
                 room.items.Add(weapon);
                 room.items.Add(potion);
                 room.activeObjects.Add(player);
-                enemy = new Enemy(viewport, Enemy.Type.MELEE, new Vector2(1100, 550), room); // TEST
-                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), room);
+                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), room); // TEST
+                enemy2 = new Enemy(viewport, Enemy.Type.TANK, new Vector2(800, 500), room);
                 room.LoadAssets(content);
             }
 
