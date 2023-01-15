@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
@@ -11,6 +12,8 @@ namespace RogueLike.Classes.Weapons
         private List<Arrow> arrows = new List<Arrow>();
         private int arrowCountdown = 0;
         private float attackSpeed;
+        private SoundEffect fireArrow_1;
+        private SoundEffect fireArrow_2;
 
         public Bow(Entity entity)
         {
@@ -80,7 +83,8 @@ namespace RogueLike.Classes.Weapons
                 direction = enemy.PlayerDirection;
             }
             arrows.Add(new Arrow(new(x, y), direction));
-            //arrowSound.Play();
+            fireArrow_1.Play();
+            fireArrow_2.Play();
             arrowCountdown = 55;
         }
 
@@ -123,8 +127,9 @@ namespace RogueLike.Classes.Weapons
 
         public new void LoadAssets(ContentManager content, string name)
         {
-            //Texture = content.Load<Texture2D>(name); // load character with specific weapon
-            Arrow.Texture = content.Load<Texture2D>("arrow"); // load different arrow rotations according to the direction OR rotate it
+            Arrow.Texture = content.Load<Texture2D>("arrow");
+            fireArrow_1 = content.Load<SoundEffect>("fire_arrow_1");
+            fireArrow_2 = content.Load<SoundEffect>("fire_arrow_2");
         }
     }
 }
