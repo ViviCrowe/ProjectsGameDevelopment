@@ -50,10 +50,10 @@ namespace RogueLike.Classes
 
         public void Draw(SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(teethTexture, new Vector2(60, 12.5f), Color.White);
-            spriteBatch.DrawString(font, teethValue, new Vector2(100, 12.5f), Color.White);
-            spriteBatch.DrawString(font, "Health    " + healthValue, new Vector2(200, 12.5f), Color.White);
-            spriteBatch.DrawString(font, "Level    " + levelValue, new Vector2(600, 12.5f), Color.White);
+            spriteBatch.Draw(teethTexture, new Vector2(60, 14f), Color.White);
+            spriteBatch.DrawString(font, teethValue, new Vector2(100, 14f), Color.White);
+            spriteBatch.DrawString(font, "Health    " + healthValue, new Vector2(200, 14f), Color.White);
+            spriteBatch.DrawString(font, "Level    " + levelValue, new Vector2(600, 14f), Color.White);
             if (weaponTexture != null)
                 spriteBatch.Draw(weaponTexture, new Vector2(700, 0), Color.White);
             if (abilityTexture != null)
