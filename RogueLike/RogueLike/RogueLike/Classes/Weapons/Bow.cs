@@ -12,8 +12,8 @@ namespace RogueLike.Classes.Weapons
         private List<Arrow> arrows = new List<Arrow>();
         private int arrowCountdown = 0;
         private float attackSpeed;
-        private SoundEffect fireArrow_1;
-        private SoundEffect fireArrow_2;
+        public static SoundEffect FireArrow_1 { get; set; }
+        public static SoundEffect FireArrow_2 { get; set; }
 
         public Bow(Entity entity)
         {
@@ -83,8 +83,8 @@ namespace RogueLike.Classes.Weapons
                 direction = enemy.PlayerDirection;
             }
             arrows.Add(new Arrow(new(x, y), direction));
-            fireArrow_1.Play();
-            fireArrow_2.Play();
+            FireArrow_1.Play();
+            FireArrow_2.Play();
             arrowCountdown = 55;
         }
 
@@ -125,11 +125,11 @@ namespace RogueLike.Classes.Weapons
             }
         }
 
-        public new void LoadAssets(ContentManager content, string name)
+        public static void LoadAssets(ContentManager content)
         {
             Arrow.Texture = content.Load<Texture2D>("arrow");
-            fireArrow_1 = content.Load<SoundEffect>("fire_arrow_1");
-            fireArrow_2 = content.Load<SoundEffect>("fire_arrow_2");
+            FireArrow_1 = content.Load<SoundEffect>("fire_arrow_1");
+            FireArrow_2 = content.Load<SoundEffect>("fire_arrow_2");
         }
     }
 }
