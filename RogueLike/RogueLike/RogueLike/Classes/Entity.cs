@@ -13,13 +13,13 @@ namespace RogueLike.Classes
     {
         public float MovementSpeed { get; set; }
 
-        private static Viewport viewport;
+        public static Viewport Viewport { get; set; }
 
         public int MaximumHealth { get; set; }
 
         public int CurrentHealth { get; set; }
 
-        public int AttackCountdown { get; set; } = 0;
+        public int AttackCountdown { get; set; } = 60;
 
         public Weapon EquippedWeapon { get; set; }
 
@@ -28,16 +28,16 @@ namespace RogueLike.Classes
         public int VisionRange { get; set; }
 
         private List<int> damageTaken = new List<int>();
-        private SpriteFont font;
+        public static SpriteFont Font { get; set; }
         private int displayDamageCountdown = 45;
-        private SoundEffect attackMissSound;
-        private SoundEffect attackSwordSound;
-        private SoundEffect attackBowSound;
-        private SoundEffect attackSpearSound;
-        private SoundEffect attackFistSound;
-        private SoundEffect damagePlayerSound;
-        private SoundEffect damageEnemySound;
-        public SoundEffect PickupDropSound { get; set; }
+        public static SoundEffect AttackMissSound { get; set; }
+        public static SoundEffect AttackSwordSound { get; set; }
+        public static SoundEffect AttackBowSound { get; set; }
+        public static SoundEffect AttackSpearSound { get; set; }
+        public static SoundEffect AttackFistSound { get; set; }
+        public static SoundEffect DamagePlayerSound { get; set; }
+        public static SoundEffect DamageEnemySound { get; set; }
+        public static SoundEffect PickupDropSound { get; set; }
 
         public enum Direction
         {
@@ -55,7 +55,7 @@ namespace RogueLike.Classes
 
         public Entity(Viewport viewport, Weapon weapon)
         {
-            Entity.viewport = viewport;
+            Entity.Viewport = viewport;
             this.EquippedWeapon = weapon;
         }
 
@@ -73,18 +73,23 @@ namespace RogueLike.Classes
                 if(random.NextDouble() < 0.1) // miss
                 {
                     damageDealt = -1;
-                    attackMissSound.Play();
+                    AttackMissSound.Play();
                 }
                 else
                 {
-                    if(this.EquippedWeapon is Bow) attackBowSound.Play();
-                    else if(this.EquippedWeapon is Spear) attackSpearSound.Play();
-                    else if(this.EquippedWeapon is Sword) attackSwordSound.Play();
-                    else if(this.EquippedWeapon is Fist) attackFistSound.Play();
+                    if(this.EquippedWeapon is Bow) AttackBowSound.Play();
+                    else if(this.EquippedWeapon is Spear) AttackSpearSound.Play();
+                    else if(this.EquippedWeapon is Sword) AttackSwordSound.Play();
+                    else if(this.EquippedWeapon is Fist) AttackFistSound.Play();
+                    
                     damageDealt = this.EquippedWeapon.AttackDamage;
+                    if(this is Player player) damageDealt += player.BaseAttack;
+                    else if(target is Player _player) damageDealt -= _player.BaseDefense;     
                     target.CurrentHealth -= damageDealt;
-                    if(target is Player) damagePlayerSound.Play();
-                    else damageEnemySound.Play();
+                    
+                    if(target is Player) DamagePlayerSound.Play();
+                    else DamageEnemySound.Play();
+                    
                 }
                 AttackCountdown = 55;
                 target.damageTaken.Add(damageDealt);
@@ -264,26 +269,25 @@ namespace RogueLike.Classes
 
         public new void LoadAssets(ContentManager content, string name)
         {
-            this.font = content.Load<SpriteFont>("gamefont");
             this.Texture = content.Load<Texture2D>(name);
-            Wallet.Texture = content.Load<Texture2D>("teeth");
-            this.attackMissSound = content.Load<SoundEffect>("attack_miss");
-            this.attackSwordSound = content.Load<SoundEffect>("attack_sword");
-            this.attackBowSound = content.Load<SoundEffect>("attack_arrow");
-            this.attackSpearSound = content.Load<SoundEffect>("attack_spear");
-            this.attackFistSound = content.Load<SoundEffect>("attack_fist");
-            this.damagePlayerSound = content.Load<SoundEffect>("damage_player");
-            this.damageEnemySound = content.Load<SoundEffect>("damage_enemy");
-            this.PickupDropSound = content.Load<SoundEffect>("drop_pickup");
 
-            if (this.EquippedWeapon is Bow bow)
-            {
-                bow.LoadAssets(content, "bow"); // arrows
-            }
-            else if (this.EquippedWeapon != null)
+            if (this.EquippedWeapon != null)
             {
                 //this.EquippedWeapon.LoadAssets(content, "........"); // character with specific weapon = change entity texture!
             }
+        }
+
+        public static void LoadAssets(ContentManager content)
+        {
+            Font = content.Load<SpriteFont>("gamefont");
+            AttackMissSound = content.Load<SoundEffect>("attack_miss");
+            AttackSwordSound = content.Load<SoundEffect>("attack_sword");
+            AttackBowSound = content.Load<SoundEffect>("attack_arrow");
+            AttackSpearSound = content.Load<SoundEffect>("attack_spear");
+            AttackFistSound = content.Load<SoundEffect>("attack_fist");
+            DamagePlayerSound = content.Load<SoundEffect>("damage_player");
+            DamageEnemySound = content.Load<SoundEffect>("damage_enemy");
+            PickupDropSound = content.Load<SoundEffect>("drop_pickup");
         }
 
         public new void Draw(SpriteBatch spriteBatch, float layerDepth)
@@ -318,7 +322,7 @@ namespace RogueLike.Classes
                     {
                         damage = hit.ToString();
                     }
-                    spriteBatch.DrawString(font, damage, this.Position - new Vector2(this.Texture.Width/4, (damageTaken.IndexOf(hit))*32 + this.Texture.Height), 
+                    spriteBatch.DrawString(Font, damage, this.Position - new Vector2(this.Texture.Width/4, (damageTaken.IndexOf(hit))*32 + this.Texture.Height), 
                         Color.Red, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
                     }
 
