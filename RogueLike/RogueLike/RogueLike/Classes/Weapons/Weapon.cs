@@ -7,10 +7,9 @@ namespace RogueLike.Classes.Weapons
      */
     public abstract class Weapon : GameObject
     {
-        public int attackDamage { get; set; }
-        public float attackSpeed { get; set; }
-        public int teethValue { get; set; }
-        public int weaponRange { get; set; }
+        public int AttackDamage { get; set; }
+        public int TeethValue { get; set; }
+        public int WeaponRange { get; set; }
         private SoundEffect soundEffect;
 
     }

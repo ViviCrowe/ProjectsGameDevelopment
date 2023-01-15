@@ -2,9 +2,10 @@
 {
     public class Sword : Weapon
     {
-        public Sword() { 
-            weaponRange = 5;
-            attackDamage = 100;
+        public Sword()
+        {
+            this.WeaponRange = 10;
+            this.AttackDamage = 125;
         }
     }
 }

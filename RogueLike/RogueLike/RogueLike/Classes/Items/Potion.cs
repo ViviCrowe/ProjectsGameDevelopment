@@ -1,9 +1,14 @@
-public class Potion : GameObject
-{
-    public int additionalHealth;
+using Microsoft.Xna.Framework.Graphics;
 
-    public Potion(int additionalHealth)
+namespace RogueLike.Classes.Items
+{
+    public class Potion : GameObject
     {
-        this.additionalHealth = additionalHealth;
+        public int AdditionalHealth { get; }
+
+        public Potion(int additionalHealth)
+        {
+            this.AdditionalHealth = additionalHealth;
+        }
     }
 }

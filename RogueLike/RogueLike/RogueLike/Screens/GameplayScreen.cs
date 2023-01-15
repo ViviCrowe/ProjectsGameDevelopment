@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
 using RogueLike.Classes.Weapons;
 using RogueLike.Classes.Abilities;
+using RogueLike.Classes.Items;
 using System;
 using Microsoft.Xna.Framework.Media;
 
@@ -69,7 +70,6 @@ namespace GameStateManagement
 #endregion Fields
 
 
-
         #region Initialization
         /// <summary>
         /// Constructor.
@@ -103,13 +103,13 @@ namespace GameStateManagement
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content, "character");
 
-            weapon = new Sword(); // TEST
-            weapon.position.X = viewport.Width / 2 + 60; //TEST
-            weapon.position.Y = viewport.Height / 2 - 60; //TEST  
+            weapon = new Spear(); // TEST
+            weapon.Position.X = viewport.Width / 2 + 60; //TEST
+            weapon.Position.Y = viewport.Height / 2 - 60; //TEST  
 
-            potion = new Potion(50); // TEST
-            potion.position.X = viewport.Width / 2 + 120;
-            potion.position.Y = viewport.Height / 2 + 120;
+            potion = new Potion(500); // TEST
+            potion.Position.X = viewport.Width / 2 + 120;
+            potion.Position.Y = viewport.Height / 2 + 120;
 
             level = new Level[3];
             level[0] = new Level(viewport, 5, false);
@@ -189,13 +189,13 @@ namespace GameStateManagement
             {
                 foreach(Entity e in currentRoom.activeObjects.ToArray()) 
                 {
-                    if(e is Enemy) 
+                    if(e is Enemy enemy) 
                     {
-                        ((Enemy)e).Update(player, currentRoom, content);
+                        enemy.Update(player, currentRoom, content);
                     }
-                    else if(e is Player)
+                    else if(e is Player player)
                     {
-                        e.Update(currentRoom);
+                        player.Update(currentRoom);
                     }
                 }
 
@@ -209,31 +209,30 @@ namespace GameStateManagement
                 }
             }
 
-            if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).objectType == GameObject.ObjectType.Door)
+            if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).ObjType == GameObject.ObjectType.Door)
             {  
-                player.position.Y = viewport.Height / 2;
+                player.Position.Y = viewport.Height / 2;
                 
                 roomCounter++;
                 currentRoom = currentLevel.Rooms[roomCounter];
 
-                player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
+                player.Position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].Position.Y - 85;
             }
-            else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).objectType == GameObject.ObjectType.Door)
+            else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).ObjType == GameObject.ObjectType.Door)
             {
-                player.position.Y = viewport.Height / 2;
+                player.Position.Y = viewport.Height / 2;
                 
-                if(roomCounter > 0)  // FÜR TESTEN, SPÄTER LÖSCHEN
-                    roomCounter--;
+                roomCounter--;
                 currentRoom = currentLevel.Rooms[roomCounter];
 
-                player.position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].position.Y + 85;
+                player.Position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].Position.Y + 85;
                 
 
             }
             else if (checkTrapDoor(player))
             {
-                player.position.X = viewport.Width / 2;
-                player.position.Y = viewport.Height / 2;
+                player.Position.X = viewport.Width / 2;
+                player.Position.Y = viewport.Height / 2;
                 levelCounter++;
                 newLevel();
             }
@@ -244,15 +243,15 @@ namespace GameStateManagement
 
         private bool checkTrapDoor(Entity entity)
         {
-            if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && (player.CheckForCollision(currentRoom, -1, 0, false, false).objectType == GameObject.ObjectType.Hole))
+            if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && (player.CheckForCollision(currentRoom, -1, 0, false, false).ObjType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && (player.CheckForCollision(currentRoom, 1, 0, false, false).objectType == GameObject.ObjectType.Hole))
+            else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && (player.CheckForCollision(currentRoom, 1, 0, false, false).ObjType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && (player.CheckForCollision(currentRoom, 0, -1, false, false).objectType == GameObject.ObjectType.Hole))
+            else if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && (player.CheckForCollision(currentRoom, 0, -1, false, false).ObjType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
@@ -348,7 +347,7 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
-                    if(player.weapon is Bow bow) 
+                    if(player.EquippedWeapon is Bow bow) 
                     {
                         bow.FireArrow(player);
                     }  
@@ -389,12 +388,6 @@ namespace GameStateManagement
             player.Draw(spriteBatch, 0.2f);
             currentRoom.Draw(spriteBatch);
             playerHUD.Draw(spriteBatch);
-            /*
-            for(int i = 0; i < projectiles.Count; i++)
-            {
-                projectiles[i].Draw(offset);
-            }
-            */
             spriteBatch.End();
 
             // If the game is transitioning on or off, fade it out to black.

@@ -1,10 +1,12 @@
-// noch umbenennen?
-public class Wallet : GameObject
+namespace RogueLike.Classes.Items
 {
-    public int value;
-
-    public Wallet (int value)
+    public class Wallet : GameObject
     {
-        this.value = value;
+        public int Value { get; set; }
+
+        public Wallet(int value)
+        {
+            this.Value = value;
+        }
     }
 }

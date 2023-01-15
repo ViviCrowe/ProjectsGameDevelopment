@@ -4,8 +4,8 @@
     {
         public Fist()
         {
-            weaponRange = 0;
+            this.WeaponRange = 2;
+            this.AttackDamage = 25;
         }
-
     }
 }

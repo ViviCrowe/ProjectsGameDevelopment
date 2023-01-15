@@ -4,7 +4,8 @@
     {
         public Spear()
         {
-            weaponRange = 3;
+            this.WeaponRange = 40;
+            this.AttackDamage = 100;
         }
     }
 }

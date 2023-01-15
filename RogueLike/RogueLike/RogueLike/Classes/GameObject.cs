@@ -2,44 +2,49 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 
-public abstract class GameObject
+namespace RogueLike.Classes
 {
-    public Texture2D texture;
-
-    public Vector2 position;
-
-    public BoundingBox boundingBox;
-
-    public ObjectType objectType;
-
-    public enum ObjectType
+    public abstract class GameObject
     {
-        Entity,
-        Floor,
-        Hole,
-        Wall,
-        Door
-    }
+        public Texture2D Texture { get; set; }
 
-    public void Draw(SpriteBatch spriteBatch, float layerDepth)
-    {
-        spriteBatch.Draw(texture,position,null,Color.White,0f,new Vector2(texture.Width / 2f, texture.Height / 2f),1.0f,SpriteEffects.None,layerDepth);
-    }
+        public Vector2 Position;
 
-    public void LoadAssets(ContentManager content, string name)
-    {
-        texture = content.Load<Texture2D>(name);
-    }
+        public BoundingBox BoundingBox { get; set; }
 
-    public BoundingBox CreateBoundingBox() {
-        int playerFactor = 0;
-        if(this is Player) playerFactor = 15;
-    return new BoundingBox(new Vector3(this.position.X -
-            (this.texture.Width / 2) - playerFactor,
-            this.position.Y - (this.texture.Height / 2) - playerFactor,
-            0),
-        new Vector3(this.position.X + (this.texture.Width / 2) + playerFactor,
-            this.position.Y + (this.texture.Height / 2) + playerFactor,
-            0));
+        public ObjectType ObjType { get; set; }
+
+        public enum ObjectType
+        {
+            Entity,
+            Floor,
+            Hole,
+            Wall,
+            Door
+        }
+
+        public void Draw(SpriteBatch spriteBatch, float layerDepth)
+        {
+            spriteBatch .Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2f, 
+                Texture.Height / 2f), 1.0f, SpriteEffects.None, layerDepth);
+        }
+
+        public void LoadAssets(ContentManager content, string name)
+        {
+            Texture = content.Load<Texture2D>(name);
+        }
+
+        public BoundingBox CreateBoundingBox()
+        {
+            int playerFactor = 0;
+            if (this is Player) playerFactor = 15;
+            return new BoundingBox(new Vector3(
+                this.Position.X - (this.Texture.Width / 2) - playerFactor,
+                    this.Position.Y - (this.Texture.Height / 2) - playerFactor,
+                    0),
+                new Vector3(this.Position.X + (this.Texture.Width / 2) + playerFactor,
+                    this.Position.Y + (this.Texture.Height / 2) + playerFactor,
+                    0));
+        }
     }
 }

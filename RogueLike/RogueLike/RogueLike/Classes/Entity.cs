@@ -1,262 +1,228 @@
 using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RogueLike.Classes;
+using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
 
-public abstract class Entity : GameObject
+namespace RogueLike.Classes
 {
-    // TODO: passive und aktive Abilities ergänzen
-    public float movementSpeed;
-
-    public static Viewport viewport;
-
-    public int maximumHealth;
-
-    public int currentHealth;
-    private int attackCountdown = 0;
-
-    public Weapon weapon;
-
-    public Wallet teeth;
-    public int visionRange;
-    public enum Direction
+    public abstract class Entity : GameObject
     {
-        DOWN,
-        UP,
-        LEFT,
-        RIGHT,
-        DOWNLEFT,
-        DOWNRIGHT,
-        UPLEFT,
-        UPRIGHT
+        public float MovementSpeed { get; set; }
 
-    }
-    public Direction directionFacing;
+        private static Viewport viewport;
 
-    public Entity(Viewport viewport, Weapon weapon) 
-    {
-        Entity.viewport = viewport;
-        this.weapon = weapon;
-    }
+        public int MaximumHealth { get; set; }
 
-    public Entity() 
-    {
-    }
+        public int CurrentHealth { get; set; }
 
-    public int Attack(Entity target)
-    {
-        if(this.attackCountdown == 0 || this.weapon is Bow)
+        private int attackCountdown = 0;
+
+        public Weapon EquippedWeapon { get; set; }
+
+        public Wallet Teeth { get; set; }
+
+        public int VisionRange { get; set; }
+
+        private List<int> damageTaken = new List<int>();
+        private SpriteFont font;
+        private int displayDamageCountdown = 45;
+
+        public enum Direction
         {
-            int damageDealt = this.weapon.attackDamage;
-            target.currentHealth -= damageDealt;
-            attackCountdown = 60;
-            System.Console.WriteLine("HIT!");
-            return damageDealt;
+            DOWN,
+            UP,
+            LEFT,
+            RIGHT,
+            DOWNLEFT,
+            DOWNRIGHT,
+            UPLEFT,
+            UPRIGHT
         }
-        else
+
+        public Direction directionFacing;
+
+        public Entity(Viewport viewport, Weapon weapon)
         {
-            return 0;
+            Entity.viewport = viewport;
+            this.EquippedWeapon = weapon;
         }
-    }
 
-    public void Buy(GameObject item)
-    {
-        // TODO
-    }
-
-    public void DropWeapon(Room room, ContentManager content)
-    {
-        if (this.weapon != null && this.weapon is not Fist)
+        public Entity()
         {
-            this.weapon.position = this.position;
-            room.items.Add(this.weapon);
-            room.LoadItemAssets (content); // nötig um null exception zu vermeiden
-            this.weapon = null;
-            this.LoadAssets(content, "character"); // TESTWEISE FÜR PLAYER NUR
         }
-    }
 
-    public void DropTeeth(Room room, ContentManager content)
-    {
-        if (this.teeth.value > 0 && this.teeth != null)
+        public int Attack(Entity target)
         {
-            this.teeth.position = this.position;
-            room.items.Add(this.teeth);
-            room.LoadItemAssets (content);
-            this.teeth = null;
-        }
-    }
+            int damageDealt = 0;
 
-    public void MoveDown()
-    {
-        position.Y += movementSpeed;
-        this.directionFacing = Direction.DOWN;
-    }
-
-    public void MoveLeft()
-    {
-        position.X -= movementSpeed;
-        this.directionFacing = Direction.LEFT;
-    }
-
-    public void MoveRight()
-    {
-        position.X += movementSpeed;
-        this.directionFacing = Direction.RIGHT;
-    }
-
-    public void MoveUp()
-    {
-        position.Y -= movementSpeed;
-        this.directionFacing = Direction.UP;
-    }
-
-    public void MoveUpRight()
-    {
-        position.X += movementSpeed;
-        position.Y -= movementSpeed;
-        this.directionFacing = Direction.UPRIGHT;
-    }
-
-    public void MoveUpLeft()
-    {
-        position.X -= movementSpeed;
-        position.Y -= movementSpeed;
-        this.directionFacing = Direction.UPLEFT;
-    }
-
-    public void MoveDownRight()
-    {
-        position.X += movementSpeed;
-        position.Y += movementSpeed;
-        this.directionFacing = Direction.DOWNRIGHT;
-    }
-
-    public void MoveDownLeft()
-    {
-        position.X -= movementSpeed;
-        position.Y += movementSpeed;
-        this.directionFacing = Direction.DOWNLEFT;
-    }
-
-    public void PickUpItem(GameObject item, Room room, ContentManager content)
-    {
-        if (item != null)
-        {
-            if (item is Weapon newWeapon)
+            if (this.attackCountdown == 0 || this.EquippedWeapon is Bow) // attack possible
             {
-                this.weapon = newWeapon;
-                room.items.Remove (newWeapon);
-                this.LoadAssets(content, "character_with_sword"); // TESTWEISE FÜR PLAYER NUR
-            }
-            else if (item is Wallet wallet)
-            {
-                this.UpdateTeethValue(wallet.value);
-                room.items.Remove (wallet);
-            }
-            else if(item is Potion potion)
-            {
-                this.currentHealth += potion.additionalHealth;
-                room.items.Remove(potion);
-            }
-        }
-    }
-
-    public void Sell(GameObject item)
-    {
-        // TODO
-    }
-
-    public void UseActiveAbility()
-    {
-        // TODO
-    }
-
-    //Sets the minimum value of the Helth bar
-    public void SetCurrentHealth(int currentHealth)
-    {
-        if (currentHealth <= maximumHealth && currentHealth >= 0)
-        {
-            this.currentHealth = currentHealth;
-        }
-    }
-
-    public void UpdateTeethValue(int teethValue)
-    {
-        if ((this.teeth.value + teethValue) >= 0)
-        {
-            this.teeth.value += teethValue;
-        }
-        else
-        {
-            this.teeth.value = 0;
-        }
-    }
-
-    public void Update(Room room)
-    {
-        if(this.weapon is Bow bow)
-        {
-            bow.UpdateArrows(this, room);
-        }
-        
-        if(attackCountdown > 0) attackCountdown--;
-    }
-
- 
-    public GameObject CheckForCollision(Room currentRoom, int factorX, int factorY, bool attack, bool vision)
-    {
-        BoundingBox boundingBox_1 =
-            this.CreateBoundingBox(factorX, factorY);
-        foreach (GameObject obj in currentRoom.passiveObjects)
-        {
-            BoundingBox boundingBox_2 = obj.CreateBoundingBox();
-            if (boundingBox_1.Intersects(boundingBox_2))
-            {
-                return obj;
-            }
-        }
-        if (currentRoom.activeObjects.Count > 1)
-        {
-            foreach (Entity entity_2 in currentRoom.activeObjects)
-            {
-                if (this != entity_2 && entity_2 != null)
+                Random random = new Random();
+                if(random.NextDouble() < 0.08) // miss
                 {
-                    BoundingBox boundingBox_2 = entity_2.CreateBoundingBox();
-                    if (attack)
-                    {
-                        boundingBox_1.Min.X -= this.weapon.weaponRange;
-                        boundingBox_1.Min.Y -= this.weapon.weaponRange;
-                        boundingBox_1.Max.X += this.weapon.weaponRange;
-                        boundingBox_1.Max.Y += this.weapon.weaponRange;
-                    }
-                    if(vision)
-                    {
-                        boundingBox_1.Min.X -= this.visionRange;
-                        boundingBox_1.Min.Y -= this.visionRange;
-                        boundingBox_1.Max.X += this.visionRange;
-                        boundingBox_1.Max.Y += this.visionRange;
-                    }
-                    if (boundingBox_1.Intersects(boundingBox_2) && vision == false)
-                    {
-                        return entity_2;
-                    }
-                    if (boundingBox_1.Intersects(boundingBox_2) && vision == true) {
-                        if(entity_2 is Player) return entity_2;
-                    }
+                    damageDealt = -1;
+                }
+                else
+                {
+                    damageDealt = this.EquippedWeapon.AttackDamage;
+                    target.CurrentHealth -= damageDealt;
+                }
+                attackCountdown = 50;
+                target.damageTaken.Add(damageDealt);
+                return damageDealt;
+            }
+            else
+            {
+                return 0;
+            }
+        }
+
+        public void DropWeapon(Room room, ContentManager content)
+        {
+            if (this.EquippedWeapon != null && this.EquippedWeapon is not Fist)
+            {
+                this.EquippedWeapon.Position = this.Position;
+                room.items.Add(this.EquippedWeapon);
+                room.LoadItemAssets (content);
+                this.EquippedWeapon = new Fist();
+                if (this is Player)
+                {
+                    this.LoadAssets(content, "character");
                 }
             }
         }
-        return null;
-    }
 
-        public GameObject CheckForItemCollision(Room currentRoom)
+        public void MoveDown()
+        {
+            Position.Y += MovementSpeed;
+            this.directionFacing = Direction.DOWN;
+        }
+
+        public void MoveLeft()
+        {
+            Position.X -= MovementSpeed;
+            this.directionFacing = Direction.LEFT;
+        }
+
+        public void MoveRight()
+        {
+            Position.X += MovementSpeed;
+            this.directionFacing = Direction.RIGHT;
+        }
+
+        public void MoveUp()
+        {
+            Position.Y -= MovementSpeed;
+            this.directionFacing = Direction.UP;
+        }
+
+        public void MoveUpRight()
+        {
+            Position.X += MovementSpeed;
+            Position.Y -= MovementSpeed;
+            this.directionFacing = Direction.UPRIGHT;
+        }
+
+        public void MoveUpLeft()
+        {
+            Position.X -= MovementSpeed;
+            Position.Y -= MovementSpeed;
+            this.directionFacing = Direction.UPLEFT;
+        }
+
+        public void MoveDownRight()
+        {
+            Position.X += MovementSpeed;
+            Position.Y += MovementSpeed;
+            this.directionFacing = Direction.DOWNRIGHT;
+        }
+
+        public void MoveDownLeft()
+        {
+            Position.X -= MovementSpeed;
+            Position.Y += MovementSpeed;
+            this.directionFacing = Direction.DOWNLEFT;
+        }
+
+        //Sets the minimum value of the Health bar
+        public void SetCurrentHealth(int CurrentHealth)
+        {
+            if (CurrentHealth <= MaximumHealth && CurrentHealth >= 0)
+            {
+                this.CurrentHealth = CurrentHealth;
+            }
+        }
+
+        public void Update(Room room)
+        {
+            if (this.EquippedWeapon is Bow bow)
+            {
+                bow.UpdateArrows(this, room);
+            }
+
+            if (attackCountdown > 0) attackCountdown--;
+        }
+
+        public GameObject CheckForCollision(Room CurrentRoom, int factorX, int factorY, bool attack, bool vision)
+        {
+            BoundingBox boundingBox_1 = this.CreateBoundingBox(factorX, factorY);
+            foreach (GameObject obj in CurrentRoom.passiveObjects)
+            {
+                BoundingBox boundingBox_2 = obj.CreateBoundingBox();
+                if (boundingBox_1.Intersects(boundingBox_2))
+                {
+                    return obj;
+                }
+            }
+            if (CurrentRoom.activeObjects.Count > 1)
+            {
+                foreach (Entity entity_2 in CurrentRoom.activeObjects)
+                {
+                    if (this != entity_2 && entity_2 != null)
+                    {
+                        BoundingBox boundingBox_2 = entity_2.CreateBoundingBox();
+                        if (attack)
+                        {
+                            boundingBox_1.Min.X -= this.EquippedWeapon.WeaponRange;
+                            boundingBox_1.Min.Y -= this.EquippedWeapon.WeaponRange;
+                            boundingBox_1.Max.X += this.EquippedWeapon.WeaponRange;
+                            boundingBox_1.Max.Y += this.EquippedWeapon.WeaponRange;
+                        }
+                        if (vision)
+                        {
+                            boundingBox_1.Min.X -= this.VisionRange;
+                            boundingBox_1.Min.Y -= this.VisionRange;
+                            boundingBox_1.Max.X += this.VisionRange;
+                            boundingBox_1.Max.Y += this.VisionRange;
+                        }
+                        if (
+                            boundingBox_1.Intersects(boundingBox_2) &&
+                            vision == false
+                        )
+                        {
+                            return entity_2;
+                        }
+                        if (
+                            boundingBox_1.Intersects(boundingBox_2) &&
+                            vision == true
+                        )
+                        {
+                            if (entity_2 is Player) return entity_2;
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+        public GameObject CheckForItemCollision(Room CurrentRoom)
         {
             BoundingBox boundingBox_1 = this.CreateBoundingBox();
 
-            foreach (GameObject item in currentRoom.items)
+            foreach (GameObject item in CurrentRoom.items)
             {
                 BoundingBox boundingBox_2 = item.CreateBoundingBox();
 
@@ -270,45 +236,67 @@ public abstract class Entity : GameObject
 
         public BoundingBox CreateBoundingBox(int factorX, int factorY)
         {
-            return new BoundingBox(new Vector3(this.position.X +
-                    this.movementSpeed * factorX -
-                    (this.texture.Width / 2) +
-                    10,
-                    this.position.Y +
-                    this.movementSpeed * factorY -
-                    (this.texture.Height / 2),
+            return new BoundingBox(new Vector3(
+                    this.Position.X + this.MovementSpeed * factorX - (this.Texture.Width / 2) + 10,
+                    this.Position.Y + this.MovementSpeed * factorY - (this.Texture.Height / 2),
                     0),
-                new Vector3(this.position.X +
-                    this.movementSpeed * factorX +
-                    (this.texture.Width / 2) -
-                    10,
-                    this.position.Y +
-                    this.movementSpeed * factorY +
-                    (this.texture.Height / 2),
+                    new Vector3(
+                    this.Position.X + this.MovementSpeed * factorX + (this.Texture.Width / 2) - 10,
+                    this.Position.Y + this.MovementSpeed * factorY + (this.Texture.Height / 2),
                     0));
         }
 
         public new void LoadAssets(ContentManager content, string name)
         {
-            texture = content.Load<Texture2D>(name);
-            if(this.weapon is Bow bow)
+            this.font = content.Load<SpriteFont>("gamefont");
+            this.Texture = content.Load<Texture2D>(name);
+            if (this.EquippedWeapon is Bow bow)
             {
                 bow.LoadAssets(content, "bow"); // bla idk
             }
-            else if(this.weapon != null)
+            else if (this.EquippedWeapon != null)
             {
-                //this.weapon.LoadAssets(content, "........"); // character with specific weapon = change entity texture!
+                //this.EquippedWeapon.LoadAssets(content, "........"); // character with specific weapon = change entity texture!
             }
         }
 
         public new void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            spriteBatch.Draw(texture,position,null,Color.White,0f,new Vector2(texture.Width / 2f, texture.Height / 2f),1.0f,SpriteEffects.None,layerDepth);
-            if(this.weapon is Bow bow)
+            // draw entity
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2f, 
+                Texture.Height / 2f), 1.0f, SpriteEffects.None, layerDepth);
+            
+            // case: draw arrows
+            if (this.EquippedWeapon is Bow bow)
             {
-                ((Bow)bow).Draw(spriteBatch); // depth richtig?
+                ((Bow) bow).Draw(spriteBatch);
+            }
+
+            // display damage taken
+            if(damageTaken.Count > 0)
+            { 
+                displayDamageCountdown--;
+                if(displayDamageCountdown == 0)
+                {
+                    damageTaken.RemoveAt(0);
+                    displayDamageCountdown = 45;
+                }
+                foreach(int hit in damageTaken)
+                {
+                    String damage;
+                    if(hit == -1)
+                    {
+                        damage = "miss";
+                    }
+                    else
+                    {
+                        damage = hit.ToString();
+                    }
+                    spriteBatch.DrawString(font, damage, this.Position - new Vector2(this.Texture.Width/4, (damageTaken.IndexOf(hit))*32 + this.Texture.Height), 
+                        Color.Red, 0f, Vector2.Zero, 0.8f, SpriteEffects.None, 0f);
+                    }
+
             }
         }
+    }
 }
-
-

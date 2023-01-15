@@ -4,22 +4,27 @@ namespace RogueLike.Classes
 {
     public class Tile : GameObject
     {
-        public double fScore, currentDistance;
-        public bool obstacle, visited;
-        public Tile parent;
-        
-        public Tile(Vector2 position, ObjectType type)
+        public double FScore { get; set; }
+        public double CurrentDistance { get; set; }
+
+        public bool Obstacle { get; set; }
+        public bool Visited { get; set; }
+
+        public Tile Parent { get; set; }
+
+        public Tile(Vector2 Position, ObjectType type)
         {
-            this.position = position;
-            this.objectType = type;
+            this.Position = Position;
+            this.ObjType = type;
         }
 
-        public Tile(Vector2 position, ObjectType type, double fScore)
+        public Tile(Vector2 Position, ObjectType type, double fScore)
         {
-            this.position = position;
-            objectType = type;
-            if(objectType != GameObject.ObjectType.Floor) {
-                this.obstacle = true;
+            this.Position = Position;
+            ObjType = type;
+            if (ObjType != GameObject.ObjectType.Floor)
+            {
+                this.Obstacle = true;
             }
         }
     }

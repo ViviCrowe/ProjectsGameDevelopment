@@ -1,52 +1,56 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using RogueLike.Classes;
 
-public class Arrow : GameObject
+namespace RogueLike.Classes.Weapons
 {
-    public static Texture2D texture;
-    public Vector2 direction;
-    public Arrow(Vector2 position, Vector2 direction)
-    {   
-        this.position = position;
-        this.direction = direction;
-    }
-
-    public GameObject CheckForCollision(Room currentRoom)
+    internal class Arrow : GameObject
     {
-        BoundingBox boundingBox_1 = this.CreateBoundingBox();
-        foreach (GameObject obj in currentRoom.passiveObjects)
+        public static Texture2D Texture { get; set; }
+
+        public Vector2 Direction { get; set; }
+
+        public Arrow(Vector2 position, Vector2 direction)
         {
-            BoundingBox boundingBox_2 = obj.CreateBoundingBox();
-            if (boundingBox_1.Intersects(boundingBox_2))
-            {
-                return obj;
-            }
+            this.Position = position;
+            this.Direction = direction;
         }
-        if (currentRoom.activeObjects.Count > 1)
+
+        public GameObject CheckForCollision(Room currentRoom)
         {
-            foreach (Entity entity_2 in currentRoom.activeObjects)
+            BoundingBox boundingBox_1 = this.CreateBoundingBox();
+            foreach (GameObject obj in currentRoom.passiveObjects)
             {
-                if (entity_2 != null)
+                BoundingBox boundingBox_2 = obj.CreateBoundingBox();
+                if (boundingBox_1.Intersects(boundingBox_2))
                 {
-                    BoundingBox boundingBox_2 = entity_2.CreateBoundingBox();
-                    if (boundingBox_1.Intersects(boundingBox_2))
+                    return obj;
+                }
+            }
+            if (currentRoom.activeObjects.Count > 1)
+            {
+                foreach (Entity entity_2 in currentRoom.activeObjects)
+                {
+                    if (entity_2 != null)
                     {
-                        return entity_2;
+                        BoundingBox boundingBox_2 = entity_2.CreateBoundingBox();
+                        if (boundingBox_1.Intersects(boundingBox_2))
+                        {
+                            return entity_2;
+                        }
                     }
                 }
             }
+            return null;
         }
-        return null;
-    }
 
-    public new BoundingBox CreateBoundingBox() {
-        return new BoundingBox(new Vector3(this.position.X -
-            (Arrow.texture.Width / 2),
-            this.position.Y - (Arrow.texture.Height / 2),
-            0),
-        new Vector3(this.position.X + (Arrow.texture.Width / 2),
-            this.position.Y + (Arrow.texture.Height / 2),
-            0));
+        public new BoundingBox CreateBoundingBox()
+        {
+            return new BoundingBox(new Vector3(this.Position.X - (Arrow.Texture.Width / 2),
+                    this.Position.Y - (Arrow.Texture.Height / 2),
+                    0),
+                new Vector3(this.Position.X + (Arrow.Texture.Width / 2),
+                    this.Position.Y + (Arrow.Texture.Height / 2),
+                    0));
+        }
     }
 }

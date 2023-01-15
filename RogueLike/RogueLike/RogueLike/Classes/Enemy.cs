@@ -2,9 +2,10 @@ using System;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RogueLike.Classes;
+using RogueLike.Classes.AI;
 using RogueLike.Classes.Weapons;
 
+namespace RogueLike.Classes{
 // Context Class
 public class Enemy : Entity
 {
@@ -16,42 +17,53 @@ public class Enemy : Entity
         MELEE,
         TANK    
     };
-    public Type type;
-    public Tile destinationTile;
-    public Vector2 playerDirection;
+    public Type EnemyType { get; set; }
+    public Tile DestinationTile { get; set; }
+    public Vector2 PlayerDirection { get; set; }
 
-    public Enemy(Viewport viewport, Type type, Vector2 position, Room room)
+    public Enemy(Viewport viewport, Type EnemyType, Vector2 Position, Room room)
     {
-        this.type = type;
+        this.EnemyType = EnemyType;
 
-        switch(type) {
+        switch(EnemyType) {
             case Type.ARCHER: 
-            this.movementSpeed = 3.5f;
-            this.maximumHealth = this.currentHealth = 200;
-            this.weapon = new Bow(this);
-            this.visionRange = 300;
+            this.MovementSpeed = 3.5f;
+            this.MaximumHealth = this.CurrentHealth = 200;
+            this.EquippedWeapon = new Bow(this);
+            this.VisionRange = 300;
             break;
             case Type.MELEE:
-            this.movementSpeed = 2.5f;
-            this.maximumHealth = this.currentHealth = 400;
-            this.weapon = new Sword();
-            this.visionRange = 150;
+            this.MovementSpeed = 2.5f;
+            this.MaximumHealth = this.CurrentHealth = 400;
+            this.EquippedWeapon = new Sword();
+            this.VisionRange = 150;
             break;
             case Type.TANK:
-            this.movementSpeed = 1.5f;
-            this.maximumHealth = this.currentHealth = 800;
-            this.weapon = new Spear();
-            this.visionRange = 100;
+            this.MovementSpeed = 1.5f;
+            this.MaximumHealth = this.CurrentHealth = 600;
+            this.EquippedWeapon = new Spear();
+            this.VisionRange = 100;
             break;
         }
 
-        this.position.X = position.X;
-        this.position.Y = position.Y;
+        this.Position.X = Position.X;
+        this.Position.Y = Position.Y;
         room.activeObjects.Add(this);
 
         this.enemyAI = new PatrolAI();
         
-        teeth = new((int) (random.NextDouble()*10));
+        Teeth = new((int) (random.NextDouble()*10));
+    }
+
+    public void DropTeeth(Room room, ContentManager content)
+    {
+        if (this.Teeth.Value > 0 && this.Teeth != null)
+        {
+            this.Teeth.Position = this.Position;
+            room.items.Add(this.Teeth);
+            room.LoadItemAssets (content);
+            this.Teeth = null;
+        }
     }
 
     public void Move(Room room, Tile destinationTile)
@@ -59,7 +71,7 @@ public class Enemy : Entity
         enemyAI.Move(this, room, destinationTile);
     }
 
-    public void setEnemyAI(EnemyAI enemyAI)
+    private void setEnemyAI(EnemyAI enemyAI)
     {
         // switch at runtime
         this.enemyAI = enemyAI;
@@ -69,15 +81,15 @@ public class Enemy : Entity
     {
         base.Update(room);
         // enemy death
-        if(this.currentHealth <= 0) 
+        if(this.CurrentHealth <= 0) 
         {
             room.activeObjects.Remove(this);
 
-            if(random.NextDouble() < 0.75)
+            if(random.NextDouble() < 0.9)
             {
                 this.DropTeeth(room, content);
             }
-            else if(random.NextDouble() < 0.2)
+            else if(random.NextDouble() < 0.4)
             {   
                 this.DropWeapon(room, content);
             }
@@ -98,9 +110,9 @@ public class Enemy : Entity
 
     private void UpdatePlayerInVision(Room room)
     {
-        if((PlayerInVision(room) || currentHealth < maximumHealth) && enemyAI is PatrolAI)
+        if((PlayerInVision(room) || CurrentHealth < MaximumHealth) && enemyAI is PatrolAI)
         {
-            switch(type) 
+            switch(EnemyType) 
             {
                 case Type.ARCHER: setEnemyAI(new ArcherAI());
                 break;
@@ -124,8 +136,9 @@ public class Enemy : Entity
 
     public void LoadAssets(ContentManager content) 
     {
-        string name = this.type.ToString().ToLower();
-        this.texture = content.Load<Texture2D>(name);
+        string name = this.EnemyType.ToString().ToLower();
+        this.Texture = content.Load<Texture2D>(name);
     }
 
+}
 }

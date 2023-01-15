@@ -2,6 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
 using static System.Math;
 
@@ -9,21 +10,22 @@ namespace RogueLike.Classes
 {
     public class Room
     {
-        public Vector2 tileDimensions = new(64, 64);
-        public Vector2 gridDimensions, offset;
+        private Vector2 tileDimensions = new(64, 64);
+        public Vector2 GridDimensions;
+        private Vector2 offset;
 
-        public Tile[,] Tiles;
+        public Tile[,] Tiles { get; set; }
 
-        public Vector2 Position;
-        public List<GameObject> passiveObjects = new List<GameObject>();
+        private Vector2 position;
+        public List<GameObject> passiveObjects { get; set; } = new List<GameObject>();
 
-        public List<Entity> activeObjects = new List<Entity>();
+        public List<Entity> activeObjects { get; set; } = new List<Entity>();
 
-        public List<GameObject> items = new List<GameObject>(); // haben (noch?) keine item klasse
+        public List<GameObject> items { get; set; } = new List<GameObject>();
 
         private Viewport viewport;
 
-        bool first, last, lastLevel;
+        private bool first, last, lastLevel;
 
         public Room(Viewport viewport, bool first, bool last, bool lastLevel, int width, int height)
         {
@@ -31,15 +33,15 @@ namespace RogueLike.Classes
 
             //Es funktionieren aktuell nur ungerade Anzahlen
             Tiles = new Tile[width, height];
-            Position.X = this.offset.X =
+            position.X = this.offset.X =
                 (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
-            Position.Y = this.offset.Y =
+            position.Y = this.offset.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
             this.first = first;
             this.last = last;
             this.lastLevel = lastLevel;
 
-            this.gridDimensions = new(Tiles.GetLength(0), Tiles.GetLength(1));
+            this.GridDimensions = new(Tiles.GetLength(0), Tiles.GetLength(1));
             }
 
         public void LoadAssets(ContentManager content)
@@ -50,7 +52,7 @@ namespace RogueLike.Classes
                 {
                     if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(1) / 2)
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Door);
+                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Door);
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
                         passiveObjects.Add(Tiles[i, j]);
                     }
@@ -61,27 +63,27 @@ namespace RogueLike.Classes
                         j == Tiles.GetLength(1) - 1
                     )
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Wall);
+                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Wall);
                         Tiles[i, j].LoadAssets(content, "wall");
                         passiveObjects.Add(Tiles[i, j]);
                     }
                     else if (!lastLevel && last && i == 1 && j == Tiles.GetLength(1) / 2)
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Hole);
+                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Hole);
                         Tiles[i, j].LoadAssets(content, "hole");
                         passiveObjects.Add(Tiles[i, j]);
                     }
                     else
                     {
-                        Tiles[i, j] = new Tile(Position, GameObject.ObjectType.Floor);
+                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Floor);
                         Tiles[i, j].LoadAssets(content, "Grass_normal");
                     }
 
-                    Position.X += tileDimensions.X;
+                    position.X += tileDimensions.X;
                 }
-                Position.X =
+                position.X =
                     viewport.Width / 2 - (Tiles.GetLength(1) - 1) * tileDimensions.X / 2;
-                Position.Y += tileDimensions.Y;
+                position.Y += tileDimensions.Y;
             }
             LoadEntityAssets(content);
             LoadItemAssets(content);
@@ -93,9 +95,17 @@ namespace RogueLike.Classes
             {
                 if (item != null)
                 {
-                    if(item is Weapon)
+                    if(item is Sword)
                     {
-                        item.LoadAssets(content, "sword"); // TEST NAME
+                        item.LoadAssets(content, "sword");
+                    }
+                    else if(item is Bow)
+                    {
+                        item.LoadAssets(content, "bow");
+                    }
+                    else if(item is Spear)
+                    {
+                        item.LoadAssets(content, "spear");
                     }
                     else if(item is Wallet)
                     {
@@ -113,9 +123,12 @@ namespace RogueLike.Classes
         {
             foreach (Entity entity in activeObjects)
             {
-                if(entity is Enemy)
+                if(entity is Enemy enemy)
                 {
-                    entity.LoadAssets(content, "enemy"); // TEST NAME
+                    //if(enemy.type == Enemy.Type.ARCHER) enemy.LoadAssets(content, "archer");
+                    //else if(enemy.type == Enemy.Type.MELEE) enemy.LoadAssets(content, "melee");
+                    //else if(enemy.type == Enemy.Type.TANK) enemy.LoadAssets(content, "tank");
+                    entity.LoadAssets(content, "enemy"); // TEST 
                 }
             }
         }
@@ -147,10 +160,10 @@ namespace RogueLike.Classes
             }
         }
 
-        public Tile GetTileFromPos(Vector2 position)
+        public Tile GetTileFromPos(Vector2 Position)
         {
-            int col = (int) ((position.X - this.offset.X) / tileDimensions.X);
-            int row = (int) ((position.Y - this.offset.Y) / tileDimensions.Y);
+            int col = (int) ((Position.X - this.offset.X) / tileDimensions.X);
+            int row = (int) ((Position.Y - this.offset.Y) / tileDimensions.Y);
             return Tiles[row, col];
         }
 
@@ -161,12 +174,12 @@ namespace RogueLike.Classes
         
         public void FollowPath(Enemy enemy)
         {
-            if(enemy.destinationTile != null)
+            if(enemy.DestinationTile != null)
             {
-                Tile temp = enemy.destinationTile;
-                while(temp.parent != null) 
+                Tile temp = enemy.DestinationTile;
+                while(temp.Parent != null) 
                 {
-                    temp = temp.parent;
+                    temp = temp.Parent;
                 }
                 enemy.Move(this, temp);
             }
@@ -174,27 +187,27 @@ namespace RogueLike.Classes
 
         public bool StartAStar(Enemy enemy) 
         {
-            for(int row = 0; row < gridDimensions.X; row++)
-                for(int col = 0; col < gridDimensions.Y; col++)
+            for(int row = 0; row < GridDimensions.X; row++)
+                for(int col = 0; col < GridDimensions.Y; col++)
                 {
-                    Tiles[row, col].visited = false;
-                    Tiles[row, col].currentDistance = double.PositiveInfinity;
-                    Tiles[row, col].fScore = double.PositiveInfinity;
-                    Tiles[row, col].parent = null;
+                    Tiles[row, col].Visited = false;
+                    Tiles[row, col].CurrentDistance = double.PositiveInfinity;
+                    Tiles[row, col].FScore = double.PositiveInfinity;
+                    Tiles[row, col].Parent = null;
                 }
             
-            Tile currentTile = GetTileFromPos(enemy.position);
-            currentTile.fScore = 0f;
-            currentTile.currentDistance = CalculateHeuristic(currentTile, enemy.destinationTile);
+            Tile currentTile = GetTileFromPos(enemy.Position);
+            currentTile.FScore = 0f;
+            currentTile.CurrentDistance = CalculateHeuristic(currentTile, enemy.DestinationTile);
 
             Stack<Tile> openList = new Stack<Tile>();
             openList.Push(currentTile);
             
-            while(openList.Count > 0 && currentTile != enemy.destinationTile)
+            while(openList.Count > 0 && currentTile != enemy.DestinationTile)
             {
                 openList = Sort(openList);
         
-                while(openList.Count > 0 && openList.Peek().visited)
+                while(openList.Count > 0 && openList.Peek().Visited)
                 {
                     openList.Pop();
                 }
@@ -204,7 +217,7 @@ namespace RogueLike.Classes
                 }
                 
                 currentTile = openList.Peek();
-                currentTile.visited = true;
+                currentTile.Visited = true;
 
                 int i = 0;
                 int j = 0;
@@ -218,17 +231,17 @@ namespace RogueLike.Classes
                     for (int y = -1; y <= 1; y++) 
                     {
                         Tile neighbourTile = Tiles[i+x, j+y]; 
-                        if(!neighbourTile.visited && !neighbourTile.obstacle)
+                        if(!neighbourTile.Visited && !neighbourTile.Obstacle)
                         {
                             openList.Push(neighbourTile); 
                         }
-                        double fScore_2 = currentTile.fScore + CalculateHeuristic(currentTile, neighbourTile);
+                        double FScore_2 = currentTile.FScore + CalculateHeuristic(currentTile, neighbourTile);
 
-                        if(fScore_2 < neighbourTile.fScore)
+                        if(FScore_2 < neighbourTile.FScore)
                         {
-                            neighbourTile.parent = currentTile;
-                            neighbourTile.fScore = fScore_2;
-                            neighbourTile.currentDistance = neighbourTile.fScore + CalculateHeuristic(neighbourTile, enemy.destinationTile);
+                            neighbourTile.Parent = currentTile;
+                            neighbourTile.FScore = FScore_2;
+                            neighbourTile.CurrentDistance = neighbourTile.FScore + CalculateHeuristic(neighbourTile, enemy.DestinationTile);
                         }
                     }
                 }
@@ -238,7 +251,7 @@ namespace RogueLike.Classes
 
         public double CalculateHeuristic(Tile tileA, Tile tileB)
         {
-            return Sqrt(Pow((tileA.position.X - tileB.position.X), 2.0) + Pow((tileA.position.Y - tileB.position.Y), 2.0));
+            return Sqrt(Pow((tileA.Position.X - tileB.Position.X), 2.0) + Pow((tileA.Position.Y - tileB.Position.Y), 2.0));
         }
 
         private Stack<Tile> Sort(Stack<Tile> stack)
@@ -247,7 +260,7 @@ namespace RogueLike.Classes
             while (stack.Count > 0)
             {
                 Tile element = stack.Pop();
-                while (temp.Count > 0 && element.currentDistance > temp.Peek().currentDistance)
+                while (temp.Count > 0 && element.CurrentDistance > temp.Peek().CurrentDistance)
                 {
                     stack.Push(temp.Pop());
                 }
@@ -255,6 +268,5 @@ namespace RogueLike.Classes
             }
             return temp;
         } 
-    }
-    
+    }   
 }
