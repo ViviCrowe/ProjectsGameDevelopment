@@ -25,7 +25,7 @@ namespace RogueLike.Classes
 
         public void Draw(SpriteBatch spriteBatch, float layerDepth)
         {
-            spriteBatch .Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2f, 
+            spriteBatch.Draw(Texture, Position, null, Color.White, 0f, new Vector2(Texture.Width / 2f, 
                 Texture.Height / 2f), 1.0f, SpriteEffects.None, layerDepth);
         }
 
