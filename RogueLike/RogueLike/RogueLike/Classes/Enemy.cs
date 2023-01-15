@@ -20,6 +20,7 @@ public class Enemy : Entity
     public Type EnemyType { get; set; }
     public Tile DestinationTile { get; set; }
     public Vector2 PlayerDirection { get; set; }
+    private int experiencePoints;
 
     public Enemy(Viewport viewport, Type EnemyType, Vector2 Position, Room room)
     {
@@ -31,18 +32,21 @@ public class Enemy : Entity
             this.MaximumHealth = this.CurrentHealth = 200;
             this.EquippedWeapon = new Bow(this);
             this.VisionRange = 300;
+            this.experiencePoints = 25;
             break;
             case Type.MELEE:
             this.MovementSpeed = 2.5f;
             this.MaximumHealth = this.CurrentHealth = 400;
             this.EquippedWeapon = new Sword();
             this.VisionRange = 150;
+            this.experiencePoints = 50;
             break;
             case Type.TANK:
             this.MovementSpeed = 1.5f;
             this.MaximumHealth = this.CurrentHealth = 600;
             this.EquippedWeapon = new Spear();
             this.VisionRange = 100;
+            this.experiencePoints = 75;
             break;
         }
 
@@ -80,6 +84,7 @@ public class Enemy : Entity
     public void Update(Player player, Room room, ContentManager content)
     {
         base.Update(room);
+
         // enemy death
         if(this.CurrentHealth <= 0) 
         {
@@ -93,6 +98,7 @@ public class Enemy : Entity
             {   
                 this.DropWeapon(room, content);
             }
+            player.Experience += this.experiencePoints;
         }
 
         // enemy movement

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.Items;
@@ -18,7 +19,7 @@ namespace RogueLike.Classes
 
         public int CurrentHealth { get; set; }
 
-        private int attackCountdown = 0;
+        public int AttackCountdown { get; set; } = 0;
 
         public Weapon EquippedWeapon { get; set; }
 
@@ -29,6 +30,14 @@ namespace RogueLike.Classes
         private List<int> damageTaken = new List<int>();
         private SpriteFont font;
         private int displayDamageCountdown = 45;
+        private SoundEffect attackMissSound;
+        private SoundEffect attackSwordSound;
+        private SoundEffect attackBowSound;
+        private SoundEffect attackSpearSound;
+        private SoundEffect attackFistSound;
+        private SoundEffect damagePlayerSound;
+        private SoundEffect damageEnemySound;
+        public SoundEffect PickupDropSound { get; set; }
 
         public enum Direction
         {
@@ -58,19 +67,26 @@ namespace RogueLike.Classes
         {
             int damageDealt = 0;
 
-            if (this.attackCountdown == 0 || this.EquippedWeapon is Bow) // attack possible
+            if (this.AttackCountdown == 0 || this.EquippedWeapon is Bow) // attack possible
             {
                 Random random = new Random();
-                if(random.NextDouble() < 0.08) // miss
+                if(random.NextDouble() < 0.1) // miss
                 {
                     damageDealt = -1;
+                    attackMissSound.Play();
                 }
                 else
                 {
+                    if(this.EquippedWeapon is Bow) attackBowSound.Play();
+                    else if(this.EquippedWeapon is Spear) attackSpearSound.Play();
+                    else if(this.EquippedWeapon is Sword) attackSwordSound.Play();
+                    else if(this.EquippedWeapon is Fist) attackFistSound.Play();
                     damageDealt = this.EquippedWeapon.AttackDamage;
                     target.CurrentHealth -= damageDealt;
+                    if(target is Player) damagePlayerSound.Play();
+                    else damageEnemySound.Play();
                 }
-                attackCountdown = 50;
+                AttackCountdown = 55;
                 target.damageTaken.Add(damageDealt);
                 return damageDealt;
             }
@@ -163,7 +179,7 @@ namespace RogueLike.Classes
                 bow.UpdateArrows(this, room);
             }
 
-            if (attackCountdown > 0) attackCountdown--;
+            if (AttackCountdown > 0) AttackCountdown--;
         }
 
         public GameObject CheckForCollision(Room CurrentRoom, int factorX, int factorY, bool attack, bool vision)
@@ -250,9 +266,19 @@ namespace RogueLike.Classes
         {
             this.font = content.Load<SpriteFont>("gamefont");
             this.Texture = content.Load<Texture2D>(name);
+            Wallet.Texture = content.Load<Texture2D>("teeth");
+            this.attackMissSound = content.Load<SoundEffect>("attack_miss");
+            this.attackSwordSound = content.Load<SoundEffect>("attack_sword");
+            this.attackBowSound = content.Load<SoundEffect>("attack_arrow");
+            this.attackSpearSound = content.Load<SoundEffect>("attack_spear");
+            this.attackFistSound = content.Load<SoundEffect>("attack_fist");
+            this.damagePlayerSound = content.Load<SoundEffect>("damage_player");
+            this.damageEnemySound = content.Load<SoundEffect>("damage_enemy");
+            this.PickupDropSound = content.Load<SoundEffect>("drop_pickup");
+
             if (this.EquippedWeapon is Bow bow)
             {
-                bow.LoadAssets(content, "bow"); // bla idk
+                bow.LoadAssets(content, "bow"); // arrows
             }
             else if (this.EquippedWeapon != null)
             {

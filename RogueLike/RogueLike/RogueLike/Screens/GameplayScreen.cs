@@ -93,15 +93,16 @@ namespace GameStateManagement
             viewport = ScreenManager.GraphicsDevice.Viewport;
 
             gameFont = content.Load<SpriteFont>("gamefont");
-            song = content.Load<Song>("revenge");
+            song = content.Load<Song>("background_music");
             MediaPlayer.IsRepeating = true;
-            //MediaPlayer.Play(song);
+            MediaPlayer.Volume = 1.5f;
+            MediaPlayer.Play(song);
 
             //Initialising and Generating Atributes of Player
             player = new Player(viewport, null);
             player.aktivAbility = new AktivAbility();
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
-            player.LoadAssets(content, "character");
+            player.LoadAssets(content);
 
             weapon = new Spear(); // TEST
             weapon.Position.X = viewport.Width / 2 + 60; //TEST

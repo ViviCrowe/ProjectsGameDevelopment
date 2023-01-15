@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.Abilities;
@@ -11,6 +12,12 @@ public class Player : Entity
 {
     public AktivAbility aktivAbility { get; set; }
     private int pickUpWeaponCountdown = 0;
+    public int Experience { get; set; }
+    public int Level { get; set; }
+    public int LevelUpAt = 200;
+    private SoundEffect drinkPotionSound;
+    private SoundEffect levelUpSound;
+
     public Player(Viewport viewport, Weapon weapon) :
         base(viewport, weapon)
     {
@@ -31,6 +38,15 @@ public class Player : Entity
     {
         base.Update(room);
         if(pickUpWeaponCountdown > 0) pickUpWeaponCountdown--;
+        if(this.Experience >= this.LevelUpAt) this.LevelUp();
+    } 
+
+    public void LevelUp()
+    {
+        this.MaximumHealth += 100;
+        this.Level++;
+        this.LevelUpAt = this.Experience + 200;
+        levelUpSound.Play();
     }
 
     public void PickUpItem(GameObject item, Room room, ContentManager content)
@@ -50,6 +66,7 @@ public class Player : Entity
                 {}
                 this.LoadAssets(content, "character_with_sword"); // TESTWEISE 
                 player.pickUpWeaponCountdown = 40;
+                PickupDropSound.Play();
             }
             else if (item is Wallet wallet)
             {
@@ -67,6 +84,7 @@ public class Player : Entity
                     this.CurrentHealth += potion.AdditionalHealth;
                 }
                 room.items.Remove(potion);
+                drinkPotionSound.Play();
             }
         }
     }
@@ -93,4 +111,10 @@ public class Player : Entity
         // TODO
     }
 
+    public void LoadAssets(ContentManager content)
+    {
+        base.LoadAssets(content, "character");
+        levelUpSound = content.Load<SoundEffect>("level_up");
+        drinkPotionSound = content.Load<SoundEffect>("drink_potion");
+    }
 }}
