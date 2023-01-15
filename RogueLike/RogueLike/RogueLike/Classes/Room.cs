@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
+using SharpDX.Direct3D9;
 using static System.Math;
 
 namespace RogueLike.Classes
@@ -13,6 +15,8 @@ namespace RogueLike.Classes
         private Vector2 tileDimensions = new(64, 64);
         public Vector2 GridDimensions;
         private Vector2 offset;
+
+        private static Random random = new Random();
 
         public Tile[,] Tiles { get; set; }
 
@@ -25,7 +29,7 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
 
-        private bool last, lastLevel;
+        private bool first, last, lastLevel;
 
         public enum DoorType
         {
@@ -36,7 +40,7 @@ namespace RogueLike.Classes
             Bottom
         }
 
-        public Room(Viewport viewport, bool last, bool lastLevel, int width, int height)
+        public Room(Viewport viewport, bool first, bool last, bool lastLevel, int width, int height)
         {
             this.viewport = viewport;
 
@@ -46,6 +50,7 @@ namespace RogueLike.Classes
                 (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
             position.Y = this.offset.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+            this.first = first;
             this.last = last;
             this.lastLevel = lastLevel;
 
@@ -105,6 +110,8 @@ namespace RogueLike.Classes
                     viewport.Width / 2 - (Tiles.GetLength(1) - 1) * tileDimensions.X / 2;
                 position.Y += tileDimensions.Y;
             }
+            if(!first && !last) addEnemies();
+
             LoadEntityAssets(content);
             LoadItemAssets(content);
         }
@@ -145,6 +152,32 @@ namespace RogueLike.Classes
                 Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1)-1] = new Tile(position, GameObject.ObjectType.Door);
                 Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1].LoadAssets(content, "tuer_offen");
                 passiveObjects.Add(Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1]);
+            }
+        }
+
+        private void addEnemies()
+        {
+            int enemyCount, enemyType;
+
+            enemyCount = random.Next(1, 4);
+            for (int i2 = 0; i2 < enemyCount; i2++)
+            {
+                enemyType = random.Next(1, 4);
+                int tileX = random.Next(1, Tiles.GetLength(0) - 2);
+                int tileY = random.Next(1, Tiles.GetLength(1) - 2);
+                Vector2 tile = Tiles[tileX, tileY].Position;
+                if (enemyType == 1)
+                {
+                    new Enemy(viewport, Enemy.Type.ARCHER, tile, this);
+                }
+                else if (enemyType == 2)
+                {
+                    new Enemy(viewport, Enemy.Type.TANK, tile, this);
+                }
+                else if (enemyType == 3)
+                {
+                    new Enemy(viewport, Enemy.Type.MELEE, tile, this);
+                }
             }
         }
 

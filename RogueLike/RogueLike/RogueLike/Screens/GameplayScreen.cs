@@ -113,9 +113,9 @@ namespace GameStateManagement
             potion.Position.Y = viewport.Height / 2 + 120;
 
             level = new Level[3];
-            level[0] = new Level(viewport, 6, false);
-            level[1] = new Level(viewport, 6, false);
-            level[2] = new Level(viewport, 6, true);
+            level[0] = new Level(viewport, 7, false);
+            level[1] = new Level(viewport, 7, false);
+            level[2] = new Level(viewport, 8, true);
 
             levelCounter = 0;
             newLevel();
@@ -143,8 +143,8 @@ namespace GameStateManagement
                     room.items.Add(weapon);
                     room.items.Add(potion);
                     room.activeObjects.Add(player);
-                    enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), room); // TEST
-                    enemy2 = new Enemy(viewport, Enemy.Type.TANK, new Vector2(800, 500), room);
+                    //enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), room); // TEST
+                    //enemy2 = new Enemy(viewport, Enemy.Type.TANK, new Vector2(800, 500), room);
                     room.LoadAssets(content);
                 }
             }
