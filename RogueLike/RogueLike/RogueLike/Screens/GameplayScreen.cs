@@ -108,9 +108,9 @@ namespace GameStateManagement
             weapon.Position.X = viewport.Width / 2 + 60; //TEST
             weapon.Position.Y = viewport.Height / 2 - 60; //TEST  
 
-            potion = new Potion(500); // TEST
-            potion.Position.X = viewport.Width / 2 + 120;
-            potion.Position.Y = viewport.Height / 2 + 120;
+            potion = new Potion(500, new(viewport.Width/2 + 130, viewport.Height/2 + 130), Potion.PotionType.HEALING); // TEST
+            //potion = new Potion(10, new(viewport.Width/2 + 130, viewport.Height/2 + 130), Potion.PotionType.DEFENSE); // TEST
+
 
             level = new Level[3];
             level[0] = new Level(viewport, 6, false);
@@ -267,6 +267,14 @@ namespace GameStateManagement
 
             //Updates the HUD if Reference is different
             playerHUD.Update(player);
+
+            if(currentRoom.Last && currentRoom.LastLevel)
+            {
+                song = content.Load<Song>("boss_music");
+                MediaPlayer.IsRepeating = true;
+                MediaPlayer.Volume = 1.5f;
+                MediaPlayer.Play(song);
+            }
         }
 
         private bool checkTrapDoor(Entity entity)
