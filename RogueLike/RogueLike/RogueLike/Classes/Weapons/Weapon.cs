@@ -10,7 +10,6 @@ namespace RogueLike.Classes.Weapons
         public int AttackDamage { get; set; }
         public int TeethValue { get; set; }
         public int WeaponRange { get; set; }
-        private SoundEffect soundEffect;
 
     }
 }
