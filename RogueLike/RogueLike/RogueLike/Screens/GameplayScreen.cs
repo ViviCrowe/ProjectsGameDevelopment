@@ -45,12 +45,6 @@ namespace GameStateManagement
 
         private Player player;
 
-        private Enemy enemy; // STATISCHER TEST GEGNER
-        private Enemy enemy2;
-        
-        private Weapon weapon; // TEST WAFFE
-        private Potion potion; // TEST POTION
-
         private Level[] level;
 
         private Level currentLevel;
@@ -64,8 +58,9 @@ namespace GameStateManagement
         private Viewport viewport;
 
         private PlayerHUD playerHUD;
-
-        private Song song;
+        private Song backgroundMusic;
+        private Song bossMusic;
+        private Song currentSong;
 
 #endregion Fields
 
@@ -92,30 +87,27 @@ namespace GameStateManagement
 
             viewport = ScreenManager.GraphicsDevice.Viewport;
 
+            Wallet.Texture = content.Load<Texture2D>("teeth");
             gameFont = content.Load<SpriteFont>("gamefont");
-            song = content.Load<Song>("background_music");
+            backgroundMusic = currentSong = content.Load<Song>("background_music");
+            bossMusic = content.Load<Song>("boss_music");
             MediaPlayer.IsRepeating = true;
             MediaPlayer.Volume = 1.5f;
-            MediaPlayer.Play(song);
+            MediaPlayer.Play(currentSong);
 
-            //Initialising and Generating Atributes of Player
+            //Initialising and Generating Attributes of Player
             player = new Player(viewport, null);
             player.aktivAbility = new AktivAbility();
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content);
 
-            weapon = new Spear(); // TEST
-            weapon.Position.X = viewport.Width / 2 + 60; //TEST
-            weapon.Position.Y = viewport.Height / 2 - 60; //TEST  
-
-            potion = new Potion(500, new(viewport.Width/2 + 130, viewport.Height/2 + 130), Potion.PotionType.HEALING); // TEST
-            //potion = new Potion(10, new(viewport.Width/2 + 130, viewport.Height/2 + 130), Potion.PotionType.DEFENSE); // TEST
-
+            Entity.LoadAssets(content);
+            Bow.LoadAssets(content);
 
             level = new Level[3];
-            level[0] = new Level(viewport, 6, false);
-            level[1] = new Level(viewport, 6, false);
-            level[2] = new Level(viewport, 6, true);
+            level[0] = new Level(viewport, 7, false);
+            level[1] = new Level(viewport, 7, false);
+            level[2] = new Level(viewport, 8, true);
 
             levelCounter = 0;
             newLevel();
@@ -140,11 +132,7 @@ namespace GameStateManagement
             {
                 if (room != null)
                 {
-                    room.items.Add(weapon);
-                    room.items.Add(potion);
                     room.activeObjects.Add(player);
-                    enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), room); // TEST
-                    enemy2 = new Enemy(viewport, Enemy.Type.TANK, new Vector2(800, 500), room);
                     room.LoadAssets(content);
                 }
             }
@@ -195,7 +183,11 @@ namespace GameStateManagement
             {
                 foreach(Entity e in currentRoom.activeObjects.ToArray()) 
                 {
-                    if(e is Enemy enemy) 
+                    if(e is Boss boss) 
+                    {
+                        boss.Update(player, currentRoom, content);
+                    }
+                    else if(e is Enemy enemy)
                     {
                         enemy.Update(player, currentRoom, content);
                     }
@@ -268,12 +260,15 @@ namespace GameStateManagement
             //Updates the HUD if Reference is different
             playerHUD.Update(player);
 
-            if(currentRoom.Last && currentRoom.LastLevel)
+            if(currentRoom.Last && currentRoom.LastLevel && currentSong != bossMusic)
             {
-                song = content.Load<Song>("boss_music");
-                MediaPlayer.IsRepeating = true;
-                MediaPlayer.Volume = 1.5f;
-                MediaPlayer.Play(song);
+                currentSong = bossMusic;
+                MediaPlayer.Play(currentSong);
+            }
+            else if(!(currentRoom.Last && currentRoom.LastLevel) && currentSong == bossMusic)
+            {
+                currentSong = backgroundMusic;
+                MediaPlayer.Play(currentSong);
             }
         }
 

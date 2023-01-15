@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
@@ -10,10 +11,11 @@ namespace RogueLike.Classes
 {
     public class Room
     {
-        private Vector2 tileDimensions = new(64, 64);
+        public Vector2 tileDimensions = new(64, 64);
         public Vector2 GridDimensions;
-        private Vector2 offset;
+        public Vector2 Offset;
 
+        private static Random random = new Random();
         public Tile[,] Tiles { get; set; }
 
         private Vector2 position;
@@ -28,6 +30,8 @@ namespace RogueLike.Classes
         public bool Last { get; set; }
         public bool LastLevel { get; set; }
 
+        public bool First { get; set; }
+
         public enum DoorType
         {
             None,
@@ -37,16 +41,18 @@ namespace RogueLike.Classes
             Bottom
         }
 
-        public Room(Viewport viewport, bool last, bool lastLevel, int width, int height)
+        public Room(Viewport viewport, bool first, bool last, bool lastLevel, int width, int height)
         {
             this.viewport = viewport;
 
             //Es funktionieren aktuell nur ungerade Anzahlen
             Tiles = new Tile[width, height];
-            position.X = this.offset.X =
+            position.X = this.Offset.X =
                 (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
-            position.Y = this.offset.Y =
+            position.Y = this.Offset.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+            
+            this.First = first;
             this.Last = last;
             this.LastLevel = lastLevel;
 
@@ -70,8 +76,6 @@ namespace RogueLike.Classes
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
                         passiveObjects.Add(Tiles[i, j]);
                     }*/
-                    
-
 
                     if (Tiles[i, j] == null)
                     {
@@ -106,6 +110,9 @@ namespace RogueLike.Classes
                     viewport.Width / 2 - (Tiles.GetLength(1) - 1) * tileDimensions.X / 2;
                 position.Y += tileDimensions.Y;
             }
+            if(!First && !Last) addEnemies();
+            if(Last && LastLevel) activeObjects.Add(new Boss(viewport, null, new Vector2(viewport.Width/2, viewport.Height/2 - 200)));
+
             LoadEntityAssets(content);
             LoadItemAssets(content);
         }
@@ -146,6 +153,32 @@ namespace RogueLike.Classes
                 Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1)-1] = new Tile(position, GameObject.ObjectType.Door);
                 Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1].LoadAssets(content, "tuer_offen");
                 passiveObjects.Add(Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1]);
+            }
+        }
+
+        private void addEnemies()
+        {
+            int enemyCount, enemyType;
+
+            enemyCount = random.Next(1, 4);
+            for (int i2 = 0; i2 < enemyCount; i2++)
+            {
+                enemyType = random.Next(1, 4);
+                int tileX = random.Next(3, Tiles.GetLength(0) - 4);
+                int tileY = random.Next(3, Tiles.GetLength(1) - 4);
+                Vector2 tile = Tiles[tileX, tileY].Position;
+                if (enemyType == 1)
+                {
+                    new Enemy(viewport, Enemy.Type.ARCHER, tile, this);
+                }
+                else if (enemyType == 2)
+                {
+                    new Enemy(viewport, Enemy.Type.TANK, tile, this);
+                }
+                else if (enemyType == 3)
+                {
+                    new Enemy(viewport, Enemy.Type.MELEE, tile, this);
+                }
             }
         }
 
@@ -195,12 +228,16 @@ namespace RogueLike.Classes
         {
             foreach (Entity entity in activeObjects)
             {
-                if(entity is Enemy enemy)
+                if(entity is Boss boss)
+                {
+                    boss.LoadAssets(content); // no texture yet
+                }
+                else if(entity is Enemy enemy)
                 {
                     //if(enemy.type == Enemy.Type.ARCHER) enemy.LoadAssets(content, "archer");
                     //else if(enemy.type == Enemy.Type.MELEE) enemy.LoadAssets(content, "melee");
                     //else if(enemy.type == Enemy.Type.TANK) enemy.LoadAssets(content, "tank");
-                    entity.LoadAssets(content, "enemy"); // TEST 
+                    enemy.LoadAssets(content, "enemy"); // TEST 
                 }
             }
         }
@@ -234,8 +271,8 @@ namespace RogueLike.Classes
 
         public Tile GetTileFromPos(Vector2 Position)
         {
-            int col = (int) ((Position.X - this.offset.X) / tileDimensions.X);
-            int row = (int) ((Position.Y - this.offset.Y) / tileDimensions.Y);
+            int col = (int) ((Position.X - this.Offset.X) / tileDimensions.X);
+            int row = (int) ((Position.Y - this.Offset.Y) / tileDimensions.Y);
             return Tiles[row, col];
         }
 

@@ -1,6 +1,8 @@
 ﻿using System;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using RogueLike.Classes.AI;
 using SharpDX.Direct3D9;
 
 namespace RogueLike.Classes
@@ -54,52 +56,85 @@ namespace RogueLike.Classes
 
         public void generateLevel(ContentManager content)
         {
-            int
-                width,
-                height;
+            int width, height;
 
             int i, j;
 
             int counter = 0;
 
-            while(counter < roomNumber)
+            Rooms[3, 1] = new Room(viewport, true, false, lastLevel, 11, 11);
+
+            while (counter < roomNumber)
             {
                 width = random.Next(9, 15);
                 if (width % 2 == 0) width++;
                 height = random.Next(15, 29);
                 if (height % 2 == 0) height++;
-                if (counter == 0)
-                {
-                    Rooms[3, 1] = new Room(viewport, false, lastLevel, width, height);
-                    counter++;
-                }
-                else if(counter == roomNumber - 1)
+                
+                if(counter == roomNumber - 1)
                 {
                     j = random.Next(0, 3);
                     if(Rooms[1, j] != null)
                     {
-                        Rooms[0, j] = new Room(viewport, true, lastLevel, width, height);
+                        Rooms[0, j] = new Room(viewport,false, true, lastLevel, 15, 15);
                         counter++;
                     }
                 }
                 else
                 {
-                    i = random.Next(0, 3);
+                    i = random.Next(1, 4);
                     j= random.Next(0, 3);
                     if (Rooms[i, j] == null)
                     {
-                        try
+                        if(i == 3)
                         {
-                            if (Rooms[i, j] == null && Rooms[i - 1, j] != null || Rooms[i + 1, j] != null || Rooms[i, j - 1] != null || Rooms[i, j + 1] != null)
+                            if(j == 0 && (Rooms[i - 1, j] != null || Rooms[i, j + 1] != null))
                             {
-                                Rooms[i, j] = new Room(viewport, false, lastLevel, width, height);
+                                Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
+                                counter++;
+                            }
+                            else if(j == 2 && (Rooms[i - 1, j] != null || Rooms[i, j - 1] != null))
+                            {
+                                Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
+                                counter++;
+                            }
+                            else if(Rooms[i - 1, j] != null || Rooms[i, j - 1] != null || Rooms[i, j + 1] != null)
+                            {
+                                Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
+                                counter++;
+                            }               
+                        }
+                        else if(j == 0)
+                        {
+                            if (Rooms[i - 1, j] != null || Rooms[i + 1, j] != null || Rooms[i, j + 1] != null)
+                            {
+                                Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
                                 counter++;
                             }
                         }
-                        catch (IndexOutOfRangeException e)
+                        else if(j == 2)
                         {
-
+                            if (Rooms[i - 1, j] != null || Rooms[i + 1, j] != null || Rooms[i, j - 1] != null)
+                            {
+                                Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
+                                counter++;
+                            }
                         }
+                        else if (Rooms[i - 1, j] != null || Rooms[i + 1, j] != null || Rooms[i, j - 1] != null || Rooms[i, j + 1] != null)
+                        {
+                            Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
+                            counter++;
+                        }
+                       
+                            /*if (i < 3 && i > 0 && j < 2 && j > 0)
+                            {
+                                if (Rooms[i, j] == null && Rooms[i - 1, j] != null || Rooms[i + 1, j] != null || Rooms[i, j - 1] != null || Rooms[i, j + 1] != null)
+                                {
+                                    Rooms[i, j] = new Room(viewport, false, false, lastLevel, width, height);
+
+                                    counter++;
+                                }
+                            }*/
                     }
                 }
             }
