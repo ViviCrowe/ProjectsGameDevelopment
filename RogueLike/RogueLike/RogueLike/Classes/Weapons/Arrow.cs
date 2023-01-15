@@ -5,7 +5,7 @@ namespace RogueLike.Classes.Weapons
 {
     internal class Arrow : GameObject
     {
-        public static Texture2D Texture { get; set; }
+        public new static Texture2D Texture { get; set; }
 
         public Vector2 Direction { get; set; }
 
