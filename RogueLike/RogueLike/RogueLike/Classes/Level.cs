@@ -1,32 +1,37 @@
 ﻿using System;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using SharpDX.Direct3D9;
 
 namespace RogueLike.Classes
 {
     public class Level
     {
-        public Room[] Rooms { get; set; }
+        public Room[,] Rooms { get; set; }
 
         private Viewport viewport;
 
         private static Random random = new Random();
+
+        private int roomNumber;
 
         private bool lastLevel;
 
         public Level(Viewport viewport, int roomNumber, bool lastLevel)
         {
             this.viewport = viewport;
-            Rooms = new Room[roomNumber];
+            Rooms = new Room[4,3];
             this.lastLevel = lastLevel;
+            this.roomNumber = roomNumber;
         }
 
-        public void generateLevel()
+        /*public void generateLevel2()
         {
             int
                 width,
                 height;
 
-            for (int i = 0; i < Rooms.Length; i++)
+            for (int i = 0; i < roomNumber; i++)
             {
                 width = random.Next(9, 15);
                 if (width % 2 == 0) width++;
@@ -43,6 +48,105 @@ namespace RogueLike.Classes
                 else
                 {
                     Rooms[i] = new Room(viewport, false, false, lastLevel, width, height);
+                }
+            }
+        }*/
+
+        public void generateLevel(ContentManager content)
+        {
+            int
+                width,
+                height;
+
+            int i, j;
+
+            int counter = 0;
+
+            while(counter < roomNumber)
+            {
+                width = random.Next(9, 15);
+                if (width % 2 == 0) width++;
+                height = random.Next(15, 29);
+                if (height % 2 == 0) height++;
+                if (counter == 0)
+                {
+                    Rooms[3, 1] = new Room(viewport, false, lastLevel, width, height);
+                    counter++;
+                }
+                else if(counter == roomNumber - 1)
+                {
+                    j = random.Next(0, 3);
+                    if(Rooms[1, j] != null)
+                    {
+                        Rooms[0, j] = new Room(viewport, true, lastLevel, width, height);
+                        counter++;
+                    }
+                }
+                else
+                {
+                    i = random.Next(0, 3);
+                    j= random.Next(0, 3);
+                    if (Rooms[i, j] == null)
+                    {
+                        try
+                        {
+                            if (Rooms[i, j] == null && Rooms[i - 1, j] != null || Rooms[i + 1, j] != null || Rooms[i, j - 1] != null || Rooms[i, j + 1] != null)
+                            {
+                                Rooms[i, j] = new Room(viewport, false, lastLevel, width, height);
+                                counter++;
+                            }
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+
+                        }
+                    }
+                }
+            }
+        }
+
+        public void addDoors(ContentManager content)
+        {
+            for(int i = 0; i < Rooms.GetLength(0); i++)
+            {
+                for(int j = 0; j < Rooms.GetLength(1); j++)
+                {
+                    if (Rooms[i, j] != null)
+                    {
+                        try
+                        {             
+                            if (Rooms[i, j - 1] != null) Rooms[i, j].addDoor(Room.DoorType.Left, content);
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+
+                        }
+                        try { 
+                        if (Rooms[i + 1, j] != null) Rooms[i, j].addDoor(Room.DoorType.Bottom, content);
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+
+                        }
+                        try
+                        {
+                            if (Rooms[i, j + 1] != null) Rooms[i, j].addDoor(Room.DoorType.Right, content);
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+
+                        }
+                        try
+                        {
+                            if (Rooms[i - 1, j] != null) Rooms[i, j].addDoor(Room.DoorType.Top, content);
+                        }
+                        catch (IndexOutOfRangeException e)
+                        {
+
+                        }
+                        
+                        
+                    }
                 }
             }
         }

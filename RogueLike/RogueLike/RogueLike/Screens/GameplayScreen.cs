@@ -57,7 +57,7 @@ namespace GameStateManagement
 
         private Room currentRoom;
 
-        private int roomCounter;
+        private int roomCounterRow, roomCounterCol;
 
         private int levelCounter;
 
@@ -112,9 +112,9 @@ namespace GameStateManagement
             potion.Position.Y = viewport.Height / 2 + 120;
 
             level = new Level[3];
-            level[0] = new Level(viewport, 5, false);
+            level[0] = new Level(viewport, 6, false);
             level[1] = new Level(viewport, 6, false);
-            level[2] = new Level(viewport, 7, true);
+            level[2] = new Level(viewport, 6, true);
 
             levelCounter = 0;
             newLevel();
@@ -133,19 +133,24 @@ namespace GameStateManagement
         private void newLevel()
         {
             currentLevel = level[levelCounter];
-            currentLevel.generateLevel();
+            currentLevel.generateLevel(content);
+            currentLevel.addDoors(content);
             foreach (Room room in currentLevel.Rooms)
             {
-                room.items.Add(weapon);
-                room.items.Add(potion);
-                room.activeObjects.Add(player);
-                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), room); // TEST
-                enemy2 = new Enemy(viewport, Enemy.Type.TANK, new Vector2(800, 500), room);
-                room.LoadAssets(content);
+                if (room != null)
+                {
+                    room.items.Add(weapon);
+                    room.items.Add(potion);
+                    room.activeObjects.Add(player);
+                    enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), room); // TEST
+                    enemy2 = new Enemy(viewport, Enemy.Type.TANK, new Vector2(800, 500), room);
+                    room.LoadAssets(content);
+                }
             }
 
-            roomCounter = 0;
-            currentRoom = currentLevel.Rooms[roomCounter];
+            roomCounterRow = 3;
+            roomCounterCol = 1;
+            currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
         }
 
         /// <summary>
@@ -210,23 +215,45 @@ namespace GameStateManagement
             }
 
             if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).ObjType == GameObject.ObjectType.Door)
-            {  
+            {
                 player.Position.Y = viewport.Height / 2;
-                
-                roomCounter++;
-                currentRoom = currentLevel.Rooms[roomCounter];
+
+                roomCounterRow--;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
 
                 player.Position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].Position.Y - 85;
             }
             else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).ObjType == GameObject.ObjectType.Door)
             {
                 player.Position.Y = viewport.Height / 2;
-                
-                roomCounter--;
-                currentRoom = currentLevel.Rooms[roomCounter];
+
+                roomCounterRow++;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
 
                 player.Position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].Position.Y + 85;
-                
+
+
+            }
+            else if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && player.CheckForCollision(currentRoom, -1, 0, false, false).ObjType == GameObject.ObjectType.Door)
+            {
+                player.Position.Y = viewport.Height / 2;
+
+                roomCounterCol--;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
+
+                player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, currentRoom.Tiles.GetLength(1) -1].Position.X - 85;
+
+
+            }
+            else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && player.CheckForCollision(currentRoom, 1, 0, false, false).ObjType == GameObject.ObjectType.Door)
+            {
+                player.Position.Y = viewport.Height / 2;
+
+                roomCounterCol++;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
+
+                player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, 0].Position.X + 85;
+
 
             }
             else if (checkTrapDoor(player))

@@ -25,9 +25,18 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
 
-        private bool first, last, lastLevel;
+        private bool last, lastLevel;
 
-        public Room(Viewport viewport, bool first, bool last, bool lastLevel, int width, int height)
+        public enum DoorType
+        {
+            None,
+            Left,
+            Right,
+            Top,
+            Bottom
+        }
+
+        public Room(Viewport viewport, bool last, bool lastLevel, int width, int height)
         {
             this.viewport = viewport;
 
@@ -37,7 +46,6 @@ namespace RogueLike.Classes
                 (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
             position.Y = this.offset.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
-            this.first = first;
             this.last = last;
             this.lastLevel = lastLevel;
 
@@ -46,37 +54,49 @@ namespace RogueLike.Classes
 
         public void LoadAssets(ContentManager content)
         {
+            position.X =
+                (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
+            position.Y =
+                (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+
             for (int i = 0; i < Tiles.GetLength(0); i++)
             {
                 for (int j = 0; j < Tiles.GetLength(1); j++)
                 {
-                    if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(1) / 2)
+                    /*if (((i == 0 && !last) || (i == Tiles.GetLength(0) - 1 && !first)) && j == Tiles.GetLength(1) / 2)
                     {
                         Tiles[i, j] = new Tile(position, GameObject.ObjectType.Door);
                         Tiles[i, j].LoadAssets(content, "tuer_offen");
                         passiveObjects.Add(Tiles[i, j]);
-                    }
-                    else if (
-                        i == 0 ||
-                        j == 0 ||
-                        i == Tiles.GetLength(0) - 1 ||
-                        j == Tiles.GetLength(1) - 1
-                    )
+                    }*/
+                    
+
+
+                    if (Tiles[i, j] == null)
                     {
-                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Wall);
-                        Tiles[i, j].LoadAssets(content, "wall");
-                        passiveObjects.Add(Tiles[i, j]);
-                    }
-                    else if (!lastLevel && last && i == 1 && j == Tiles.GetLength(1) / 2)
-                    {
-                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Hole);
-                        Tiles[i, j].LoadAssets(content, "hole");
-                        passiveObjects.Add(Tiles[i, j]);
-                    }
-                    else
-                    {
-                        Tiles[i, j] = new Tile(position, GameObject.ObjectType.Floor);
-                        Tiles[i, j].LoadAssets(content, "Grass_normal");
+                        if (
+                            (Tiles[i, j] == null) &&
+                            (i == 0 ||
+                            j == 0 ||
+                            i == Tiles.GetLength(0) - 1 ||
+                            j == Tiles.GetLength(1) - 1)
+                        )
+                        {
+                            Tiles[i, j] = new Tile(position, GameObject.ObjectType.Wall);
+                            Tiles[i, j].LoadAssets(content, "wall");
+                            passiveObjects.Add(Tiles[i, j]);
+                        }
+                        else if (!lastLevel && last && i == 1 && j == Tiles.GetLength(1) / 2)
+                        {
+                            Tiles[i, j] = new Tile(position, GameObject.ObjectType.Hole);
+                            Tiles[i, j].LoadAssets(content, "hole");
+                            passiveObjects.Add(Tiles[i, j]);
+                        }
+                        else
+                        {
+                            Tiles[i, j] = new Tile(position, GameObject.ObjectType.Floor);
+                            Tiles[i, j].LoadAssets(content, "Grass_normal");
+                        }
                     }
 
                     position.X += tileDimensions.X;
@@ -87,6 +107,45 @@ namespace RogueLike.Classes
             }
             LoadEntityAssets(content);
             LoadItemAssets(content);
+        }
+
+        public void addDoor(DoorType type, ContentManager content)
+        {
+            position.X = 
+                (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
+            position.Y = 
+                (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
+
+            if (type == DoorType.Top)
+            {
+                position.X = position.X + tileDimensions.X * (Tiles.GetLength(1) / 2);
+                Tiles[0, Tiles.GetLength(1)/2] = new Tile(position, GameObject.ObjectType.Door);
+                Tiles[0, Tiles.GetLength(1)/2].LoadAssets(content, "tuer_offen");
+                passiveObjects.Add(Tiles[0, Tiles.GetLength(1) / 2]);
+            }
+            else if(type == DoorType.Bottom)
+            {
+                position.X = position.X + tileDimensions.X * (Tiles.GetLength(1) / 2);
+                position.Y += (Tiles.GetLength(0)-1) * tileDimensions.Y;
+                Tiles[Tiles.GetLength(0) -1, Tiles.GetLength(1)/2] = new Tile(position, GameObject.ObjectType.Door);
+                Tiles[Tiles.GetLength(0) - 1, Tiles.GetLength(1) / 2].LoadAssets(content, "tuer_offen");
+                passiveObjects.Add(Tiles[Tiles.GetLength(0) - 1, Tiles.GetLength(1) / 2]);
+            }
+            else if (type == DoorType.Left)
+            {
+                position.Y += (Tiles.GetLength(0) / 2) * tileDimensions.Y;
+                Tiles[Tiles.GetLength(0) / 2, 0] = new Tile(position, GameObject.ObjectType.Door);
+                Tiles[Tiles.GetLength(0) / 2, 0].LoadAssets(content, "tuer_offen");
+                passiveObjects.Add(Tiles[Tiles.GetLength(0) / 2, 0]);
+            }
+            else if(type == DoorType.Right)
+            {
+                position.Y += (Tiles.GetLength(0) / 2) * tileDimensions.Y;
+                position.X += (Tiles.GetLength(1) - 1) * tileDimensions.X;
+                Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1)-1] = new Tile(position, GameObject.ObjectType.Door);
+                Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1].LoadAssets(content, "tuer_offen");
+                passiveObjects.Add(Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1]);
+            }
         }
 
         public void LoadItemAssets(ContentManager content)
