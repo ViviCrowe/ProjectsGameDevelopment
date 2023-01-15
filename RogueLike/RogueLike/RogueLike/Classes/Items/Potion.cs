@@ -1,14 +1,26 @@
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 
 namespace RogueLike.Classes.Items
 {
     public class Potion : GameObject
     {
-        public int AdditionalHealth { get; }
+        public int Value { get; }
 
-        public Potion(int additionalHealth)
+        public enum PotionType
         {
-            this.AdditionalHealth = additionalHealth;
+            HEALING,
+            ATTACK,
+            DEFENSE
+        }
+
+        public PotionType Type { get; }
+
+        public Potion(int value, Vector2 position, PotionType type)
+        {
+            this.Value = value;
+            this.Type = type;
+            this.Position = position;
         }
     }
 }
