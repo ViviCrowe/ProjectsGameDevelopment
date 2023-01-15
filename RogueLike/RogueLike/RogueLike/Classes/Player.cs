@@ -17,6 +17,8 @@ public class Player : Entity
     public int LevelUpAt = 200;
     private SoundEffect drinkPotionSound;
     private SoundEffect levelUpSound;
+    public int BaseAttack { get; set; } = 0;
+    public int BaseDefense { get; set; } = 0;
 
     public Player(Viewport viewport, Weapon weapon) :
         base(viewport, weapon)
@@ -75,13 +77,20 @@ public class Player : Entity
             }
             else if(item is Potion potion)
             {
-                if(this.CurrentHealth + potion.AdditionalHealth > this.MaximumHealth)
+                switch(potion.Type) 
                 {
-                    this.CurrentHealth = this.MaximumHealth;
-                }
-                else
-                {
-                    this.CurrentHealth += potion.AdditionalHealth;
+                    case Potion.PotionType.HEALING: 
+                    if(this.CurrentHealth + potion.Value > this.MaximumHealth) 
+                        this.CurrentHealth = this.MaximumHealth;
+                    else
+                        this.CurrentHealth += potion.Value;
+                    break;
+                    case Potion.PotionType.ATTACK: item.LoadAssets(content, "purple_potion"); 
+                    this.BaseAttack += potion.Value;
+                    break;
+                    case Potion.PotionType.DEFENSE: item.LoadAssets(content, "green_potion"); 
+                    this.BaseDefense += potion.Value;
+                    break;
                 }
                 room.items.Remove(potion);
                 drinkPotionSound.Play();
@@ -111,7 +120,7 @@ public class Player : Entity
         // TODO
     }
 
-    public void LoadAssets(ContentManager content)
+    public new void LoadAssets(ContentManager content)
     {
         base.LoadAssets(content, "character");
         levelUpSound = content.Load<SoundEffect>("level_up");
