@@ -25,7 +25,8 @@ namespace RogueLike.Classes
 
         private Viewport viewport;
 
-        private bool last, lastLevel;
+        public bool Last { get; set; }
+        public bool LastLevel { get; set; }
 
         public enum DoorType
         {
@@ -46,8 +47,8 @@ namespace RogueLike.Classes
                 (viewport.Width / 2) - ((Tiles.GetLength(1) - 1) * 64 / 2);
             position.Y = this.offset.Y =
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
-            this.last = last;
-            this.lastLevel = lastLevel;
+            this.Last = last;
+            this.LastLevel = lastLevel;
 
             this.GridDimensions = new(Tiles.GetLength(0), Tiles.GetLength(1));
             }
@@ -86,7 +87,7 @@ namespace RogueLike.Classes
                             Tiles[i, j].LoadAssets(content, "wall");
                             passiveObjects.Add(Tiles[i, j]);
                         }
-                        else if (!lastLevel && last && i == 1 && j == Tiles.GetLength(1) / 2)
+                        else if (!LastLevel && Last && i == 1 && j == Tiles.GetLength(1) / 2)
                         {
                             Tiles[i, j] = new Tile(position, GameObject.ObjectType.Hole);
                             Tiles[i, j].LoadAssets(content, "hole");
@@ -170,9 +171,21 @@ namespace RogueLike.Classes
                     {
                         item.LoadAssets(content, "teeth");
                     }
-                    else if(item is Potion)
+                    else if(item is Potion potion)
                     {
-                        item.LoadAssets(content, "potion"); 
+                        switch(potion.Type) 
+                        {
+                            case Potion.PotionType.HEALING: item.LoadAssets(content, "potion"); 
+                            break;
+                            case Potion.PotionType.ATTACK: item.LoadAssets(content, "purple_potion"); 
+                            break;
+                            case Potion.PotionType.DEFENSE: item.LoadAssets(content, "green_potion"); 
+                            break;
+                        }
+                    }
+                    else if(item is Treasure)
+                    {
+                        item.LoadAssets(content, "treasure");
                     }
                 }
             }
