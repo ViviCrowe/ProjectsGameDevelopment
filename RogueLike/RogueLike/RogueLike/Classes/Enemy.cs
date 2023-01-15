@@ -3,28 +3,30 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.AI;
+using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
 
 namespace RogueLike.Classes{
 // Context Class
 public class Enemy : Entity
 {
-    private EnemyAI enemyAI;
-    private static Random random = new Random();
+    public EnemyAI enemyAI { get; set; }
+    public static Random _random { get; set; } = new Random();
     public enum Type
     {
         ARCHER,
         MELEE,
-        TANK    
+        TANK,
+        BOSS
     };
     public Type EnemyType { get; set; }
     public Tile DestinationTile { get; set; }
     public Vector2 PlayerDirection { get; set; }
-    private int experiencePoints;
+    public int ExperiencePoints { get; set; }
 
-    public Enemy(Viewport viewport, Type EnemyType, Vector2 Position, Room room)
+    public Enemy(Viewport viewport, Type enemyType, Vector2 position, Room room)
     {
-        this.EnemyType = EnemyType;
+        this.EnemyType = enemyType;
 
         switch(EnemyType) {
             case Type.ARCHER: 
@@ -32,31 +34,32 @@ public class Enemy : Entity
             this.MaximumHealth = this.CurrentHealth = 200;
             this.EquippedWeapon = new Bow(this);
             this.VisionRange = 300;
-            this.experiencePoints = 25;
+            this.ExperiencePoints = 25;
+            room.activeObjects.Add(this);
             break;
             case Type.MELEE:
             this.MovementSpeed = 2.5f;
             this.MaximumHealth = this.CurrentHealth = 400;
             this.EquippedWeapon = new Sword();
             this.VisionRange = 150;
-            this.experiencePoints = 50;
+            this.ExperiencePoints = 50;
+            room.activeObjects.Add(this);
             break;
             case Type.TANK:
             this.MovementSpeed = 1.5f;
             this.MaximumHealth = this.CurrentHealth = 600;
             this.EquippedWeapon = new Spear();
             this.VisionRange = 100;
-            this.experiencePoints = 75;
+            this.ExperiencePoints = 75;
+            room.activeObjects.Add(this);
             break;
         }
 
-        this.Position.X = Position.X;
-        this.Position.Y = Position.Y;
-        room.activeObjects.Add(this);
+        this.Position = position;
 
         this.enemyAI = new PatrolAI();
         
-        Teeth = new((int) (random.NextDouble()*10));
+        Teeth = new((int) (_random.NextDouble()*10));
     }
 
     public void DropTeeth(Room room, ContentManager content)
@@ -70,12 +73,21 @@ public class Enemy : Entity
         }
     }
 
+    public void DropPotion(Room room, ContentManager content)
+    {
+        double randomNumber = _random.NextDouble();
+        if(randomNumber < 0.5) room.items.Add(new Potion(500, this.Position, Potion.PotionType.HEALING));
+        else if(randomNumber < 0.75) room.items.Add(new Potion(10, this.Position, Potion.PotionType.ATTACK));
+        else room.items.Add(new Potion(10, this.Position, Potion.PotionType.DEFENSE));
+        room.LoadItemAssets(content);
+    }
+
     public void Move(Room room, Tile destinationTile)
     {
         enemyAI.Move(this, room, destinationTile);
     }
 
-    private void setEnemyAI(EnemyAI enemyAI)
+    public void setEnemyAI(EnemyAI enemyAI)
     {
         // switch at runtime
         this.enemyAI = enemyAI;
@@ -86,19 +98,27 @@ public class Enemy : Entity
         base.Update(room);
 
         // enemy death
-        if(this.CurrentHealth <= 0) 
+        if(this.CurrentHealth <= 0 ) 
         {
             room.activeObjects.Remove(this);
-
-            if(random.NextDouble() < 0.9)
+            double randomDrop = _random.NextDouble();
+            if(this is Boss boss)
+            {
+                boss.DropTreasure(room, content);
+            }
+            else if(randomDrop < 0.95)
             {
                 this.DropTeeth(room, content);
             }
-            else if(random.NextDouble() < 0.4)
+            else if(randomDrop < 0.7)
             {   
                 this.DropWeapon(room, content);
             }
-            player.Experience += this.experiencePoints;
+            else if(randomDrop > 0.3)
+            {
+                this.DropPotion(room, content);
+            }
+            player.Experience += this.ExperiencePoints;
         }
 
         // enemy movement
@@ -140,11 +160,10 @@ public class Enemy : Entity
         return false;
     }
 
-    public void LoadAssets(ContentManager content) 
+    public new void LoadAssets(ContentManager content) 
     {
         string name = this.EnemyType.ToString().ToLower();
         this.Texture = content.Load<Texture2D>(name);
     }
-
 }
 }
