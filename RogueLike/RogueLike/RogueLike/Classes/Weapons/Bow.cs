@@ -41,35 +41,35 @@ namespace RogueLike.Classes.Weapons
                     direction.Y = 1;
                     break;
                     case Entity.Direction.RIGHT:
-                    x += entity.Texture.Width/2 + Arrow.Texture.Width*2;
+                    x += entity.Texture.Width/2 + Arrow.Texture.Width*4;
                     direction.X = 1;
                     break;
                     case Entity.Direction.LEFT:
-                    x -= entity.Texture.Width/2 + Arrow.Texture.Width*2;
+                    x -= entity.Texture.Width/2 + Arrow.Texture.Width*4;
                     direction.X = -1;
                     break;
                     case Entity.Direction.UPRIGHT:
                     y -= entity.Texture.Height/2 + Arrow.Texture.Height;
                     direction.Y = -1;
-                    x += entity.Texture.Width/2 + Arrow.Texture.Width;
+                    x += entity.Texture.Width/2 + Arrow.Texture.Width*2;
                     direction.X = 1;
                     break;
                     case Entity.Direction.UPLEFT:
                     y -= entity.Texture.Height/2 + Arrow.Texture.Height;
                     direction.Y = -1;
-                    x -= entity.Texture.Width/2 + Arrow.Texture.Width;
+                    x -= entity.Texture.Width/2 + Arrow.Texture.Width*2;
                     direction.X = -1;
                     break;
                     case Entity.Direction.DOWNRIGHT:
                     y += entity.Texture.Height/2 + Arrow.Texture.Height;
                     direction.Y = 1;
-                    x += entity.Texture.Width/2 + Arrow.Texture.Width;
+                    x += entity.Texture.Width/2 + Arrow.Texture.Width*2;
                     direction.X = 1;
                     break;
                     case Entity.Direction.DOWNLEFT:
                     y += entity.Texture.Height/2 + Arrow.Texture.Height;
                     direction.Y = 1;
-                    x -= entity.Texture.Width/2 + Arrow.Texture.Width;
+                    x -= entity.Texture.Width/2 + Arrow.Texture.Width*2;
                     direction.X = -1;
                     break;
                 }
@@ -78,8 +78,8 @@ namespace RogueLike.Classes.Weapons
             else if(entity is Enemy enemy)
             {
                 enemy.PlayerDirection = Vector2.Normalize((enemy.PlayerDirection));
-                x += enemy.PlayerDirection.X*64;
-                y += enemy.PlayerDirection.Y*64;
+                x += enemy.PlayerDirection.X*72;
+                y += enemy.PlayerDirection.Y*72;
                 direction = enemy.PlayerDirection;
             }
             arrows.Add(new Arrow(new(x, y), direction));
