@@ -13,10 +13,10 @@ namespace RogueLike.Classes.AI
             Boss boss = (Boss) enemy;
 
             // swap weapon        
-            if((room.CalculateHeuristic(room.GetTileFromPos(boss.Position), boss.DestinationTile) > 300
+            if((room.CalculateHeuristic(room.GetTileFromPos(boss.Position), boss.DestinationTile) > 320
                 && boss.EquippedWeapon is not Bow)
-                || room.CalculateHeuristic(room.GetTileFromPos(boss.Position), boss.DestinationTile) < 300
-                && boss.EquippedWeapon is Bow)
+                || (room.CalculateHeuristic(room.GetTileFromPos(boss.Position), boss.DestinationTile) <= 320
+                && boss.EquippedWeapon is Bow))
             {
                 Weapon temp = boss.EquippedWeapon;
                 boss.EquippedWeapon = boss.SecondaryWeapon;
@@ -31,7 +31,7 @@ namespace RogueLike.Classes.AI
             if(this.player is not null)
             {
                 if(room.CalculateHeuristic(room.GetTileFromPos(boss.Position), 
-                    room.GetTileFromPos(this.player.Position)) < 320)
+                    room.GetTileFromPos(this.player.Position)) <= 320)
                 {
                     meleeAI.Move(boss, room, destinationTile);
                 }
@@ -43,8 +43,10 @@ namespace RogueLike.Classes.AI
             }
 
             // spawn enemies
+            /*
             if(boss.MinionCountdown == 0) boss.SummonMinions(room);
             else boss.MinionCountdown--;
+            */
         }
 
         public void UpdateDestination(Enemy enemy, Player player, Room room)
