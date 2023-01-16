@@ -10,12 +10,9 @@ namespace RogueLike.Classes.AI
             int y = (int) destinationTile.Position.Y;
 
             if (
-                enemy.CheckForCollision(room, 0, 0, true, false) is
-                Player player &&
-                room
-                    .CalculateHeuristic(room.GetTileFromPos(enemy.Position),
-                    room.GetTileFromPos(player.Position)) >
-                300
+                enemy.CheckForCollision(room, 0, 0, true, false) is Player player &&
+                room.CalculateHeuristic(room.GetTileFromPos(enemy.Position),
+                room.GetTileFromPos(player.Position)) > 320
             )
             {
                 if (enemy.EquippedWeapon is Bow bow)
