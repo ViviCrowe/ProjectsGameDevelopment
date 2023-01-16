@@ -46,7 +46,8 @@ namespace RogueLike.Classes
             }
             else if(this.CurrentHealth < this.MaximumHealth*0.66) // phase 2
             {
-                this.EquippedWeapon = sword;
+                if(this.EquippedWeapon is Spear) this.EquippedWeapon = sword;
+                else if(this.EquippedWeapon is Bow) this.SecondaryWeapon = sword;
                 this.sword.AttackDamage = 100;
                 this.bow.AttackDamage = 100;
             }
