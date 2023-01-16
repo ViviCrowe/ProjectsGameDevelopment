@@ -37,7 +37,7 @@ namespace RogueLike.Classes
         public BoundingBox CreateBoundingBox()
         {
             int playerFactor = 0;
-            if (this is Player) playerFactor = 15;
+            if (this is Player) playerFactor = 20;
             return new BoundingBox(new Vector3(
                 this.Position.X - (this.Texture.Width / 2) - playerFactor,
                     this.Position.Y - (this.Texture.Height / 2) - playerFactor,
