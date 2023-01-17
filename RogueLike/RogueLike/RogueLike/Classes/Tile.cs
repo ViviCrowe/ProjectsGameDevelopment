@@ -7,10 +7,10 @@ namespace RogueLike.Classes
     public class Tile : GameObject
     {
 
-        public Tile(Vector2 tilePosition, TileType type)
+        public Tile(Vector2 tilePosition, ObjectType type)
         {
             position = tilePosition;
-            tileType = type;
+            objectType = type;
         }
     }
 }
