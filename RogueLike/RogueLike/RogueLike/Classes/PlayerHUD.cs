@@ -59,14 +59,17 @@ namespace RogueLike.Classes
             healthbar0 = content.Load<Texture2D>("0");
 
             font = content.Load<SpriteFont>("gamefont");
+
             if (player.EquippedWeapon != null)
             {
                 weaponTexture = weaponSlot.Texture;
             }
+
             if (player.aktivAbility != null)
             {
                 abilityTexture = aktivAbility.abilityTexture;
             }
+
             teethTexture = Wallet.Texture;
         }
 
@@ -75,48 +78,49 @@ namespace RogueLike.Classes
             spriteBatch.DrawString(font,teethValue,new Vector2(100,12.5f),Color.White);
             spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.White);
 
+
             if(player.CurrentHealth == player.MaximumHealth)
             {
-                spriteBatch.Draw(healthbar100, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar100, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 87.5 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 75)
             {
-                spriteBatch.Draw(healthbar87_5, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar87_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 75 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 62.5)
             {
-                spriteBatch.Draw(healthbar75, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar75, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 62.5 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 50)
             {
-                spriteBatch.Draw(healthbar62_5, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar62_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 50 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 37.5)
             {
-                spriteBatch.Draw(healthbar50, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar50, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 37.5 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 25)
             {
-                spriteBatch.Draw(healthbar37_5, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar37_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 25 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 12.5)
             {
-                spriteBatch.Draw(healthbar25, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar25, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 12.5 &&
                 player.CurrentHealth > 0)
             {
-                spriteBatch.Draw(healthbar12_5, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar12_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= 0)
             {
-                spriteBatch.Draw(healthbar0, new Vector2(700, -50), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar0, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
 
 
