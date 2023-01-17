@@ -3,6 +3,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using RogueLike.Classes.Abilities;
+using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
 
 namespace RogueLike.Classes
@@ -12,10 +13,13 @@ namespace RogueLike.Classes
         private Player player;
 
         private Weapon weaponSlot;
+
         private AktivAbility aktivAbility;
 
         private String teethValue;
+
         private String healthValue;
+        private String levelValue;
 
         private SpriteFont font;
 
@@ -31,16 +35,14 @@ namespace RogueLike.Classes
         private Texture2D healthbar0;
 
         private Texture2D weaponTexture;
+
         private Texture2D abilityTexture;
+        private Texture2D teethTexture;
 
         public PlayerHUD(Player player)
         {
             this.player = player;
-            
-            teethValue =  player.teeth.value.ToString();
-            healthValue = player.currentHealth + "/" + player.maximumHealth;
-            weaponSlot = player.weapon;
-            aktivAbility = player.aktivAbility;
+            this.Update(player);
         }
 
         public void LoadContent(ContentManager content)
@@ -58,12 +60,15 @@ namespace RogueLike.Classes
             healthbar0 = content.Load<Texture2D>("0");
 
             font = content.Load<SpriteFont>("gamefont");
-            if(player.weapon != null) {
-                weaponTexture = weaponSlot.texture;
+            if (player.EquippedWeapon != null)
+            {
+                weaponTexture = weaponSlot.Texture;
             }
-            if(player.aktivAbility != null) {
+            if (player.aktivAbility != null)
+            {
                 abilityTexture = aktivAbility.abilityTexture;
             }
+            teethTexture = Wallet.Texture;
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -81,37 +86,11 @@ namespace RogueLike.Classes
 
         public void Update(Player player)
         {
-            if(this.player.maximumHealth != player.maximumHealth)
-            {
-                this.player.maximumHealth = player.maximumHealth;
-                healthValue = player.currentHealth + "/" + player.maximumHealth;
-            }
-
-            if(this.player.currentHealth != player.currentHealth)
-            {
-                this.player.currentHealth = player.currentHealth;
-                healthValue = player.currentHealth + "/" + player.maximumHealth;
-            }
-
-            if(this.player.weapon != player.weapon)
-            {
-                this.player.weapon = player.weapon;
-            }
-
-            if(this.player.aktivAbility != player.aktivAbility)
-            {
-                this.player.aktivAbility =player.aktivAbility;
-            }
-
-            if(this.teethValue != player.teeth.value.ToString())
-            {
-                this.teethValue = player.teeth.value.ToString();
-            }
-
-            if (this.player != player)
-            {
-                this.player = player;
-            }
+            this.teethValue = player.Teeth.Value.ToString();
+            this.healthValue = player.CurrentHealth + "/" + player.MaximumHealth;
+            this.weaponSlot = player.EquippedWeapon;
+            this.aktivAbility = player.aktivAbility;
+            this.levelValue = player.Level.ToString();
         }
     }
 }

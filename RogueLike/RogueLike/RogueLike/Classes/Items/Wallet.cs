@@ -1,10 +1,15 @@
-// noch umbenennen?
-public class Wallet : GameObject
-{
-    public int value;
+using Microsoft.Xna.Framework.Graphics;
 
-    public Wallet (int value)
+namespace RogueLike.Classes.Items
+{
+    public class Wallet : GameObject
     {
-        this.value = value;
+        public int Value { get; set; }
+        public new static Texture2D Texture { get; set; }
+
+        public Wallet(int value)
+        {
+            this.Value = value;
+        }
     }
 }

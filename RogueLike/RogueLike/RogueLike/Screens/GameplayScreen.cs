@@ -16,6 +16,7 @@ using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
 using RogueLike.Classes.Weapons;
 using RogueLike.Classes.Abilities;
+using RogueLike.Classes.Items;
 using System;
 using Microsoft.Xna.Framework.Media;
 
@@ -44,29 +45,24 @@ namespace GameStateManagement
 
         private Player player;
 
-        private Enemy enemy; // STATISCHER TEST GEGNER
-        private Enemy enemy2;
-        
-        private Weapon weapon; // TEST WAFFE
-
         private Level[] level;
 
         private Level currentLevel;
 
         private Room currentRoom;
 
-        private int roomCounter;
+        private int roomCounterRow, roomCounterCol;
 
         private int levelCounter;
 
         private Viewport viewport;
 
         private PlayerHUD playerHUD;
-
-        private Song song;
+        private Song backgroundMusic;
+        private Song bossMusic;
+        private Song currentSong;
 
 #endregion Fields
-
 
 
         #region Initialization
@@ -91,25 +87,27 @@ namespace GameStateManagement
 
             viewport = ScreenManager.GraphicsDevice.Viewport;
 
+            Wallet.Texture = content.Load<Texture2D>("teeth");
             gameFont = content.Load<SpriteFont>("gamefont");
-            song = content.Load<Song>("revenge");
+            backgroundMusic = currentSong = content.Load<Song>("background_music");
+            bossMusic = content.Load<Song>("boss_music");
             MediaPlayer.IsRepeating = true;
-            //MediaPlayer.Play(song);
+            MediaPlayer.Volume = 1.5f;
+            MediaPlayer.Play(currentSong);
 
-            //Initialising and Generating Atributes of Player
+            //Initialising and Generating Attributes of Player
             player = new Player(viewport, null);
             player.aktivAbility = new AktivAbility();
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
-            player.LoadAssets(content, "character");
+            player.LoadAssets(content);
 
-            weapon = new Sword();
-            weapon.position.X = viewport.Width / 2 + 60; //TEST
-            weapon.position.Y = viewport.Height / 2 - 60; //TEST  
+            Entity.LoadAssets(content);
+            Bow.LoadAssets(content);
 
             level = new Level[3];
-            level[0] = new Level(viewport, 5, false);
-            level[1] = new Level(viewport, 6, false);
-            level[2] = new Level(viewport, 7, true);
+            level[0] = new Level(viewport, 7, false);
+            level[1] = new Level(viewport, 7, false);
+            level[2] = new Level(viewport, 8, true);
 
             levelCounter = 0;
             newLevel();
@@ -128,17 +126,20 @@ namespace GameStateManagement
         private void newLevel()
         {
             currentLevel = level[levelCounter];
-            currentLevel.generateLevel();
+            currentLevel.generateLevel(content);
+            currentLevel.addDoors(content);
             foreach (Room room in currentLevel.Rooms)
             {
-                room.items.Add(weapon);
-                enemy = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(1100, 550), null, room); // TEST
-                enemy2 = new Enemy(viewport, Enemy.Type.ARCHER, new Vector2(800, 500), null, room);
-                room.LoadAssets(content);
+                if (room != null)
+                {
+                    room.activeObjects.Add(player);
+                    room.LoadAssets(content);
+                }
             }
 
-            roomCounter = 0;
-            currentRoom = currentLevel.Rooms[roomCounter];
+            roomCounterRow = 3;
+            roomCounterCol = 1;
+            currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
         }
 
         /// <summary>
@@ -182,67 +183,106 @@ namespace GameStateManagement
             {
                 foreach(Entity e in currentRoom.activeObjects.ToArray()) 
                 {
-                    if(e is Enemy) {
-                        ((Enemy)e).Update(currentRoom, content);
+                    if(e is Boss boss) 
+                    {
+                        boss.Update(player, currentRoom, content);
+                    }
+                    else if(e is Enemy enemy)
+                    {
+                        enemy.Update(player, currentRoom, content);
+                    }
+                    else if(e is Player player)
+                    {
+                        player.Update(currentRoom);
                     }
                 }
 
                 //Updates the HUD if Reference is different
                 playerHUD.Update(player);
                 
-                GameObject item = CheckForItemCollision();
-                if(item is Wallet)
+                GameObject item = player.CheckForItemCollision(currentRoom);
+                if(item is Wallet || item is Potion)
                 {
                     player.PickUpItem(item, currentRoom, content);
                 }
             }
 
-            if (CheckForCollision(0, -1, false) != null && CheckForCollision(0, -1, false).objectType == GameObject.ObjectType.Door)
-            {  
-                player.position.Y = viewport.Height / 2;
-                
-
-                roomCounter++;
-                currentRoom = currentLevel.Rooms[roomCounter];
-
-                player.position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].position.Y - 85;
-            }
-            else if (CheckForCollision(0, 1, false) != null && CheckForCollision(0, 1, false).objectType == GameObject.ObjectType.Door)
+            if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && player.CheckForCollision(currentRoom, 0, -1, false, false).ObjType == GameObject.ObjectType.Door)
             {
-                player.position.Y = viewport.Height / 2;
+                player.Position.Y = viewport.Height / 2;
 
-                
+                roomCounterRow--;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
 
-                roomCounter--;
-                currentRoom = currentLevel.Rooms[roomCounter];
+                player.Position.Y = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) - 1, currentRoom.Tiles.GetLength(0) / 2].Position.Y - 85;
+            }
+            else if (player.CheckForCollision(currentRoom, 0, 1, false, false) != null && player.CheckForCollision(currentRoom, 0, 1, false, false).ObjType == GameObject.ObjectType.Door)
+            {
+                player.Position.Y = viewport.Height / 2;
 
-                player.position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].position.Y + 85;
-                
+                roomCounterRow++;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
+
+                player.Position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].Position.Y + 85;
+
 
             }
-            else if (checkTrapDoor())
+            else if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && player.CheckForCollision(currentRoom, -1, 0, false, false).ObjType == GameObject.ObjectType.Door)
             {
-                player.position.X = viewport.Width / 2;
-                player.position.Y = viewport.Height / 2;
+                player.Position.Y = viewport.Height / 2;
+
+                roomCounterCol--;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
+
+                player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, currentRoom.Tiles.GetLength(1) -1].Position.X - 85;
+
+
+            }
+            else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && player.CheckForCollision(currentRoom, 1, 0, false, false).ObjType == GameObject.ObjectType.Door)
+            {
+                player.Position.Y = viewport.Height / 2;
+
+                roomCounterCol++;
+                currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
+
+                player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, 0].Position.X + 85;
+
+
+            }
+            else if (checkTrapDoor(player))
+            {
+                player.Position.X = viewport.Width / 2;
+                player.Position.Y = viewport.Height / 2;
                 levelCounter++;
                 newLevel();
             }
-            enemy.Update(currentRoom, content);
+
             //Updates the HUD if Reference is different
             playerHUD.Update(player);
+
+            if(currentRoom.Last && currentRoom.LastLevel && currentSong != bossMusic)
+            {
+                currentSong = bossMusic;
+                MediaPlayer.Play(currentSong);
+            }
+            else if(!(currentRoom.Last && currentRoom.LastLevel) && currentSong == bossMusic)
+            {
+                currentSong = backgroundMusic;
+                MediaPlayer.Play(currentSong);
+            }
         }
 
-        private bool checkTrapDoor()
+        private bool checkTrapDoor(Entity entity)
         {
-            if (CheckForCollision(-1, 0, false) != null && (CheckForCollision(-1, 0, false).objectType == GameObject.ObjectType.Hole))
+            if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && (player.CheckForCollision(currentRoom, -1, 0, false, false).ObjType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (CheckForCollision(1, 0, false) != null && (CheckForCollision(1, 0, false).objectType == GameObject.ObjectType.Hole))
+            else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && (player.CheckForCollision(currentRoom, 1, 0, false, false).ObjType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
-            else if (CheckForCollision(0, -1, false) != null && (CheckForCollision(0, -1, false).objectType == GameObject.ObjectType.Hole))
+            else if (player.CheckForCollision(currentRoom, 0, -1, false, false) != null && (player.CheckForCollision(currentRoom, 0, -1, false, false).ObjType == GameObject.ObjectType.Hole))
             {
                 return true;
             }
@@ -282,30 +322,50 @@ namespace GameStateManagement
             }
             else
             {
-                if (keyboardState.IsKeyDown(Keys.A))
+                if (keyboardState.IsKeyDown(Keys.A) && !keyboardState.IsKeyDown(Keys.W) && !keyboardState.IsKeyDown(Keys.S))
                 {
-                    if (CheckForCollision(-1, 0, false) == null)
+                    if (player.CheckForCollision(currentRoom, -1, 0, false, false) == null)
                         player.MoveLeft();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.D))
+                if (keyboardState.IsKeyDown(Keys.D) && !keyboardState.IsKeyDown(Keys.S) && !keyboardState.IsKeyDown(Keys.W))
                 {
-                    if (CheckForCollision(1, 0, false) == null)
+                    if (player.CheckForCollision(currentRoom, 1, 0, false, false) == null)
                         player.MoveRight();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.W))
+                if (keyboardState.IsKeyDown(Keys.W) && !keyboardState.IsKeyDown(Keys.A) && !keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (CheckForCollision(0, -1, false) == null)
+                    if (player.CheckForCollision(currentRoom, 0, -1, false, false) == null)
                         player.MoveUp();
                 }
 
-                if (keyboardState.IsKeyDown(Keys.S))
+                if (keyboardState.IsKeyDown(Keys.S) && !keyboardState.IsKeyDown(Keys.A) && !keyboardState.IsKeyDown(Keys.D))
                 {
-                    if (CheckForCollision(0, 1, false) == null)
+                    if (player.CheckForCollision(currentRoom, 0, 1, false, false) == null)
                         player.MoveDown();
                 }
 
+                if(keyboardState.IsKeyDown(Keys.W) && keyboardState.IsKeyDown(Keys.A))
+                {
+                    if (player.CheckForCollision(currentRoom, -1, -1, false, false) == null)
+                        player.MoveUpLeft();     
+                }
+                if(keyboardState.IsKeyDown(Keys.W) && keyboardState.IsKeyDown(Keys.D))
+                {
+                    if (player.CheckForCollision(currentRoom, 1, -1, false, false) == null)
+                        player.MoveUpRight();     
+                }
+                if(keyboardState.IsKeyDown(Keys.S) && keyboardState.IsKeyDown(Keys.A))
+                {
+                    if (player.CheckForCollision(currentRoom, -1, 1, false, false) == null)
+                        player.MoveDownLeft();      
+                }
+                if(keyboardState.IsKeyDown(Keys.S) && keyboardState.IsKeyDown(Keys.D))
+                {
+                    if (player.CheckForCollision(currentRoom, 1, 1, false, false) == null)
+                        player.MoveDownRight();     
+                }
                 if (keyboardState.IsKeyDown(Keys.J))
                 {
                     player.DropWeapon (currentRoom, content);
@@ -313,17 +373,24 @@ namespace GameStateManagement
 
                 if (keyboardState.IsKeyDown(Keys.K))
                 {
-                    player.PickUpItem(CheckForItemCollision(), currentRoom, content);
+                    player.PickUpItem(player.CheckForItemCollision(currentRoom), currentRoom, content);
                 }
 
                 if (keyboardState.IsKeyDown(Keys.Space))
                 {
-                    Entity targetEntity =
-                        (Entity) CheckForCollision(0, 0, true);
-                    if (targetEntity != null)
+                    if(player.EquippedWeapon is Bow bow) 
                     {
-                        int damageDealt = player.Attack (targetEntity);
-                        // TODO: display damage dealt
+                        bow.FireArrow(player);
+                    }  
+                    else
+                    {
+                         Entity targetEntity =
+                            (Entity) player.CheckForCollision(currentRoom, 0, 0, true, false);
+                        if (targetEntity != null)
+                        {
+                            int damageDealt = player.Attack (targetEntity);
+                            // TODO: display damage dealt
+                        }
                     }
                 }
             }
@@ -341,7 +408,6 @@ namespace GameStateManagement
         /// </summary>
         public override void Draw(GameTime gameTime)
         {
-            // This game has a blue background. Why? Because!
             ScreenManager
                 .GraphicsDevice
                 .Clear(ClearOptions.Target, Color.Black, 0, 0);
@@ -368,94 +434,5 @@ namespace GameStateManagement
 
 #endregion Update and Draw
 
-
-        private GameObject
-        CheckForCollision(int factorX, int factorY, bool attack)
-        {
-            BoundingBox boundingBox_1 =
-                CreateBoundingBox(player, factorX, factorY);
-
-            foreach (GameObject obj in currentRoom.passiveObjects)
-            {
-                BoundingBox boundingBox_2 = CreateBoundingBox(obj);
-
-                if (boundingBox_1.Intersects(boundingBox_2))
-                {
-                    return obj;
-                }
-            }
-
-            if (currentRoom.activeObjects.Count > 0)
-            {
-                foreach (Entity entity_2 in currentRoom.activeObjects)
-                {
-                    if (player != entity_2 && entity_2 != null)
-                    {
-                        BoundingBox boundingBox_2 = CreateBoundingBox(entity_2);
-
-                        if (attack)
-                        {
-                            boundingBox_1.Min.X -= player.weapon.weaponRange;
-                            boundingBox_1.Min.Y -= player.weapon.weaponRange;
-                            boundingBox_1.Max.X += player.weapon.weaponRange;
-                            boundingBox_1.Max.Y += player.weapon.weaponRange;
-                        }
-                        if (boundingBox_1.Intersects(boundingBox_2))
-                        {
-                            return entity_2;
-                        }
-                    }
-                }
-            }
-            return null;
-        }
-
-        private GameObject CheckForItemCollision()
-        {
-            BoundingBox boundingBox_1 = CreateBoundingBox(player);
-
-            foreach (GameObject item in currentRoom.items)
-            {
-                BoundingBox boundingBox_2 = CreateBoundingBox(item);
-
-                if (boundingBox_1.Intersects(boundingBox_2))
-                {
-                    return item;
-                }
-            }
-            return null;
-        }
-
-        private BoundingBox
-        CreateBoundingBox(Entity entity, int factorX, int factorY)
-        {
-            return new BoundingBox(new Vector3(entity.position.X +
-                    entity.movementSpeed * factorX -
-                    (entity.texture.Width / 2) +
-                    10,
-                    entity.position.Y +
-                    entity.movementSpeed * factorY -
-                    (entity.texture.Height / 2),
-                    0),
-                new Vector3(entity.position.X +
-                    entity.movementSpeed * factorX +
-                    (entity.texture.Width / 2) -
-                    10,
-                    entity.position.Y +
-                    entity.movementSpeed * factorY +
-                    (entity.texture.Height / 2),
-                    0));
-        }
-
-        private BoundingBox CreateBoundingBox(GameObject obj)
-        {
-            return new BoundingBox(new Vector3(obj.position.X -
-                    (obj.texture.Width / 2),
-                    obj.position.Y - (obj.texture.Height / 2),
-                    0),
-                new Vector3(obj.position.X + (obj.texture.Width / 2),
-                    obj.position.Y + (obj.texture.Height / 2),
-                    0));
-        }
     }
 }
