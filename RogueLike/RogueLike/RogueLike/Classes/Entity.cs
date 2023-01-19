@@ -192,7 +192,9 @@ namespace RogueLike.Classes
             BoundingBox boundingBox_1 = this.CreateBoundingBox(factorX, factorY);
             foreach (GameObject obj in CurrentRoom.passiveObjects)
             {
-                BoundingBox boundingBox_2 = obj.CreateBoundingBox();
+                BoundingBox boundingBox_2;
+                if(obj is Tower tower) boundingBox_2 = tower.GetBoundingBox();
+                else boundingBox_2 = obj.CreateBoundingBox();
                 if (boundingBox_1.Intersects(boundingBox_2))
                 {
                     return obj;
