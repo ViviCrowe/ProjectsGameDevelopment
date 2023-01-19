@@ -76,8 +76,8 @@ public class Enemy : Entity
     public void DropPotion(Room room, ContentManager content)
     {
         double randomNumber = _random.NextDouble();
-        if(randomNumber < 0.5) room.items.Add(new Potion(500, this.Position, Potion.PotionType.HEALING));
-        else if(randomNumber < 0.75) room.items.Add(new Potion(10, this.Position, Potion.PotionType.ATTACK));
+        if(randomNumber < 0.3) room.items.Add(new Potion(200, this.Position, Potion.PotionType.HEALING));
+        else if(randomNumber < 0.6) room.items.Add(new Potion(10, this.Position, Potion.PotionType.ATTACK));
         else room.items.Add(new Potion(10, this.Position, Potion.PotionType.DEFENSE));
         room.LoadItemAssets(content);
     }
