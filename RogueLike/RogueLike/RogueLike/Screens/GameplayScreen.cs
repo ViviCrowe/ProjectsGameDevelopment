@@ -201,7 +201,7 @@ namespace GameStateManagement
                 playerHUD.Update(player);
                 
                 GameObject item = player.CheckForItemCollision(currentRoom);
-                if(item is Wallet || item is Potion || item is Key)
+                if(item is Wallet || item is Potion)
                 {
                     player.PickUpItem(item, currentRoom, content);
                 }
@@ -278,6 +278,7 @@ namespace GameStateManagement
                 MediaPlayer.Play(currentSong);
             }
 
+            Tower.Update();
         }
 
         private bool checkTrapDoor(Entity entity)
