@@ -20,7 +20,8 @@ namespace RogueLike.Classes
             Floor,
             Hole,
             Wall,
-            Door
+            Door,
+            LockedDoor
         }
 
         public void Draw(SpriteBatch spriteBatch, float layerDepth)

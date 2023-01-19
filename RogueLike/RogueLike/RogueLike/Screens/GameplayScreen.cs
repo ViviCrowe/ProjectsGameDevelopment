@@ -110,7 +110,7 @@ namespace GameStateManagement
             level[2] = new Level(viewport, 8, true);
 
             levelCounter = 0;
-            newLevel();
+            NewLevel();
 
 
             //playerHUD initialization
@@ -123,11 +123,11 @@ namespace GameStateManagement
             ScreenManager.Game.ResetElapsedTime();
         }
 
-        private void newLevel()
+        private void NewLevel()
         {
             currentLevel = level[levelCounter];
-            currentLevel.generateLevel(content);
-            currentLevel.addDoors(content);
+            currentLevel.GenerateLevel(content);
+            currentLevel.AddDoors(content);
             foreach (Room room in currentLevel.Rooms)
             {
                 if (room != null)
@@ -201,7 +201,7 @@ namespace GameStateManagement
                 playerHUD.Update(player);
                 
                 GameObject item = player.CheckForItemCollision(currentRoom);
-                if(item is Wallet || item is Potion)
+                if(item is Wallet || item is Potion || item is Key)
                 {
                     player.PickUpItem(item, currentRoom, content);
                 }
@@ -225,7 +225,6 @@ namespace GameStateManagement
 
                 player.Position.Y = currentRoom.Tiles[0, currentRoom.Tiles.GetLength(0) / 2].Position.Y + 85;
 
-
             }
             else if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && player.CheckForCollision(currentRoom, -1, 0, false, false).ObjType == GameObject.ObjectType.Door)
             {
@@ -235,7 +234,6 @@ namespace GameStateManagement
                 currentRoom = currentLevel.Rooms[roomCounterRow, roomCounterCol];
 
                 player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, currentRoom.Tiles.GetLength(1) -1].Position.X - 85;
-
 
             }
             else if (player.CheckForCollision(currentRoom, 1, 0, false, false) != null && player.CheckForCollision(currentRoom, 1, 0, false, false).ObjType == GameObject.ObjectType.Door)
@@ -247,14 +245,23 @@ namespace GameStateManagement
 
                 player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, 0].Position.X + 85;
 
-
             }
             else if (checkTrapDoor(player))
             {
                 player.Position.X = viewport.Width / 2;
                 player.Position.Y = viewport.Height / 2;
                 levelCounter++;
-                newLevel();
+                NewLevel();
+            }
+            else if (player.HasKey)
+            {
+                GameObject temp = player.CheckForCollision(currentRoom, 0, -1, false, false);
+                if(temp != null && temp.ObjType == GameObject.ObjectType.LockedDoor)
+                {
+                    temp.ObjType =  GameObject.ObjectType.Door;
+                    temp.LoadAssets(content, "tuer_offen2");
+                    player.HasKey = false;
+                }
             }
 
             //Updates the HUD if Reference is different
@@ -270,6 +277,7 @@ namespace GameStateManagement
                 currentSong = backgroundMusic;
                 MediaPlayer.Play(currentSong);
             }
+
         }
 
         private bool checkTrapDoor(Entity entity)

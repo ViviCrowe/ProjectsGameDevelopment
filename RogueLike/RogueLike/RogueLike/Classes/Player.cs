@@ -17,8 +17,9 @@ public class Player : Entity
     public int LevelUpAt = 200;
     private SoundEffect drinkPotionSound;
     private SoundEffect levelUpSound;
-    public int BaseAttack { get; set; } = 0;
+    public int BaseAttack { get; set; } = 500; // debug
     public int BaseDefense { get; set; } = 0;
+    public bool HasKey { get; set; } = false;
 
     public Player(Viewport viewport, Weapon weapon) :
         base(viewport, weapon)
@@ -94,6 +95,11 @@ public class Player : Entity
                 }
                 room.items.Remove(potion);
                 drinkPotionSound.Play();
+            }
+            else if(item is Key key)
+            {
+                this.HasKey = true;
+                room.items.Remove(key);
             }
         }
     }

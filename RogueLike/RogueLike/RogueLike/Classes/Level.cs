@@ -2,8 +2,7 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RogueLike.Classes.AI;
-using SharpDX.Direct3D9;
+using RogueLike.Classes.Items;
 
 namespace RogueLike.Classes
 {
@@ -27,7 +26,7 @@ namespace RogueLike.Classes
             this.roomNumber = roomNumber;
         }
 
-        /*public void generateLevel2()
+        /*public void GenerateLevel2()
         {
             int
                 width,
@@ -54,7 +53,7 @@ namespace RogueLike.Classes
             }
         }*/
 
-        public void generateLevel(ContentManager content)
+        public void GenerateLevel(ContentManager content)
         {
             int width, height;
 
@@ -76,7 +75,7 @@ namespace RogueLike.Classes
                     j = random.Next(0, 3);
                     if(Rooms[1, j] != null)
                     {
-                        Rooms[0, j] = new Room(viewport,false, true, lastLevel, 15, 15);
+                        Rooms[0, j] = new Room(viewport,false, true, lastLevel, 15, 25);
                         counter++;
                     }
                 }
@@ -138,9 +137,21 @@ namespace RogueLike.Classes
                     }
                 }
             }
+
+            if(this.lastLevel)
+            {
+                Room keyRoom = null;
+                do
+                {
+                    int row = (int) random.NextInt64(1, Rooms.GetLength(0)-2);
+                    int col = (int) random.NextInt64(1, Rooms.GetLength(1)-2);
+                    keyRoom = Rooms[row, col];
+                } while(keyRoom == null);
+                keyRoom.items.Add(new Key(new Vector2(viewport.Width/2, viewport.Height/2)));
+            }
         }
 
-        public void addDoors(ContentManager content)
+        public void AddDoors(ContentManager content)
         {
             for(int i = 0; i < Rooms.GetLength(0); i++)
             {
@@ -150,14 +161,14 @@ namespace RogueLike.Classes
                     {
                         try
                         {             
-                            if (Rooms[i, j - 1] != null) Rooms[i, j].addDoor(Room.DoorType.Left, content);
+                            if (Rooms[i, j - 1] != null) Rooms[i, j].AddDoor(Room.DoorType.Left, content);
                         }
                         catch (IndexOutOfRangeException e)
                         {
 
                         }
                         try { 
-                        if (Rooms[i + 1, j] != null) Rooms[i, j].addDoor(Room.DoorType.Bottom, content);
+                        if (Rooms[i + 1, j] != null) Rooms[i, j].AddDoor(Room.DoorType.Bottom, content);
                         }
                         catch (IndexOutOfRangeException e)
                         {
@@ -165,7 +176,7 @@ namespace RogueLike.Classes
                         }
                         try
                         {
-                            if (Rooms[i, j + 1] != null) Rooms[i, j].addDoor(Room.DoorType.Right, content);
+                            if (Rooms[i, j + 1] != null) Rooms[i, j].AddDoor(Room.DoorType.Right, content);
                         }
                         catch (IndexOutOfRangeException e)
                         {
@@ -173,7 +184,13 @@ namespace RogueLike.Classes
                         }
                         try
                         {
-                            if (Rooms[i - 1, j] != null) Rooms[i, j].addDoor(Room.DoorType.Top, content);
+                            if (Rooms[i - 1, j] != null)
+                            {    if(Rooms[i-1,j].LastLevel && Rooms[i-1,j].Last)
+                                {
+                                    Rooms[i, j].AddLockedDoor(content);
+                                }
+                                else Rooms[i, j].AddDoor(Room.DoorType.Top, content);
+                            }
                         }
                         catch (IndexOutOfRangeException e)
                         {
