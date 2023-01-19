@@ -111,7 +111,13 @@ namespace RogueLike.Classes
                 position.Y += tileDimensions.Y;
             }
             if(!First && !Last) AddEnemies();
-            if(Last && LastLevel) activeObjects.Add(new Boss(viewport, null, new Vector2(viewport.Width/2, viewport.Height/2 - 200)));
+            if(Last && LastLevel) 
+            {
+                activeObjects.Add(new Boss(viewport, null, new Vector2(viewport.Width/2, viewport.Height/2 - 100)));
+                Tower tower = new Tower(new Vector2(viewport.Width/2, viewport.Width/2 - 350));
+                passiveObjects.Add(tower);
+                tower.LoadAssets(content, "redtower");
+            }
 
             LoadEntityAssets(content);
             LoadItemAssets(content);
@@ -282,6 +288,13 @@ namespace RogueLike.Classes
                 if (entity != null)
                 {
                     entity.Draw(spriteBatch, 0.2f);
+                }
+            }
+            foreach(GameObject obj in passiveObjects)
+            {
+                if(obj is Tower tower)
+                {
+                    tower.Draw(spriteBatch, 0.95f);
                 }
             }
         }
