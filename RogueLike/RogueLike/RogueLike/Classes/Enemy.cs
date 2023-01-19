@@ -106,17 +106,17 @@ public class Enemy : Entity
             {
                 boss.DropTreasure(room, content);
             }
-            else if(randomDrop < 0.95)
+            else if(randomDrop < 0.4)
             {
-                this.DropTeeth(room, content);
-            }
-            else if(randomDrop < 0.7)
-            {   
                 this.DropWeapon(room, content);
             }
-            else if(randomDrop > 0.3)
+            else if(randomDrop < 0.8)
+            {   
+               this.DropPotion(room, content);
+            }
+            else if(randomDrop > 0.2)
             {
-                this.DropPotion(room, content);
+                this.DropTeeth(room, content);
             }
             player.Experience += this.ExperiencePoints;
         }
