@@ -82,9 +82,8 @@ namespace RogueLike.Classes
 
         public new void LoadAssets(ContentManager content)
         {
-            base.LoadAssets(content);
+            base.LoadAssets(content, "boss"); //temp
             this.treasure.Texture = content.Load<Texture2D>("treasure");
-            this.minionTexture = content.Load<Texture2D>("enemy"); // TEMPORÄR
         }
     }
 }
