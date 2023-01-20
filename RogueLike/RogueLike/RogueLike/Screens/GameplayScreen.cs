@@ -166,6 +166,7 @@ namespace GameStateManagement
             bool otherScreenHasFocus,
             bool coveredByOtherScreen
         )
+        { 
             //Return back to title screen if player is dead
             if(player.CurrentHealth <= 0)
             {
