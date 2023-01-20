@@ -138,17 +138,15 @@ namespace RogueLike.Classes
                 }
             }
 
-            if(this.lastLevel)
-            {
                 Room keyRoom = null;
                 do
                 {
-                    int row = (int) random.NextInt64(1, Rooms.GetLength(0)-2);
-                    int col = (int) random.NextInt64(1, Rooms.GetLength(1)-2);
+                    int row = (int) random.NextInt64(0, Rooms.GetLength(0)-1);
+                    int col = (int) random.NextInt64(0, Rooms.GetLength(1)-1);
                     keyRoom = Rooms[row, col];
-                } while(keyRoom == null);
+                } while(keyRoom == null || keyRoom.Last);
                 keyRoom.items.Add(new Key(new Vector2(viewport.Width/2, viewport.Height/2)));
-            }
+            
         }
 
         public void AddDoors(ContentManager content)
@@ -185,7 +183,7 @@ namespace RogueLike.Classes
                         try
                         {
                             if (Rooms[i - 1, j] != null)
-                            {    if(Rooms[i-1,j].LastLevel && Rooms[i-1,j].Last)
+                            {    if(Rooms[i-1,j].Last)
                                 {
                                     Rooms[i, j].AddLockedDoor(content);
                                 }
