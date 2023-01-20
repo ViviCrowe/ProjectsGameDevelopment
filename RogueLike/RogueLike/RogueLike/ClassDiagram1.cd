@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="RogueLike.Classes.AI.ArcherAI" Collapsed="true" BaseTypeListCollapsed="true">
+    <Position X="33" Y="0.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AI\ArcherAI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="RogueLike.Classes.AI.BossAI" BaseTypeListCollapsed="true">
+    <Position X="11" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAIAAAAIAAAAAAAAAAAAAAAAAAAAABBAAQAAAAAAA=</HashCode>
+      <FileName>Classes\AI\BossAI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RogueLike.Classes.AI.MeleeAI" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="13.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AI\MeleeAI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RogueLike.Classes.AI.PatrolAI" BaseTypeListCollapsed="true">
+    <Position X="11" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAEAAAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AI\PatrolAI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="RogueLike.Classes.AI.TankAI" BaseTypeListCollapsed="true">
+    <Position X="9.25" Y="11.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AI\TankAI.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.181" />
+  </Class>
+  <Class Name="RogueLike.Classes.Items.Key">
+    <Position X="31.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Items\Key.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Items.Potion">
+    <Position X="6.75" Y="5.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="RogueLike.Classes.Items.Potion.PotionType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Classes\Items\Potion.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAgAAAAAAA=</HashCode>
+      <FileName>Classes\Items\Potion.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Items.Treasure">
+    <Position X="9.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Items\Treasure.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Items.Wallet">
+    <Position X="17.75" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIgAAAAAAA=</HashCode>
+      <FileName>Classes\Items\Wallet.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Weapons.Arrow">
+    <Position X="20" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAACAAAAgAABAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Classes\Weapons\Arrow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Weapons.Bow">
+    <Position X="13.5" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>ACACQAAAAAAAAgAAACAAAAAAQAAAAABAIAAAAAAIAAA=</HashCode>
+      <FileName>Classes\Weapons\Bow.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Weapons.Fist">
+    <Position X="11.25" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Weapons\Fist.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Weapons.Spear">
+    <Position X="15.75" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Weapons\Spear.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Weapons.Sword">
+    <Position X="9" Y="7.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Weapons\Sword.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Weapons.Weapon">
+    <Position X="12.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAA=</HashCode>
+      <FileName>Classes\Weapons\Weapon.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Boss">
+    <Position X="30.75" Y="14" Width="1.5" />
+    <InheritanceLine Type="RogueLike.Classes.Enemy" FixedToPoint="true">
+      <Path>
+        <Point X="31.5" Y="12.752" />
+        <Point X="31.5" Y="14" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAABIAAIAACAEAgAADAAAAAABACAAAIAAAAA=</HashCode>
+      <FileName>Classes\Boss.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Enemy">
+    <Position X="30.75" Y="8.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="RogueLike.Classes.Enemy.Type" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Classes\Enemy.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <InheritanceLine Type="RogueLike.Classes.Entity" FixedFromPoint="true">
+      <Path>
+        <Point X="27.25" Y="7.875" />
+        <Point X="31.5" Y="7.875" />
+        <Point X="31.5" Y="8.5" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAIAAAAICAIAAQEAAQAAEAAAAAAAIAAAAAEE=</HashCode>
+      <FileName>Classes\Enemy.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Entity">
+    <Position X="25.75" Y="5.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="RogueLike.Classes.Entity.Direction" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Classes\Entity.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>QAVBgAABCgCEAgAAAWAAAAwyAJgIYABIQAAIAAgqAAA=</HashCode>
+      <FileName>Classes\Entity.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.GameObject">
+    <Position X="17.25" Y="0.5" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="RogueLike.Classes.GameObject.ObjectType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Classes\GameObject.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAAAAAgAgACAAAAgAACAAAAAAAAIAAAAAAAA=</HashCode>
+      <FileName>Classes\GameObject.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Level">
+    <Position X="21.5" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAACgBAAAAAACACAAABAAAAQAAAAAAAA=</HashCode>
+      <FileName>Classes\Level.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Player">
+    <Position X="28.5" Y="8.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAMAAAAKAgCqAAAAABAAAAAAABAAAAQCAEQAA=</HashCode>
+      <FileName>Classes\Player.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.PlayerHUD">
+    <Position X="18" Y="8.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AA4AAAKAAAAAAgABAAAAoAAAUgAAkCI1IQAAABIABAQ=</HashCode>
+      <FileName>Classes\PlayerHUD.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Room">
+    <Position X="23.5" Y="8.25" Width="1.5" />
+    <NestedTypes>
+      <Enum Name="RogueLike.Classes.Room.DoorType" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Classes\Room.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AQQAAAAAICAAA4AABChQJAABFAEAAQKAAAaCAAAAoAA=</HashCode>
+      <FileName>Classes\Room.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Tile">
+    <Position X="22.25" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAQAAAAAAAAAAAQAEAAAAAAAAIAAAAAAAAAAA=</HashCode>
+      <FileName>Classes\Tile.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="RogueLike.Classes.Tower">
+    <Position X="29" Y="5.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQAAAAAAAAAAgAAAAAAAAAgAAAAAAEAAAAAAQAAAAA=</HashCode>
+      <FileName>Classes\Tower.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="GameStateManagement.GameplayScreen">
+    <Position X="6" Y="9" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAQKEASgACAgAgIABECAAAAAAAEIAIABBAAAQAMAjgQ=</HashCode>
+      <FileName>Screens\GameplayScreen.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Interface Name="RogueLike.Classes.AI.EnemyAI">
+    <Position X="10" Y="9.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAA=</HashCode>
+      <FileName>Classes\AI\EnemyAI.cs</FileName>
+    </TypeIdentifier>
+  </Interface>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
