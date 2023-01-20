@@ -62,6 +62,12 @@ namespace GameStateManagement
         private Song bossMusic;
         private Song currentSong;
 
+        // for cheating
+        private int tempMaxHealth = -1;
+        private float tempSpeed = -1;
+        private int tempAttack = -1;
+        private int cheatCountdown = 0;
+
 #endregion Fields
 
 
@@ -286,6 +292,8 @@ namespace GameStateManagement
             }
 
             Tower.Update();
+            if(cheatCountdown > 0) cheatCountdown--;
+
         }
 
         private bool checkTrapDoor(Entity entity)
@@ -407,6 +415,28 @@ namespace GameStateManagement
                             int damageDealt = player.Attack (targetEntity);
                             // TODO: display damage dealt
                         }
+                    }
+                }
+
+                // cheat
+                if(keyboardState.IsKeyDown(Keys.Enter) && cheatCountdown == 0)
+                {
+                    cheatCountdown = 30;
+                    if(player.MaximumHealth < 99999)
+                    {
+                        tempMaxHealth = player.MaximumHealth;
+                        tempSpeed = player.MovementSpeed;
+                        tempAttack = player.BaseAttack;
+    
+                        player.MaximumHealth = player.CurrentHealth = 99999;
+                        player.MovementSpeed = 7f;
+                        player.BaseAttack = 1000;
+                    }
+                    else if(player.MaximumHealth == 99999 && tempMaxHealth > -1)
+                    {
+                        player.MaximumHealth = player.CurrentHealth = tempMaxHealth;
+                        player.MovementSpeed = tempSpeed;
+                        player.BaseAttack = tempAttack;
                     }
                 }
             }
