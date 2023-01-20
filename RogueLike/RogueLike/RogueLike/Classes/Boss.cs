@@ -33,7 +33,7 @@ namespace RogueLike.Classes
             this.ExperiencePoints = 3000;
             this.SetEnemyAI(new BossAI()); // phase 1
             if(BossCounter < 3) BossCounter++;
-            else BossCounter = 1;
+            else if(BossCounter > 3) BossCounter = 0;
             this.Level = BossCounter;
         }
 

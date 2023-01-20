@@ -183,9 +183,8 @@ namespace GameStateManagement
             // player win 
             foreach (Entity entity in currentRoom.activeObjects)
             {
-                if(entity is Boss)
+                if(entity is Boss boss)
                 {
-                    Boss boss = (Boss)entity;
                     if(boss.Level == 3 && boss.CurrentHealth <= 0)
                     {
                         LoadingScreen.Load(ScreenManager, false, null, 
@@ -446,6 +445,7 @@ namespace GameStateManagement
                         player.MaximumHealth = player.CurrentHealth = 99999;
                         player.MovementSpeed = 7f;
                         player.BaseAttack = 1000;
+                        player.HasKey = true;
                     }
                     else if(player.MaximumHealth == 99999 && tempMaxHealth > -1)
                     {
