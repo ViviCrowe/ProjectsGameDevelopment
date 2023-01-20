@@ -11,8 +11,6 @@ namespace RogueLike.Classes
     {
         private Player player;
 
-        private Weapon weaponSlot;
-
         private String teethValue;
 
         private String healthValue;
@@ -215,7 +213,7 @@ namespace RogueLike.Classes
             else if (player.Experience <= player.LevelUpAt &&
                 player.Experience > (player.LevelUpAt / 100) * 87.5)
             {
-                spriteBatch.Draw(xpbar25, new Vector2(550, -60), null, Color.White,
+                spriteBatch.Draw(xpbar100, new Vector2(550, -60), null, Color.White,
                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
 
@@ -227,7 +225,6 @@ namespace RogueLike.Classes
         {
             this.teethValue = player.Teeth.Value.ToString();
             this.healthValue = player.CurrentHealth + "/" + player.MaximumHealth;
-            this.weaponSlot = player.EquippedWeapon;
         }
     }
 }
