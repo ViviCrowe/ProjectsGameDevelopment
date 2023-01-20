@@ -27,8 +27,6 @@ public class Player : Entity
         this.Position = new Vector2(viewport.Width / 2, viewport.Height / 2);
         this.CurrentHealth = MaximumHealth = 800;
         this.Teeth = new(0);
-        //this.weapon = new Fist();
-        this.EquippedWeapon = new Bow(this); // TEST
         this.MovementSpeed = 5f;
     }
 
@@ -61,13 +59,9 @@ public class Player : Entity
                 if(this.EquippedWeapon is not Fist) DropWeapon(room, content);
                 this.EquippedWeapon = newWeapon;
                 room.items.Remove (newWeapon);
-                if(newWeapon is Sword)
-                {}
-                else if(newWeapon is Bow)
-                {}
-                else if(newWeapon is Spear)
-                {}
-                this.LoadAssets(content, "character_with_sword"); // TESTWEISE 
+                if(newWeapon is Sword) this.LoadAssets(content, "Player_with_Sword");
+                else if(newWeapon is Bow) this.LoadAssets(content, "Player_with_Bow");
+                else if(newWeapon is Spear) this.LoadAssets(content, "Player_with_Spear");
                 player.pickUpWeaponCountdown = 40;
                 PickupDropSound.Play();
             }
@@ -128,7 +122,7 @@ public class Player : Entity
 
     public new void LoadAssets(ContentManager content)
     {
-        base.LoadAssets(content, "character");
+        base.LoadAssets(content, "Player_no_weapon");
         levelUpSound = content.Load<SoundEffect>("level_up");
         drinkPotionSound = content.Load<SoundEffect>("drink_potion");
     }
