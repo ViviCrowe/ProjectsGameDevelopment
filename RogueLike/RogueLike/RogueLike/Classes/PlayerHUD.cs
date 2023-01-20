@@ -17,11 +17,6 @@ namespace RogueLike.Classes
 
         private String healthValue;
 
-        private int levelValue;
-        private int experienceValue;
-        private int prevLevelUpAt;
-        
-
         private SpriteFont font;
 
         private Texture2D healthbar100;
@@ -106,7 +101,8 @@ namespace RogueLike.Classes
                     0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
 
 
-            if (player.CurrentHealth == player.MaximumHealth)
+            if (player.CurrentHealth == player.MaximumHealth && 
+                player.CurrentHealth >= (player.MaximumHealth / 100) * 87.5)
             {
                 spriteBatch.Draw(healthbar100, new Vector2(200, -60), null, Color.White,
                     0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
@@ -222,11 +218,6 @@ namespace RogueLike.Classes
                 spriteBatch.Draw(xpbar25, new Vector2(550, -60), null, Color.White,
                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
-            else
-            {
-                spriteBatch.Draw(healthbar100, new Vector2(550, -60), null, Color.White,
-                   0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
-            }
 
             spriteBatch.DrawString(font, player.Experience.ToString() +"/"+ player.LevelUpAt, new Vector2(800, 12.5f), Color.White);
             spriteBatch.DrawString(font, player.Level.ToString(), new Vector2(500, 12.5f), Color.White);
@@ -237,7 +228,6 @@ namespace RogueLike.Classes
             this.teethValue = player.Teeth.Value.ToString();
             this.healthValue = player.CurrentHealth + "/" + player.MaximumHealth;
             this.weaponSlot = player.EquippedWeapon;
-            this.levelValue = player.Level;
         }
     }
 }
