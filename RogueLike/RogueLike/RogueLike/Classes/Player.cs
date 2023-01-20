@@ -39,7 +39,8 @@ public class Player : Entity
     {
         this.MaximumHealth += 100;
         this.Level++;
-        this.LevelUpAt = this.Experience + 200;
+        this.LevelUpAt += 100;
+        this.Experience = 0;
         levelUpSound.Play();
     }
 
