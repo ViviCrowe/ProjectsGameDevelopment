@@ -51,7 +51,7 @@ namespace RogueLike.Classes
             UPRIGHT
         }
 
-        public Direction directionFacing;
+        public Direction DirectionFacing;
 
         public Entity(Viewport viewport, Weapon weapon)
         {
@@ -119,53 +119,53 @@ namespace RogueLike.Classes
         public void MoveDown()
         {
             Position.Y += MovementSpeed;
-            this.directionFacing = Direction.DOWN;
+            this.DirectionFacing = Direction.DOWN;
         }
 
         public void MoveLeft()
         {
             Position.X -= MovementSpeed;
-            this.directionFacing = Direction.LEFT;
+            this.DirectionFacing = Direction.LEFT;
         }
 
         public void MoveRight()
         {
             Position.X += MovementSpeed;
-            this.directionFacing = Direction.RIGHT;
+            this.DirectionFacing = Direction.RIGHT;
         }
 
         public void MoveUp()
         {
             Position.Y -= MovementSpeed;
-            this.directionFacing = Direction.UP;
+            this.DirectionFacing = Direction.UP;
         }
 
         public void MoveUpRight()
         {
             Position.X += MovementSpeed;
             Position.Y -= MovementSpeed;
-            this.directionFacing = Direction.UPRIGHT;
+            this.DirectionFacing = Direction.UPRIGHT;
         }
 
         public void MoveUpLeft()
         {
             Position.X -= MovementSpeed;
             Position.Y -= MovementSpeed;
-            this.directionFacing = Direction.UPLEFT;
+            this.DirectionFacing = Direction.UPLEFT;
         }
 
         public void MoveDownRight()
         {
             Position.X += MovementSpeed;
             Position.Y += MovementSpeed;
-            this.directionFacing = Direction.DOWNRIGHT;
+            this.DirectionFacing = Direction.DOWNRIGHT;
         }
 
         public void MoveDownLeft()
         {
             Position.X -= MovementSpeed;
             Position.Y += MovementSpeed;
-            this.directionFacing = Direction.DOWNLEFT;
+            this.DirectionFacing = Direction.DOWNLEFT;
         }
 
         //Sets the minimum value of the Health bar

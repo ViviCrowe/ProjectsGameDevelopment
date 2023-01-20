@@ -273,7 +273,7 @@ namespace GameStateManagement
                 player.Position.X = currentRoom.Tiles[currentRoom.Tiles.GetLength(0) / 2, 0].Position.X + 85;
 
             }
-            else if (checkTrapDoor(player))
+            else if (CheckTrapDoor(player))
             {
                 player.Position.X = viewport.Width / 2;
                 player.Position.Y = viewport.Height / 2;
@@ -310,7 +310,7 @@ namespace GameStateManagement
 
         }
 
-        private bool checkTrapDoor(Entity entity)
+        private bool CheckTrapDoor(Entity entity)
         {
             if (player.CheckForCollision(currentRoom, -1, 0, false, false) != null && (player.CheckForCollision(currentRoom, -1, 0, false, false).ObjType == GameObject.ObjectType.Hole))
             {

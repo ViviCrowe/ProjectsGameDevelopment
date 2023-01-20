@@ -30,7 +30,7 @@ namespace RogueLike.Classes.Weapons
             float y = entity.Position.Y;
             if(entity is Player)
             {
-                switch(entity.directionFacing)
+                switch(entity.DirectionFacing)
                 {
                     case Entity.Direction.UP:
                     y -= entity.Texture.Height/2 + Arrow.Texture.Height;

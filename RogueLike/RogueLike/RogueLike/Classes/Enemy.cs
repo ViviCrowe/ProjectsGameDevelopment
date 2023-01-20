@@ -87,7 +87,7 @@ public class Enemy : Entity
         enemyAI.Move(this, room, destinationTile);
     }
 
-    public void setEnemyAI(EnemyAI enemyAI)
+    public void SetEnemyAI(EnemyAI enemyAI)
     {
         // switch at runtime
         this.enemyAI = enemyAI;
@@ -140,17 +140,17 @@ public class Enemy : Entity
         {
             switch(EnemyType) 
             {
-                case Type.ARCHER: setEnemyAI(new ArcherAI());
+                case Type.ARCHER: SetEnemyAI(new ArcherAI());
                 break;
-                case Type.MELEE: setEnemyAI(new MeleeAI());
+                case Type.MELEE: SetEnemyAI(new MeleeAI());
                 break;
-                case Type.TANK: setEnemyAI(new TankAI());
+                case Type.TANK: SetEnemyAI(new TankAI());
                 break;
             }
         }
         else if(!PlayerInVision(room) && enemyAI is not PatrolAI)
         {
-            setEnemyAI(new PatrolAI());
+            SetEnemyAI(new PatrolAI());
         }
     }
 

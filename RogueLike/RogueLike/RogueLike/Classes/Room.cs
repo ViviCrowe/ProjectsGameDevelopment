@@ -11,7 +11,7 @@ namespace RogueLike.Classes
 {
     public class Room
     {
-        public Vector2 tileDimensions = new(64, 64);
+        public Vector2 TileDimensions = new(64, 64);
         public Vector2 GridDimensions;
         public Vector2 Offset;
 
@@ -105,11 +105,11 @@ namespace RogueLike.Classes
                         }
                     }
 
-                    position.X += tileDimensions.X;
+                    position.X += TileDimensions.X;
                 }
                 position.X =
-                    viewport.Width / 2 - (Tiles.GetLength(1) - 1) * tileDimensions.X / 2;
-                position.Y += tileDimensions.Y;
+                    viewport.Width / 2 - (Tiles.GetLength(1) - 1) * TileDimensions.X / 2;
+                position.Y += TileDimensions.Y;
             }
             if(!First && !Last) AddEnemies();
             if(Last) 
@@ -135,30 +135,30 @@ namespace RogueLike.Classes
 
             if (type == DoorType.Top)
             {
-                position.X = position.X + tileDimensions.X * (Tiles.GetLength(1) / 2);
+                position.X = position.X + TileDimensions.X * (Tiles.GetLength(1) / 2);
                 Tiles[0, Tiles.GetLength(1)/2] = new Tile(position, GameObject.ObjectType.Door);
                 Tiles[0, Tiles.GetLength(1)/2].LoadAssets(content, "tuer_offen2");
                 passiveObjects.Add(Tiles[0, Tiles.GetLength(1) / 2]);
             }
             else if(type == DoorType.Bottom)
             {
-                position.X = position.X + tileDimensions.X * (Tiles.GetLength(1) / 2);
-                position.Y += (Tiles.GetLength(0)-1) * tileDimensions.Y;
+                position.X = position.X + TileDimensions.X * (Tiles.GetLength(1) / 2);
+                position.Y += (Tiles.GetLength(0)-1) * TileDimensions.Y;
                 Tiles[Tiles.GetLength(0) -1, Tiles.GetLength(1)/2] = new Tile(position, GameObject.ObjectType.Door);
                 Tiles[Tiles.GetLength(0) - 1, Tiles.GetLength(1) / 2].LoadAssets(content, "tuer_offen2");
                 passiveObjects.Add(Tiles[Tiles.GetLength(0) - 1, Tiles.GetLength(1) / 2]);
             }
             else if (type == DoorType.Left)
             {
-                position.Y += (Tiles.GetLength(0) / 2) * tileDimensions.Y;
+                position.Y += (Tiles.GetLength(0) / 2) * TileDimensions.Y;
                 Tiles[Tiles.GetLength(0) / 2, 0] = new Tile(position, GameObject.ObjectType.Door);
                 Tiles[Tiles.GetLength(0) / 2, 0].LoadAssets(content, "tuer_offen2");
                 passiveObjects.Add(Tiles[Tiles.GetLength(0) / 2, 0]);
             }
             else if(type == DoorType.Right)
             {
-                position.Y += (Tiles.GetLength(0) / 2) * tileDimensions.Y;
-                position.X += (Tiles.GetLength(1) - 1) * tileDimensions.X;
+                position.Y += (Tiles.GetLength(0) / 2) * TileDimensions.Y;
+                position.X += (Tiles.GetLength(1) - 1) * TileDimensions.X;
                 Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1)-1] = new Tile(position, GameObject.ObjectType.Door);
                 Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1].LoadAssets(content, "tuer_offen2");
                 passiveObjects.Add(Tiles[Tiles.GetLength(0) / 2, Tiles.GetLength(1) - 1]);
@@ -172,7 +172,7 @@ namespace RogueLike.Classes
             position.Y = 
                 (viewport.Height / 2) - ((Tiles.GetLength(0) - 1) * 64 / 2);
 
-                position.X = position.X + tileDimensions.X * (Tiles.GetLength(1) / 2);
+                position.X = position.X + TileDimensions.X * (Tiles.GetLength(1) / 2);
                 Tiles[0, Tiles.GetLength(1)/2] = new Tile(position, GameObject.ObjectType.LockedDoor);
                 Tiles[0, Tiles.GetLength(1)/2].LoadAssets(content, "tuer_geschlossen2");
                 passiveObjects.Add(Tiles[0, Tiles.GetLength(1) / 2]);
@@ -305,8 +305,8 @@ namespace RogueLike.Classes
 
         public Tile GetTileFromPos(Vector2 Position)
         {
-            int col = (int) ((Position.X - this.Offset.X) / tileDimensions.X);
-            int row = (int) ((Position.Y - this.Offset.Y) / tileDimensions.Y);
+            int col = (int) ((Position.X - this.Offset.X) / TileDimensions.X);
+            int row = (int) ((Position.Y - this.Offset.Y) / TileDimensions.Y);
             return Tiles[row, col];
         }
 

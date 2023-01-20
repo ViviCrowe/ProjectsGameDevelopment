@@ -113,20 +113,20 @@
   <Class Name="RogueLike.Classes.Weapons.Weapon">
     <Position X="12.25" Y="5.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAEAAEAAAAAA=</HashCode>
       <FileName>Classes\Weapons\Weapon.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RogueLike.Classes.Boss">
-    <Position X="30.75" Y="14" Width="1.5" />
+    <Position X="30.75" Y="13.25" Width="1.5" />
     <InheritanceLine Type="RogueLike.Classes.Enemy" FixedToPoint="true">
       <Path>
         <Point X="31.5" Y="12.752" />
-        <Point X="31.5" Y="14" />
+        <Point X="31.5" Y="13.25" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAABIAAIAACAEAgAADAAAAAABACAAAIAAAAA=</HashCode>
+      <HashCode>AAQAAAAAAABAAAIAACAEAgAACAAAAAABACAAAIAAAAA=</HashCode>
       <FileName>Classes\Boss.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -141,18 +141,21 @@
     </NestedTypes>
     <InheritanceLine Type="RogueLike.Classes.Entity" FixedFromPoint="true">
       <Path>
-        <Point X="27.25" Y="7.875" />
-        <Point X="31.5" Y="7.875" />
+        <Point X="27.25" Y="8.083" />
+        <Point X="31.5" Y="8.083" />
         <Point X="31.5" Y="8.5" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAIAAAAICAIAAQEAAQAAEAAAAAAAIAAAAAEE=</HashCode>
+      <HashCode>AAQAAAAAQIAAAAICAIAAQEAAAAAEAAAAAAAIAAAAAEE=</HashCode>
       <FileName>Classes\Enemy.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="RogueLike.Classes.Entity">
     <Position X="25.75" Y="5.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
       <Enum Name="RogueLike.Classes.Entity.Direction" Collapsed="true">
         <TypeIdentifier>
@@ -161,7 +164,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>QAVBgAABCgCEAgAAAWAAAAwyAJgIYABIQAAIAAgqAAA=</HashCode>
+      <HashCode>QAVBgAABCgCEAgAAAWAAAAwyAJgIYABIQCAIAAgKAAA=</HashCode>
       <FileName>Classes\Entity.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -202,6 +205,9 @@
   </Class>
   <Class Name="RogueLike.Classes.Room">
     <Position X="23.5" Y="8.25" Width="1.5" />
+    <Compartments>
+      <Compartment Name="Nested Types" Collapsed="false" />
+    </Compartments>
     <NestedTypes>
       <Enum Name="RogueLike.Classes.Room.DoorType" Collapsed="true">
         <TypeIdentifier>
@@ -210,7 +216,7 @@
       </Enum>
     </NestedTypes>
     <TypeIdentifier>
-      <HashCode>AQQAAAAAICAAA4AABChQJAABFAEAAQKAAAaCAAAAoAA=</HashCode>
+      <HashCode>AQQAAAAAICAAA4AABChQJAABFAEAAQKAAAYCAAAAoAA=</HashCode>
       <FileName>Classes\Room.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -231,7 +237,7 @@
   <Class Name="GameStateManagement.GameplayScreen">
     <Position X="6" Y="9" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQKEASgACAgAgIABECAAAAAAAEIAIABBAAAQAMAjgQ=</HashCode>
+      <HashCode>AASKEASgACAgAgIABECAAAAAAAEIAIABBAAAQAMADgQ=</HashCode>
       <FileName>Screens\GameplayScreen.cs</FileName>
     </TypeIdentifier>
   </Class>

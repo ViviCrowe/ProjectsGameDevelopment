@@ -13,9 +13,7 @@ namespace RogueLike.Classes
         private Spear spear = new Spear();
         private Bow bow;
         private Sword sword = new Sword();
-        public int MinionCountdown { get; set; }= 0;
         private Treasure treasure = new Treasure(Vector2.Zero);
-        private Texture2D minionTexture;
         public int Level { get; set; }
         public static int BossCounter { get; set; } = 1;
 
@@ -33,7 +31,7 @@ namespace RogueLike.Classes
             this.bow.AttackDamage = 50;
             this.VisionRange = 1000;
             this.ExperiencePoints = 3000;
-            this.setEnemyAI(new BossAI()); // phase 1
+            this.SetEnemyAI(new BossAI()); // phase 1
             this.Level = BossCounter;
             if(BossCounter < 3) BossCounter++;
             else BossCounter = 1;
