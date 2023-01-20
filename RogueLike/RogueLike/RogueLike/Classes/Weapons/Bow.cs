@@ -19,7 +19,7 @@ namespace RogueLike.Classes.Weapons
         {
             this.WeaponRange = 2000;
             this.attackSpeed = 6f;
-            this.AttackDamage = 125;
+            this.AttackDamage = 75;
         }
 
         public void FireArrow(Entity entity)

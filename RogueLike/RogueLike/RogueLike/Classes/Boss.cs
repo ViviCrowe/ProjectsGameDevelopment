@@ -15,7 +15,7 @@ namespace RogueLike.Classes
         private Sword sword = new Sword();
         private Treasure treasure = new Treasure(Vector2.Zero);
         public int Level { get; set; }
-        public static int BossCounter { get; set; } = 1;
+        public static int BossCounter { get; set; } = 0;
 
         public Boss(Viewport viewport, Room room, Vector2 position) :
             base(viewport, Type.BOSS, position, room)
@@ -32,9 +32,9 @@ namespace RogueLike.Classes
             this.VisionRange = 1000;
             this.ExperiencePoints = 3000;
             this.SetEnemyAI(new BossAI()); // phase 1
-            this.Level = BossCounter;
             if(BossCounter < 3) BossCounter++;
             else BossCounter = 1;
+            this.Level = BossCounter;
         }
 
         public new void Update(Player player, Room room, ContentManager content)

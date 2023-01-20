@@ -173,7 +173,7 @@ namespace GameStateManagement
             //Return back to title screen if player is dead
             if(player.CurrentHealth <= 0)
             {
-                Boss.BossCounter = 1;
+                Boss.BossCounter = 0;
                 LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
                                                            new MainMenuScreen());
                 LoadingScreen.Load(ScreenManager, false, null, 
@@ -190,6 +190,7 @@ namespace GameStateManagement
                     {
                         LoadingScreen.Load(ScreenManager, false, null, 
                             new BackgroundScreen(), new MainMenuScreen());
+                        MediaPlayer.Stop();
                     } 
                 }
             }
