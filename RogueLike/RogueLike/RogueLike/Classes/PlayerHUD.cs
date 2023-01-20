@@ -11,16 +11,9 @@ namespace RogueLike.Classes
     {
         private Player player;
 
-        private Weapon weaponSlot;
-
         private String teethValue;
 
         private String healthValue;
-
-        private int levelValue;
-        private int experienceValue;
-        private int prevLevelUpAt;
-        
 
         private SpriteFont font;
 
@@ -52,6 +45,7 @@ namespace RogueLike.Classes
         private Texture2D abilityTexture;
         private Texture2D teethTexture;
 
+        private Texture2D keyTexture;
         public PlayerHUD(Player player)
         {
             this.player = player;
@@ -89,8 +83,9 @@ namespace RogueLike.Classes
             spearTexture = content.Load<Texture2D>("spear");
             fistTexture = content.Load<Texture2D>("empty");
             
-
             teethTexture = Wallet.Texture;
+
+            keyTexture = content.Load<Texture2D>("key");
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -98,9 +93,14 @@ namespace RogueLike.Classes
             spriteBatch.Draw(teethTexture, new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(font, teethValue, new Vector2(100, 12.5f), Color.White);
             spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.White);
+            
+            if(player.HasKey)
+                spriteBatch.Draw(keyTexture, new Vector2(1100, 50), null, Color.White,
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
 
 
-            if (player.CurrentHealth == player.MaximumHealth)
+            if (player.CurrentHealth == player.MaximumHealth && 
+                player.CurrentHealth >= (player.MaximumHealth / 100) * 87.5)
             {
                 spriteBatch.Draw(healthbar100, new Vector2(200, -60), null, Color.White,
                     0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
@@ -213,12 +213,7 @@ namespace RogueLike.Classes
             else if (player.Experience <= player.LevelUpAt &&
                 player.Experience > (player.LevelUpAt / 100) * 87.5)
             {
-                spriteBatch.Draw(xpbar25, new Vector2(550, -60), null, Color.White,
-                   0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
-            }
-            else
-            {
-                spriteBatch.Draw(healthbar100, new Vector2(550, -60), null, Color.White,
+                spriteBatch.Draw(xpbar100, new Vector2(550, -60), null, Color.White,
                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
 
@@ -230,8 +225,6 @@ namespace RogueLike.Classes
         {
             this.teethValue = player.Teeth.Value.ToString();
             this.healthValue = player.CurrentHealth + "/" + player.MaximumHealth;
-            this.weaponSlot = player.EquippedWeapon;
-            this.levelValue = player.Level;
         }
     }
 }
