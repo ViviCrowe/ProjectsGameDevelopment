@@ -52,6 +52,7 @@ namespace RogueLike.Classes
         private Texture2D abilityTexture;
         private Texture2D teethTexture;
 
+        private Texture2D keyTexture;
         public PlayerHUD(Player player)
         {
             this.player = player;
@@ -89,8 +90,9 @@ namespace RogueLike.Classes
             spearTexture = content.Load<Texture2D>("spear");
             fistTexture = content.Load<Texture2D>("empty");
             
-
             teethTexture = Wallet.Texture;
+
+            keyTexture = content.Load<Texture2D>("key");
         }
 
         public void Draw(SpriteBatch spriteBatch)
@@ -98,6 +100,10 @@ namespace RogueLike.Classes
             spriteBatch.Draw(teethTexture, new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(font, teethValue, new Vector2(100, 12.5f), Color.White);
             spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.White);
+            
+            if(player.HasKey)
+                spriteBatch.Draw(keyTexture, new Vector2(1100, 50), null, Color.White,
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
 
 
             if (player.CurrentHealth == player.MaximumHealth)
