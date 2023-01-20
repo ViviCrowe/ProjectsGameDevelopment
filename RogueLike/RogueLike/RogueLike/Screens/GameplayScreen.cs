@@ -166,7 +166,13 @@ namespace GameStateManagement
             bool otherScreenHasFocus,
             bool coveredByOtherScreen
         )
-        {
+            //Return back to title screen if player is dead
+            if(player.CurrentHealth <= 0)
+            {
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new MainMenuScreen());
+            }
+
             base.Update(gameTime, otherScreenHasFocus, false);
 
             // Gradually fade in or out depending on whether we are covered by the pause screen.
