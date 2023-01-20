@@ -178,6 +178,7 @@ namespace GameStateManagement
                                                            new MainMenuScreen());
                 LoadingScreen.Load(ScreenManager, false, null, 
                     new BackgroundScreen(), new MainMenuScreen());
+                MediaPlayer.Stop();
             }
 
             // player win 
@@ -187,6 +188,7 @@ namespace GameStateManagement
                 {
                     if(boss.Level == 3 && boss.CurrentHealth <= 0)
                     {
+                        Boss.BossCounter = 0;
                         LoadingScreen.Load(ScreenManager, false, null, 
                             new BackgroundScreen(), new MainMenuScreen());
                         MediaPlayer.Stop();
