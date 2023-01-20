@@ -173,8 +173,21 @@ namespace GameStateManagement
             //Return back to title screen if player is dead
             if(player.CurrentHealth <= 0)
             {
-                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
-                                                           new MainMenuScreen());
+                LoadingScreen.Load(ScreenManager, false, null, 
+                    new BackgroundScreen(), new MainMenuScreen());
+            }
+
+            foreach (Entity entity in currentRoom.activeObjects)
+            {
+                if(entity is Boss)
+                {
+                    Boss boss = (Boss)entity;
+                    if(boss.Level == 3 && boss.CurrentHealth <= 0)
+                    {
+                        LoadingScreen.Load(ScreenManager, false, null, 
+                            new BackgroundScreen(), new MainMenuScreen());
+                    } 
+                }
             }
 
             base.Update(gameTime, otherScreenHasFocus, false);
