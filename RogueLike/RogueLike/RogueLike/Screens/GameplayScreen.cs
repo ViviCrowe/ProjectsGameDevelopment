@@ -101,7 +101,7 @@ namespace GameStateManagement
             MediaPlayer.Play(currentSong);
 
             //Initialising and Generating Attributes of Player
-            player = new Player(viewport, new Sword());
+            player = new Player(viewport, new Fist());
             player.LoadAssets(content);
 
             Entity.LoadAssets(content);

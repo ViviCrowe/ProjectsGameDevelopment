@@ -112,7 +112,7 @@ public class Player : Entity
 
     public new void LoadAssets(ContentManager content)
     {
-        base.LoadAssets(content, "Player_with_Sword");
+        base.LoadAssets(content, "Player_no_Weapon");
         levelUpSound = content.Load<SoundEffect>("level_up");
         drinkPotionSound = content.Load<SoundEffect>("drink_potion");
     }
