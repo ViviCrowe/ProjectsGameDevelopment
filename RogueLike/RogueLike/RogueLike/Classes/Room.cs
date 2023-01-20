@@ -111,10 +111,12 @@ namespace RogueLike.Classes
                 position.Y += tileDimensions.Y;
             }
             if(!First && !Last) AddEnemies();
-            if(Last && LastLevel) 
+            if(Last) 
             {
                 activeObjects.Add(new Boss(viewport, null, new Vector2(viewport.Width/2, viewport.Height/2 - 100)));
-                Tower tower = new Tower(new Vector2(viewport.Width/2, viewport.Width/2 - 350));
+                Tower tower;
+                if(LastLevel) tower = new Tower(new Vector2(viewport.Width/2, viewport.Width/2 - 350));
+                else tower = new Tower(new Vector2(viewport.Width/2, viewport.Width/2 - 150));
                 passiveObjects.Add(tower);
                 tower.LoadAssets(content, "redtower");
             }
@@ -257,10 +259,9 @@ namespace RogueLike.Classes
                 }
                 else if(entity is Enemy enemy)
                 {
-                    //if(enemy.type == Enemy.Type.ARCHER) enemy.LoadAssets(content, "archer");
-                    //else if(enemy.type == Enemy.Type.MELEE) enemy.LoadAssets(content, "melee");
-                    //else if(enemy.type == Enemy.Type.TANK) enemy.LoadAssets(content, "tank");
-                    enemy.LoadAssets(content, "enemy"); // TEST 
+                    if(enemy.EnemyType == Enemy.Type.ARCHER) enemy.LoadAssets(content, "Archer");
+                    else if(enemy.EnemyType == Enemy.Type.MELEE) enemy.LoadAssets(content, "Melee");
+                    else if(enemy.EnemyType == Enemy.Type.TANK) enemy.LoadAssets(content, "Tank");
                 }
             }
         }
