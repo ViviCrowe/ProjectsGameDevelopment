@@ -213,6 +213,13 @@ namespace RogueLike.Classes
                             boundingBox_1.Min.Y -= this.EquippedWeapon.WeaponRange;
                             boundingBox_1.Max.X += this.EquippedWeapon.WeaponRange;
                             boundingBox_1.Max.Y += this.EquippedWeapon.WeaponRange;
+                            if(this is Player player) 
+                            {
+                                boundingBox_1.Min.X -= player.BaseRange;
+                                boundingBox_1.Min.Y -= player.BaseRange;
+                                boundingBox_1.Max.X += player.BaseRange;
+                                boundingBox_1.Max.Y += player.BaseRange;
+                            }
                         }
                         if (vision)
                         {

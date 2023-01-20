@@ -6,7 +6,7 @@ namespace RogueLike.Classes.Weapons
     {
         public Spear()
         {
-            this.WeaponRange = 40;
+            this.WeaponRange = 50;
             this.AttackDamage = 100;
         }
     }

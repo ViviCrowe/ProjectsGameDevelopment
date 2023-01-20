@@ -101,7 +101,7 @@ namespace GameStateManagement
             MediaPlayer.Play(currentSong);
 
             //Initialising and Generating Attributes of Player
-            player = new Player(viewport, new Fist());
+            player = new Player(viewport, new Sword());
             player.LoadAssets(content);
 
             Entity.LoadAssets(content);
@@ -173,10 +173,14 @@ namespace GameStateManagement
             //Return back to title screen if player is dead
             if(player.CurrentHealth <= 0)
             {
+                Boss.BossCounter = 1;
+                LoadingScreen.Load(ScreenManager, false, null, new BackgroundScreen(),
+                                                           new MainMenuScreen());
                 LoadingScreen.Load(ScreenManager, false, null, 
                     new BackgroundScreen(), new MainMenuScreen());
             }
 
+            // player win 
             foreach (Entity entity in currentRoom.activeObjects)
             {
                 if(entity is Boss)

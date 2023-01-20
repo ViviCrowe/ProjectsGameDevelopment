@@ -17,6 +17,7 @@ public class Player : Entity
     private SoundEffect levelUpSound;
     public int BaseAttack { get; set; } = 0;
     public int BaseDefense { get; set; } = 0;
+    public int BaseRange { get; set; } = 50;
     public bool HasKey { get; set; } = false;
 
     public Player(Viewport viewport, Weapon weapon) :
@@ -111,7 +112,7 @@ public class Player : Entity
 
     public new void LoadAssets(ContentManager content)
     {
-        base.LoadAssets(content, "Player_no_weapon");
+        base.LoadAssets(content, "Player_with_Sword");
         levelUpSound = content.Load<SoundEffect>("level_up");
         drinkPotionSound = content.Load<SoundEffect>("drink_potion");
     }
