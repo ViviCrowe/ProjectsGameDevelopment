@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RogueLike.Classes.Abilities;
 using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
 
@@ -13,8 +12,6 @@ namespace RogueLike.Classes
         private Player player;
 
         private Weapon weaponSlot;
-
-        private AktivAbility aktivAbility;
 
         private String teethValue;
 
@@ -63,11 +60,6 @@ namespace RogueLike.Classes
             if (player.EquippedWeapon != null)
             {
                 weaponTexture = weaponSlot.Texture;
-            }
-
-            if (player.aktivAbility != null)
-            {
-                abilityTexture = aktivAbility.abilityTexture;
             }
 
             teethTexture = Wallet.Texture;
@@ -135,7 +127,6 @@ namespace RogueLike.Classes
             this.teethValue = player.Teeth.Value.ToString();
             this.healthValue = player.CurrentHealth + "/" + player.MaximumHealth;
             this.weaponSlot = player.EquippedWeapon;
-            this.aktivAbility = player.aktivAbility;
             this.levelValue = player.Level.ToString();
         }
     }

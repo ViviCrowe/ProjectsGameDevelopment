@@ -15,7 +15,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using RogueLike.Classes;
 using RogueLike.Classes.Weapons;
-using RogueLike.Classes.Abilities;
 using RogueLike.Classes.Items;
 using System;
 using Microsoft.Xna.Framework.Media;
@@ -103,8 +102,6 @@ namespace GameStateManagement
 
             //Initialising and Generating Attributes of Player
             player = new Player(viewport, new Bow(player));
-            player.aktivAbility = new AktivAbility();
-            player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content);
 
             Entity.LoadAssets(content);

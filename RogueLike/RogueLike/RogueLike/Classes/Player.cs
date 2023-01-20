@@ -2,7 +2,6 @@
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using RogueLike.Classes.Abilities;
 using RogueLike.Classes.Items;
 using RogueLike.Classes.Weapons;
 
@@ -10,7 +9,6 @@ namespace RogueLike.Classes
 {
 public class Player : Entity
 {
-    public AktivAbility aktivAbility { get; set; }
     private int pickUpWeaponCountdown = 0;
     public int Experience { get; set; }
     public int Level { get; set; }
@@ -28,11 +26,6 @@ public class Player : Entity
         this.CurrentHealth = MaximumHealth = 800;
         this.Teeth = new(0);
         this.MovementSpeed = 5f;
-    }
-
-    public void Buy(GameObject item)
-    {
-        // TODO
     }
 
     public new void Update(Room room)
@@ -96,11 +89,6 @@ public class Player : Entity
                 room.items.Remove(key);
             }
         }
-    }
-
-    public void Sell(GameObject item)
-    {
-        // TODO
     }
 
     public void UpdateTeethValue(int TeethValue)

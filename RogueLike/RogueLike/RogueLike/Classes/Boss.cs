@@ -57,27 +57,6 @@ namespace RogueLike.Classes
             }
         }
 
-        public void SummonMinions(Room room)
-        {/*
-            int count = (int) _random.NextInt64(1, 5);
-            int type = (int) _random.NextInt64(0, 3);
-            Enemy temp = null;
-            for(; count > 0; count--)
-            {
-                do
-                {
-                    int xCoord = (int) _random.NextInt64((long) (room.Offset.X + room.tileDimensions.X*3), (long) (room.Offset.X + room.tileDimensions.X*(room.GridDimensions.X-3)));
-                    int yCoord = (int) _random.NextInt64((long) (room.Offset.Y + room.tileDimensions.Y*3), (long) (room.Offset.Y + room.tileDimensions.Y*(room.GridDimensions.Y-3)));
-                    temp = new Enemy(Entity.Viewport, (Type) type, new Vector2(xCoord, yCoord), room);
-                    temp.Texture = this.minionTexture;
-                } while(temp.CheckForCollision(room, 0, 0, false, false) != null);
-                room.activeObjects.Add(temp);
-            }
-            if(this.enemyAI is TankAI) this.MinionCountdown = 200;
-            else if(this.enemyAI is MeleeAI) this.MinionCountdown = 400;
-            else if(this.enemyAI is ArcherAI) this.MinionCountdown = 600;*/
-        }
-
         public void DropTreasure(Room room, ContentManager content)
         {
             this.treasure.Position = this.Position;

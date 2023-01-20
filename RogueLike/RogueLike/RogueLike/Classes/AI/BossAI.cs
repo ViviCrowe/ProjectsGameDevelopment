@@ -41,12 +41,6 @@ namespace RogueLike.Classes.AI
                     archerAI.Move(boss, room, destinationTile);
                 }
             }
-
-            // spawn enemies
-            /*
-            if(boss.MinionCountdown == 0) boss.SummonMinions(room);
-            else boss.MinionCountdown--;
-            */
         }
 
         public void UpdateDestination(Enemy enemy, Player player, Room room)
