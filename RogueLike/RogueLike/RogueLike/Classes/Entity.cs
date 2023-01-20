@@ -269,16 +269,6 @@ namespace RogueLike.Classes
                     0));
         }
 
-        public new void LoadAssets(ContentManager content, string name)
-        {
-            this.Texture = content.Load<Texture2D>(name);
-
-            if (this.EquippedWeapon != null)
-            {
-                //this.EquippedWeapon.LoadAssets(content, "........"); // character with specific weapon = change entity texture!
-            }
-        }
-
         public static void LoadAssets(ContentManager content)
         {
             Font = content.Load<SpriteFont>("gamefont");

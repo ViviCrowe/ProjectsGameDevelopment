@@ -16,6 +16,8 @@ namespace RogueLike.Classes
         public int MinionCountdown { get; set; }= 0;
         private Treasure treasure = new Treasure(Vector2.Zero);
         private Texture2D minionTexture;
+        public int Level { get; set; }
+        private static int bossCounter = 0;
 
         public Boss(Viewport viewport, Room room, Vector2 position) :
             base(viewport, Type.BOSS, position, room)
@@ -32,6 +34,8 @@ namespace RogueLike.Classes
             this.VisionRange = 1000;
             this.ExperiencePoints = 3000;
             this.setEnemyAI(new BossAI()); // phase 1
+            bossCounter++;
+            this.Level = bossCounter;
         }
 
         public new void Update(Player player, Room room, ContentManager content)
@@ -80,9 +84,9 @@ namespace RogueLike.Classes
             room.items.Add(treasure);
         }
 
-        public new void LoadAssets(ContentManager content)
+        public new void LoadAssets(ContentManager content, string name)
         {
-            base.LoadAssets(content, "boss"); //temp
+            base.LoadAssets(content, name); 
             this.treasure.Texture = content.Load<Texture2D>("treasure");
         }
     }

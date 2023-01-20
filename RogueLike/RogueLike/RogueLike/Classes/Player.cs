@@ -17,7 +17,7 @@ public class Player : Entity
     public int LevelUpAt = 200;
     private SoundEffect drinkPotionSound;
     private SoundEffect levelUpSound;
-    public int BaseAttack { get; set; } = 500; // debug
+    public int BaseAttack { get; set; } = 0;
     public int BaseDefense { get; set; } = 0;
     public bool HasKey { get; set; } = false;
 

@@ -31,6 +31,7 @@ namespace RogueLike.Classes
         public bool LastLevel { get; set; }
 
         public bool First { get; set; }
+        private static int level = 0;
 
         public enum DoorType
         {
@@ -255,7 +256,9 @@ namespace RogueLike.Classes
             {
                 if(entity is Boss boss)
                 {
-                    boss.LoadAssets(content); // no texture yet
+                    if(boss.Level == 1) boss.LoadAssets(content, "boss1");
+                    else if(boss.Level == 2) boss.LoadAssets(content, "boss2");
+                    else if(boss.Level == 3) boss.LoadAssets(content, "boss3");
                 }
                 else if(entity is Enemy enemy)
                 {

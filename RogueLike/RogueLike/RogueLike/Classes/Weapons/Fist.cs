@@ -5,7 +5,7 @@
         public Fist()
         {
             this.WeaponRange = 7;
-            this.AttackDamage = 25;
+            this.AttackDamage = 50;
         }
     }
 }
