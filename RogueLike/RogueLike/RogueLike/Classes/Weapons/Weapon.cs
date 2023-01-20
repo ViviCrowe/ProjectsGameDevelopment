@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 
 namespace RogueLike.Classes.Weapons
 {
@@ -10,6 +11,5 @@ namespace RogueLike.Classes.Weapons
         public int AttackDamage { get; set; }
         public int TeethValue { get; set; }
         public int WeaponRange { get; set; }
-
     }
 }

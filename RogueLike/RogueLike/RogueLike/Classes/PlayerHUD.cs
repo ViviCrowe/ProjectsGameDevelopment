@@ -35,6 +35,10 @@ namespace RogueLike.Classes
         private Texture2D healthbar0;
 
         private Texture2D weaponTexture;
+        private Texture2D bowTexture;
+        private Texture2D swordTexture;
+        private Texture2D spearTexture;
+        private Texture2D fistTexture;
 
         private Texture2D abilityTexture;
         private Texture2D teethTexture;
@@ -60,10 +64,11 @@ namespace RogueLike.Classes
 
             font = content.Load<SpriteFont>("gamefont");
 
-            if (player.EquippedWeapon != null)
-            {
-                weaponTexture = weaponSlot.Texture;
-            }
+            bowTexture = content.Load<Texture2D>("bow");
+            swordTexture = content.Load<Texture2D>("sword");
+            spearTexture = content.Load<Texture2D>("spear");
+            fistTexture = content.Load<Texture2D>("empty");
+            
 
             if (player.aktivAbility != null)
             {
@@ -124,9 +129,17 @@ namespace RogueLike.Classes
             }
 
 
-            if (weaponTexture != null)
-                spriteBatch.Draw(weaponTexture, new Vector2(400,0), Color.White);
-            if(abilityTexture != null)
+            if (player.EquippedWeapon is Bow)
+                spriteBatch.Draw(bowTexture, new Vector2(400, 0), Color.White);
+            else if(player.EquippedWeapon is Sword)
+                spriteBatch.Draw(swordTexture, new Vector2(400, 0), Color.White);
+            else if(player.EquippedWeapon is Spear)
+                spriteBatch.Draw(spearTexture, new Vector2(400, 0), Color.White);
+            else if(player.EquippedWeapon is Fist)
+                spriteBatch.Draw(fistTexture, new Vector2(400, 0), Color.White);
+
+
+            if (abilityTexture != null)
                 spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.White);
         }
 

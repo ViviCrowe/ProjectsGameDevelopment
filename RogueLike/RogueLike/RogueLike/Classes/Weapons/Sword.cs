@@ -1,4 +1,6 @@
-﻿namespace RogueLike.Classes.Weapons
+﻿using Microsoft.Xna.Framework.Content;
+
+namespace RogueLike.Classes.Weapons
 {
     public class Sword : Weapon
     {

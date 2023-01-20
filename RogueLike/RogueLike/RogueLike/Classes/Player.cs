@@ -59,9 +59,9 @@ public class Player : Entity
                 if(this.EquippedWeapon is not Fist) DropWeapon(room, content);
                 this.EquippedWeapon = newWeapon;
                 room.items.Remove (newWeapon);
-                if(newWeapon is Sword) this.LoadAssets(content, "Player_with_Sword");
-                else if(newWeapon is Bow) this.LoadAssets(content, "Player_with_Bow");
-                else if(newWeapon is Spear) this.LoadAssets(content, "Player_with_Spear");
+                    if (newWeapon is Sword)this.LoadAssets(content, "Player_with_Sword");
+                    else if (newWeapon is Bow) this.LoadAssets(content, "Player_with_Bow");
+                    else if (newWeapon is Spear) this.LoadAssets(content, "Player_with_Spear");
                 player.pickUpWeaponCountdown = 40;
                 PickupDropSound.Play();
             }
