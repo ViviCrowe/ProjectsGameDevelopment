@@ -17,6 +17,7 @@ namespace RogueLike.Classes
 
         private String healthValue;
         private String levelValue;
+        
 
         private SpriteFont font;
 
@@ -72,8 +73,9 @@ namespace RogueLike.Classes
 
         public void Draw(SpriteBatch spriteBatch)
         {
+            spriteBatch.Draw(teethTexture, new Vector2(10, 10), Color.White);
             spriteBatch.DrawString(font,teethValue,new Vector2(100,12.5f),Color.White);
-            spriteBatch.DrawString(font, healthValue, new Vector2(200, 12.5f), Color.White);
+            spriteBatch.DrawString(font,healthValue, new Vector2(200, 12.5f), Color.White);
 
 
             if(player.CurrentHealth == player.MaximumHealth)
