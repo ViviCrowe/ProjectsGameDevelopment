@@ -111,7 +111,7 @@ namespace RogueLike.Classes
                 this.EquippedWeapon = new Fist();
                 if (this is Player)
                 {
-                    this.LoadAssets(content, "character");
+                    this.LoadAssets(content, "Player_no_weapon");
                 }
             }
         }
