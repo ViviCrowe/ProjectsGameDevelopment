@@ -42,7 +42,6 @@ namespace RogueLike.Classes
         private Texture2D spearTexture;
         private Texture2D fistTexture;
 
-        private Texture2D abilityTexture;
         private Texture2D teethTexture;
 
         private Texture2D keyTexture;
