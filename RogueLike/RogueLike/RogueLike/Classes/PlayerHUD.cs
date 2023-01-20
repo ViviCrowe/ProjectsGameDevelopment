@@ -21,7 +21,6 @@ namespace RogueLike.Classes
 
         private SpriteFont font;
 
-        private Texture2D healthbar;
         private Texture2D healthbar100;
         private Texture2D healthbar87_5;
         private Texture2D healthbar75;
@@ -32,7 +31,16 @@ namespace RogueLike.Classes
         private Texture2D healthbar12_5;
         private Texture2D healthbar0;
 
-        private Texture2D weaponTexture;
+        private Texture2D xpbar100;
+        private Texture2D xpbar87_5;
+        private Texture2D xpbar75;
+        private Texture2D xpbar62_5;
+        private Texture2D xpbar50;
+        private Texture2D xpbar37_5;
+        private Texture2D xpbar25;
+        private Texture2D xpbar12_5;
+        private Texture2D xpbar0;
+
         private Texture2D bowTexture;
         private Texture2D swordTexture;
         private Texture2D spearTexture;
@@ -60,6 +68,17 @@ namespace RogueLike.Classes
             healthbar12_5 = content.Load<Texture2D>("12-5");
             healthbar0 = content.Load<Texture2D>("0");
 
+            xpbar100 = content.Load<Texture2D>("xp100");
+            xpbar87_5 = content.Load<Texture2D>("xp87-5");
+            xpbar75 = content.Load<Texture2D>("xp75");
+            xpbar62_5 = content.Load<Texture2D>("xp62-5");
+            xpbar50 = content.Load<Texture2D>("xp50");
+            xpbar37_5 = content.Load<Texture2D>("xp37-5");
+            xpbar25 = content.Load<Texture2D>("xp25");
+            xpbar12_5 = content.Load<Texture2D>("xp12-5");
+            xpbar0 = content.Load<Texture2D>("xp0");
+
+
             font = content.Load<SpriteFont>("gamefont");
 
             bowTexture = content.Load<Texture2D>("bow");
@@ -80,46 +99,55 @@ namespace RogueLike.Classes
 
             if(player.CurrentHealth == player.MaximumHealth)
             {
-                spriteBatch.Draw(healthbar100, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
+                spriteBatch.Draw(healthbar100, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 1.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 87.5 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 75)
             {
-                spriteBatch.Draw(healthbar87_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar87_5, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 75 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 62.5)
             {
-                spriteBatch.Draw(healthbar75, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar75, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 62.5 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 50)
             {
-                spriteBatch.Draw(healthbar62_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar62_5, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 50 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 37.5)
             {
-                spriteBatch.Draw(healthbar50, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar50, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 37.5 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 25)
             {
-                spriteBatch.Draw(healthbar37_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar37_5, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 25 &&
                 player.CurrentHealth >= (player.MaximumHealth / 100) * 12.5)
             {
-                spriteBatch.Draw(healthbar25, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar25, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= (player.MaximumHealth / 100) * 12.5 &&
                 player.CurrentHealth > 0)
             {
-                spriteBatch.Draw(healthbar12_5, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar12_5, new Vector2(200, -60), null, Color.White,
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
             else if (player.CurrentHealth <= 0)
             {
-                spriteBatch.Draw(healthbar0, new Vector2(200, -60), null, Color.White, 0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
+                spriteBatch.Draw(healthbar0, new Vector2(200, -60), null, Color.White, 
+                    0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
             }
 
 
@@ -132,9 +160,10 @@ namespace RogueLike.Classes
             else if(player.EquippedWeapon is Fist)
                 spriteBatch.Draw(fistTexture, new Vector2(400, 0), Color.White);
 
+            spriteBatch.DrawString(font, player.Level + "", new Vector2(500, 12.5f), Color.White);
 
-            if (abilityTexture != null)
-                spriteBatch.Draw(abilityTexture,new Vector2(600,0),Color.White);
+            spriteBatch.Draw(xpbar50, new Vector2(550, -60), null, Color.White,
+                   0.0f, new Vector2(20, 20), 2.0f, SpriteEffects.None, 0.0f);
         }
 
         public void Update(Player player)
