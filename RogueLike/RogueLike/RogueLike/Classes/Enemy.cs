@@ -159,11 +159,5 @@ public class Enemy : Entity
         if(this.CheckForCollision(room, 0, 0, false, true) != null) return true;
         return false;
     }
-
-    public new void LoadAssets(ContentManager content) 
-    {
-        string name = this.EnemyType.ToString().ToLower();
-        this.Texture = content.Load<Texture2D>(name);
-    }
 }
 }
