@@ -96,7 +96,7 @@ namespace GameStateManagement
             MediaPlayer.Play(currentSong);
 
             //Initialising and Generating Attributes of Player
-            player = new Player(viewport, null);
+            player = new Player(viewport, new Fist());
             player.aktivAbility = new AktivAbility();
             player.aktivAbility.abilityTexture = content.Load<Texture2D>("enemy");
             player.LoadAssets(content);
