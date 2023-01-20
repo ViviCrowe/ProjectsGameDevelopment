@@ -229,18 +229,6 @@
 /processorParam:TextureFormat=Color
 /build:boss.png
 
-#begin boss.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:boss.png
-
 #begin boss1.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -609,18 +597,6 @@
 /processorParam:TextureFormat=Color
 /build:treasure.png
 
-#begin tuer_geschlossen.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:tuer_geschlossen.jpg
-
 #begin tuer_geschlossen2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -633,18 +609,6 @@
 /processorParam:TextureFormat=Color
 /build:tuer_geschlossen2.png
 
-#begin tuer_offen.jpg
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:tuer_offen.jpg
-
 #begin tuer_offen2.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -656,18 +620,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:tuer_offen2.png
-
-#begin wall.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:wall.png
 
 #begin wall2.png
 /importer:TextureImporter
